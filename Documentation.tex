@@ -15,13 +15,17 @@
 \usepackage{adjustbox}
 \usepackage{xcolor}  % Add this to your preamble for color support
 \usepackage{tcolorbox}  % For colored box around the note
+\usepackage{ulem}
 
 % Define simple symbols using basic LaTeX
 \newcommand{\done}{\checkmark}  % Checkmark for completed
 \newcommand{\pending}{$\square$}  % Empty square for uncompleted
 \newcommand{\refine}{$\circlearrowright$}  % Circle arrow for needs refinement
 \newcommand{\issue}{$\triangle$}  % Triangle for unexpected issues
-\newcommand{\draft}{$/$}  % Simple pencil-like symbol for draft
+\newcommand{\draft}{\faPencil}
+  % Simple pencil-like symbol for draft
+\newcommand{\moved}{\faArrowCircleRight}
+
 
 % Define custom colors
 \definecolor{lightgreen}{rgb}{0.56, 0.93, 0.56}  % Define light green
@@ -31,8 +35,10 @@
 % Define new commands for highlighted task descriptions
 \newcommand{\highlightessential}[1]{\colorbox{lightgreen}{#1}}  % Green highlight
 \newcommand{\highlightoptional}[1]{\colorbox{lightorange}{#1}}  % Orange highlight
-\newcommand{\highlightrobust}[1]{\colorbox{lightcoral}{#1}}  % Red highlight
-
+\newcommand{\highlightrobust}[1]{\colorbox{lightcoral}{#1}}  % Red highlight	
+% Define new command for deprecated (strikethrough)
+\newcommand{\deprecated}[1]{\sout{#1}}  % Strikethrough for deprecated tasks
+  
 % Set up the fancy header
 \pagestyle{fancy}
 \fancyhf{}
@@ -61,7 +67,8 @@
 		\item [\pending] Pending
 		\item [\refine] Needs refinement
 		\item [\issue] Unexpected issues
-		\item [\faPencil] Drafted
+		\item [\draft] Drafted
+		\item [\moved] Moved
 	\end{itemize}
 	&
 	% Column 2: Color-coded descriptions
@@ -69,6 +76,7 @@
 		\item \highlightessential{Essential}
 		\item \highlightoptional{Optional}
 		\item \highlightrobust{Robust}
+		\item \deprecated{Deprecated}  % Added deprecated to the description
 	\end{itemize}
 \end{tabular}
 
@@ -79,9 +87,14 @@
 	\begin{itemize}
 		\item [\pending] \highlightessential{Confirmation of Robustness of analysis}
 			\begin{itemize}
-				\item [\done] Calculate using quotation from PGC
 				\item [\pending] Agree upon the type of analyses
 			\end{itemize}
+			\item [\done] \highlightessential{Set up config files}
+		\begin {itemize}
+		\item [\pending] \highlightessential{ARG-metagenomics pipeline}
+		
+		
+	\end{itemize}
 		\item [\pending] \highlightessential{SLURM}
 		\begin{itemize}
 			\item [\pending] \highlightessential{Setup Docker containers for SLURM}
@@ -91,34 +104,45 @@
 
 	\end{itemize}
 	
-	\section{File management}
+\section{File management}
+\begin{itemize}
+	\item [\pending] \highlightoptional{BAM file parsing}
+	\item [\pending] \highlightoptional{Interconversion between SAM and BAM}
+\end{itemize}
+
+\section{Raw read processing}
+\begin{itemize}
+	\item [\done] \highlightessential{Read quality control}
 	\begin{itemize}
-		\item [\done] \highlightessential{Compression and decompression scripts}
-		\item [\done] \highlightessential{Demultiplexing script}
-		\item [\pending] \highlightoptional{BAM file parsing}
-		\item [\pending] \highlightoptional{Interconversion between SAM and BAM}
+		\item [\pending] \highlightrobust{Data visualization}
+		\item [\pending] \highlightrobust{Determination of optimal tool/s}
+		\item [\pending] \highlightrobust{Determination of optimal parameters}
+		\item [\pending] \highlightrobust{Tool combination randomization script}
 	\end{itemize}
+\end{itemize}
 	
-	\section{Assembly \& Binning}
+\section{Assembly \& Binning}
+\begin{itemize}
+	\item [\pending] Testing binning pipeline
 	\begin{itemize}
-		\item [\pending] Testing binning pipeline
+		\item [\done] \highlightrobust{CD-HIT-EST clustering}
+		\item [\done] Assembly tools
 		\begin{itemize}
-			\item [\done] \highlightrobust{CD-HIT-EST clustering}
-			\item [\done] Assembly
-				\begin{itemize}
-					\item [\done] \highlightessential{MEGAHIT}
-					\item [\pending] \highlightoptional{VELVET}
-					\item [\pending] \highlightoptional{meta-SPAdes}
-					\item [\pending] \highlightrobust{Benchmarking between all of them}
-				\end{itemize}
-			\item [\issue] MetaWrap binning  
-		\begin{itemize}
-			\item [\pending] Testing on datasets of higher depth
+			\item [\done] \highlightessential{MEGAHIT}
+			\item [\pending] \highlightoptional{VELVET}
+			\item [\pending] \highlightoptional{meta-SPAdes}
 		\end{itemize}
-			
-			\item [\pending] Refinement of bins
-		\end{itemize}
+		\item [\pending] \highlightrobust{Benchmarking between all of them}
+		\item [\draft] \highlightrobust{Iterative assembly}
+		\item [\draft] \highlightessential{Contig quality checking}
 	\end{itemize}
+	\item [\issue] MetaWrap binning
+	\begin{itemize}
+		\item [\pending] Testing on datasets of higher depth
+	\end{itemize}
+	\item [\pending] Refinement of bins
+\end{itemize}
+
 
 	
 \section{Annotation}
@@ -126,8 +150,8 @@
 	\begin{itemize}
 		\item [\done] \highlightessential{Identification of relevant ARG databases}
 			\begin{itemize}
-				\item CARD
-				\item NCBI AMR Database
+				\item \highlightessential{CARD}
+				\item \highlightoptional{NCBI AMR Database}
 			\end{itemize}
 		\item [\refine]\highlightessential{Script to identify ARGs from short-reads}
 			\begin{itemize}
@@ -162,16 +186,11 @@
 	\begin{itemize}
 		\item 
 	\end{itemize}
-
-		
-		
-	
-	
 	
 \section{Complete} 
 
-\begin{itemize}
-	\item [\done] \par\noindent\highlightessential{\textbf{\large Set up general taxo-metagenomics pipeline}}
+
+\par\noindent\highlightessential{\textbf{\large General taxo-metagenomics pipeline}}
 	\begin{itemize}
 		\item [\done] \highlightessential{Integration with config folder}
 		\item [\done] \highlightoptional{Testing with simulated datasets}
@@ -181,58 +200,114 @@
 				\item [\done] \highlightessential{Trimmomatic}
 				\item [\done] \highlightessential{Kraken2}
 				\item [\done] \highlightessential{Bracken}
-				\item [\issue] \highlightoptional{QIIME2}
+				\item [\issue] \deprecated{QIIME2}
 				\item [\done] \highlightessential{Change QIIME2 to in-house diversity script}
 				\item [\done] \highlightessential{Aggregate diversity metrics}
 			\end{itemize}
 	\end{itemize}
-	\item [\done] \par\noindent\highlightrobust{\textbf{\large Read quality control}}
-		\begin{itemize}
-			\item [\done] \highlightrobust{Parametric randomization script}
-			\item [\done] \highlightrobust{Parsing QC metrics of all iterations}
-			\item [\done] \highlightrobust{Bootstrapping script}
-			\item [\pending] \highlightrobust{Data visualization}
-			\item [\pending] \highlightrobust{Determination of optimal tool/s}
-			\item [\pending] \highlightrobust{Determination of optimal parameters}
-			\item [\pending] \highlightrobust{Tool combination randomization script}
-		\end{itemize}
-	\item [\done] \par\noindent\highlightessential{\textbf{\large Pipeline preparation for HPC}}
 
-	\item [\done] \highlightessential{Set up config files}
-	\begin {itemize}
-		\item [\done] \highlightessential{Taxo-metagenomics pipeline}
-		\item [\pending] \highlightessential{ARG-metagenomics pipeline}
-		\item [\pending] 
-		\item [\pending] 
-		\item [\pending]
-		\item [\pending]
+
+[\pending] \par\noindent\highlightessential{\textbf{\large File management}}
+\begin{itemize}
+	\item [\done] \highlightessential{Compression and decompression scripts}
+	\item [\done] \highlightessential{Demultiplexing script}
+
+\end{itemize}
+\par\noindent\highlightessential{\textbf{\large Read quality control}}
+	\begin{itemize}
+		\item [\done] \highlightessential{Initial raw read QC}
+		\item [\done] \highlightessential{Standard Trimming (Trimmomatic)}
+		\item [\done] \highlightessential{Raw Read QC after trimming}
+		\item [\done] \highlightrobust{Parametric randomization script}
+		\item [\done] \highlightrobust{Parsing QC metrics of all iterations}
+		\item [\done] \highlightrobust{Bootstrapping script}
 
 	\end{itemize}
-\par\noindent\highlightessential{\textbf{\large ARG Identification and Quantification}}	
+\par\noindent\highlightessential{\textbf{\large Pipeline preparation for HPC}}
+\begin{itemize}
+	\item [\done] \highlightessential{Calculate using quotation from PGC}
+	\item [\pending] \highlightessential{Set up config files}  % Add label here for consistency
+	\item [\done] \highlightessential{Taxo-metagenomics pipeline}	
+\end{itemize}
+
+\par\noindent\highlightessential{\textbf{\large ARGs}}  % Indented and highlighted
+\begin{itemize}
+	\item [\done] \highlightessential{Identification of relevant ARG databases}
+	\begin{itemize}
+		\item \highlightessential{CARD}
+		\item \highlightoptional{NCBI AMR Database}
+	\end{itemize}
+	\item [\refine]\highlightessential{Script to identify ARGs from short-reads}
+\end{itemize}
+\par\noindent\highlightoptional{{\textbf{\large Detection of HGT}}}	
+
+\par\noindent\highlightrobust{{\textbf{\large HGT mechanisms}}}
+\onecolumn
+\newpage
+\setcounter{section}{1}  % Resets section numbering
+
+% Research Diary
+\section*{September 17, 2024}
+
+\subsection{To-do List}
+\begin{itemize}
+	\item [\pending] Call for a group meeting regarding logistics (on-site)
+
+	\begin{itemize}
+		\item [\pending] Offer to use landline to minimize on-site visits and reduce transportation costs; as point-persons have not been replying via email as quickly lately
+		\item [\pending] Discuss PGC calculations and talk about allocatable budget
+		\item [\pending] Raise concerns about data storage and management
+		\item [\pending] Inquire if there are scripts I can develop to streamline the bureaucratic process
+	\end{itemize}
+\end{itemize}
+
+\subsection{Completed Tasks}
+\begin{itemize}
+	\item 
+	
+\end{itemize}
+
+\subsection{Scripts Worked On}
+\begin{itemize}
+	\item
 \end{itemize}
 
 
-% Daily diary starts on a new page
+\subsection{Issues Encountered}
+\begin{itemize}
+	\item 
+\end{itemize}
+
+\subsection{Need to Troubleshoot}
+\begin{itemize}
+	\item 
+\end{itemize}
+
+
+\newpage
+\onecolumn
+
+
 \onecolumn
 \newpage
-\setcounter{section}{0}  % Resets section numbering
+\setcounter{section}{1}  % Resets section numbering
 	
 	% Research Diary
-	\section*{Research Diary - \today}
+	\section*{September 16, 2024}
 	
-	\section{To-do List}
+	\subsection{To-do List}
 	\begin{itemize}
-		\item [\issue] Call for a group meeting regarding logistics
-		\item \textbf{Notes} will move these for tomorrow for will be meeting the team on-site
+		\item [\moved] Call for a group meeting regarding logistics
+
 		\begin{itemize}
-			\item [\pending] Offer to use landline to minimize on-site visits and reduce transportation costs; as point-persons have not been replying via email as quickly lately
-			\item [\pending] Discuss PGC calculations and talk about allocatable budget
-			\item [\pending] Raise concerns about data storage and management
-			\item [\pending] Inquire if there are scripts I can develop to streamline the bureaucratic process
+			\item [\moved] Offer to use landline to minimize on-site visits and reduce transportation costs; as point-persons have not been replying via email as quickly lately
+			\item [\moved] Discuss PGC calculations and talk about allocatable budget
+			\item [\moved] Raise concerns about data storage and management
+			\item [\moved] Inquire if there are scripts I can develop to streamline the bureaucratic process
 		\end{itemize}
 	\end{itemize}
 	
-	\section{Completed Tasks}
+	\subsection{Completed Tasks}
 	\begin{itemize}
 		\item [\done] Updated GitHub repositories; created new repositories: \texttt{Documentation} and \texttt{Confidential}
 		\item [\done] Created a new bash script to track progress across all repositories
@@ -244,7 +319,7 @@
 		
 	\end{itemize}
 	
-	\section{Scripts Worked On}
+	\subsection{Scripts Worked On}
 	\begin{itemize}
 		\item \texttt{Project4/ARG\_MGE.smk} - updated
 		\item [\done] \texttt  {Project4/calculate\_contig\_quality.py} 
@@ -252,12 +327,12 @@
 	\end{itemize}
 	
 	
-	\section{Issues Encountered}
+	\subsection{Issues Encountered}
 	\begin{itemize}
 		\item [\done] Could not access GitHub, needed to reset the SSH keys and update my Git histories for version control
 	\end{itemize}
 	
-	\section{Need to Troubleshoot}
+	\subsection{Need to Troubleshoot}
 	\begin{itemize}
 		\item None identified at this time
 	\end{itemize}
