@@ -16,6 +16,8 @@
 \usepackage{xcolor}  % Add this to your preamble for color support
 \usepackage{tcolorbox}  % For colored box around the note
 \usepackage{ulem}
+\usepackage[utf8]{inputenc}
+\usepackage{titlesec}
 
 % Define simple symbols using basic LaTeX
 \newcommand{\done}{\checkmark}  % Checkmark for completed
@@ -275,9 +277,22 @@ I have separated them into folders/repositories (shameless plug here: \href{http
 
 
 \newpage
+
+
+
+
 \setcounter{section}{1}
 \setcounter{subsection}{0}
-\section*{Project4 - ARG-MGE.smk}
+
+% Redefine the \part command to move the title closer to the top of the page
+\titleformat{\part}[display]
+{\normalfont\Huge\bfseries\centering} % Title formatting
+{} % No label (e.g., "Part I")
+{-120pt} % This adjusts the space between the top of the page and the title. Reduce or increase this value as needed.
+{\Huge} % Title font size
+
+\part{Project 4}
+\section*{ ARG-MGE.smk}
 \section*{Stage: Draft}   
 \section*{General Purpose}
 
@@ -525,90 +540,57 @@ Will continue improving this section (everything regarding HGT) by evaluating th
 \newpage
 \setcounter{section}{1}
 \setcounter{subsection}{0}
-\section*{Project4 - metagenomics\_general.smk}
-\section*{Stage: Draft}   
-\section*{General Purpose}
+\section*{metagenomics\_general.smk}
+\section*{Stage: Done}   
+\section*{General Purpose taxo-metagenomics}
 
 This pipeline is designed for \textbf{The essentials in metagenomics}, which includes \textbf{quality checking, filtering, and trimming of raw reads to clean reads}. As well as the usual \textbf{taxo-metagenomic analysis}. 
 
 \section*{Specifics:}
 
-\textbf{Purpose:} A general pipeline for preprocessing, assembly, and binning of metagenomic reads. \\
-\textbf{Inputs:}
-\begin{itemize}
-	\item Raw sequencing data.
-	\item Refernce databases for assembly and binning.
-\end{itemize}
-\textbf{Outputs:}
-\begin{itemize}
-	\item Assembled contigs.
-	\item Binned genomes.
-\end{itemize}
-\textbf{Key Steps:}
-\begin{itemize}
-	\item Preprocesses reads with quality control.
-	\item Assembles reads into contigs using MEGAHIT.
-	\item Bins the contigs into genomes using MetaWrap.
-\end{itemize}
+
+\subsection{Quality control (Pre-processing)}		
+
+\textbf{Raw trimming of raw metagenomic data} 
+\\ \textbf{Technical Notes}: \texttt{FastQC} is used on \textbf{raw reads}
+\\ \textbf{Rationale}: This is mainly used as a point of comparison - determine whether the next step (trimming) was effective. This pre-processing step is the starting point in any and all metagenomics pipelines. 
+\\ \textbf{Notes}: This whole quality control steps are interconnected with each other. \\
+\\ 
+\\
+\textbf{Trimming} 
+\\ \textbf{Technical Notes}: \texttt{Trimmomatic} is used on \textbf{raw reads}
+\\ \textbf{Rationale}: Trimming involves removing low quality bases (often depending on something called the Phred Score - which is just a measure of how "confident" we are that the base on that site was accurate), adapters, and filtering reads that go below a specific length threshold. 
+\\ \textbf{Notes}: Journals often report the parameters on \texttt{Trimmomatic} (or any trimmer they decide to use); this is often so that the study is reproducible, should one decide to actually reproduce the study starting from scratch (raw reads). 
+\\ \textbf{Notes}: There are many different trimmers each with their own strengths and weaknesses, \texttt{Trimmomatic} is just the most popular trimmer and is thus used here, though studies differ in the parameters they used for trimming - which often dictates how strict they are with what they define as "good enough". \\
+\\ \textbf{Perspective}: Why different people choose different trimmers depend on the \textbf{strengths and weaknesses} of the trimmer e.g. trimmers like "fastp" is used because it's fast making it suitable for very large datasets like deep sequencing. While some trimmers like \texttt{Sickle} has automatic adjustment over the entire sequence - which makes it useful for very ancient datasets where DNA is often highly-degraded. Other times, it's for \textbf{convenience} like \texttt{Trim-Galore} which combines \texttt{FastQC} and \texttt{Cutadapt} trimmer in a single command. Another good example is \texttt{BBDuk} which is part of a larger package called \texttt{BBtools}, \texttt{BBDuk} also has an built-in contamination detection - so it's particularly good at filtering out usual contaminants like sequences known to be from the human genome. so you can simply just use all the modules in that package for all-in-one processing.  Other times, it's just \textbf{familiarity}. 
+\\\\
+\textbf{Quality checks of post-trimmed data} 
+\\ \textbf{Technical Notes}: \texttt{FastQC} is used on \textbf{trimmed reads} to determine how effective the trimming process was. 
+\\ \textbf{Rationale}: If the trimming process was effective, we should notice a better quality reads here, otherwise, we might have to adjust the trimming parameters. 
+\\ \textbf{Notes}: Determination of whether the trimmed reads are "clean enough" is more of an art rather than actual science, though thresholds exist like Phred $>$ 20 or Phred $>$ 30 depending on how strict you are as a researcher. \\
+\\ 
+\\
 
 % Add more pipelines as necessary...
 
+
 \newpage
-\section*{Modules}  % Modules Section
 
-\subsection*{1. \texttt{FastQC.bash}}
-\textbf{Purpose:} Runs FastQC on sequencing reads for quality control checks. \\
-\textbf{Inputs:}
-\begin{itemize}
-	\item Raw sequencing data in FASTQ format.
-\end{itemize}
-\textbf{Outputs:}
-\begin{itemize}
-	\item FastQC reports (HTML and text).
-\end{itemize}
-\textbf{Key Steps:}
-\begin{itemize}
-	\item Runs FastQC on input files.
-	\item Generates quality control reports for each sample.
-\end{itemize}
 
-\subsection*{2. \texttt{trimmomatic.bash}}
-\textbf{Purpose:} Performs read trimming and filtering to remove low-quality bases and adapters. \\
-\textbf{Inputs:}
-\begin{itemize}
-	\item Raw sequencing data in FASTQ format.
-	\item Adapter sequences for trimming.
-\end{itemize}
-\textbf{Outputs:}
-\begin{itemize}
-	\item Trimmed reads in FASTQ format.
-\end{itemize}
-\textbf{Key Steps:}
-\begin{itemize}
-	\item Trims adapters from sequencing reads.
-	\item Filters low-quality bases and short reads.
-\end{itemize}
 
-\subsection*{3. \texttt{calculate\_diversity.py}}
-\textbf{Purpose:} Computes alpha and beta diversity metrics from metagenomic data. \\
-\textbf{Inputs:}
-\begin{itemize}
-	\item Feature table in TSV format.
-	\item Metadata for each sample.
-\end{itemize}
-\textbf{Outputs:}
-\begin{itemize}
-	\item Diversity indices (e.g., Shannon, Simpson).
-	\item Beta diversity distance matrices (e.g., Bray-Curtis).
-\end{itemize}
-\textbf{Key Steps:}
-\begin{itemize}
-	\item Loads feature table and metadata.
-	\item Computes diversity metrics for each sample.
-	\item Outputs a summary of diversity indices.
-\end{itemize}
 
-% Add more modules as necessary...
+\setcounter{section}{1}
+\setcounter{subsection}{0}
+
+% Redefine the \part command to move the title closer to the top of the page
+\titleformat{\part}[display]
+{\normalfont\Huge\bfseries\centering} % Title formatting
+{} % No label (e.g., "Part I")
+{-120pt} % This adjusts the space between the top of the page and the title. Reduce or increase this value as needed.
+{\Huge} % Title font size
+
+\part{Daily entries}
+
 % Research Diary
 \section*{September 18, 2024}
 
@@ -773,3 +755,27 @@ This pipeline is designed for \textbf{The essentials in metagenomics}, which inc
 \onecolumn
 
 \end{document}
+
+
+\section{Templates}
+Templates section
+
+
+\newpage
+\setcounter{section}{1}
+\setcounter{subsection}{-1}
+\section*{Project4 - metagenomics\_general.smk}
+\section*{Stage: }   
+\section*{General Purpose: }
+
+This pipeline is designed for \textbf{The essentials in metagenomics}, which includes \textbf{quality checking, filtering, and trimming of raw reads to clean reads}. As well as the usual \textbf{taxo-metagenomic analysis}. 
+
+\section*{Specifics:}
+
+
+\subsection{Quality control}		
+
+\textbf{} 
+\\ \textbf{Technical Notes}: \
+\\ \textbf{Rationale}:
+\\ \textbf{Notes}:
