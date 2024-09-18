@@ -60,6 +60,7 @@
 \date{\today}
 
 \begin{document}
+
 	
 % Single-column section
 \begin{multicols}{1}
@@ -296,7 +297,7 @@ I have separated them into folders/repositories (shameless plug here: \href{http
 {-80pt} % This adjusts the space between the top of the page and the title. Reduce or increase this value as needed.
 {\Huge} % Title font size
 
-\part{Project 4}
+\part{Project 4 Scripts}
 \section*{ ARG-MGE.smk}
 \section*{Stage: Draft}   
 \section*{General Purpose}
@@ -319,7 +320,7 @@ This pipeline is designed for \textbf{comprehensive metagenomic analysis of ARGs
 	\textbf{Technical Notes}: \texttt{transeq} from \texttt{EMBOSS} translates nucleotide sequences to protein sequences based on \textbf{standard genetic code}. \texttt{backtranseq} reverses this to allow iterative alignments with nucleotide sequences. \\
 	\textbf{Rationale}: This leverages conserved protein-level information, which is lost at the nucleotide level due to synonymous mutations - while also increasing the sensitivity to potential ARG proteins from k-mer alignment. See Nature Methods, doi: doi.org/10.1038/s41592-019-0437-4 (2019) for more details.
 	
-	\subsection{Metagenomic assembly of ARG-contigs}
+	\subsection*{Metagenomic assembly of ARG-contigs}
 		
 	\item \textbf{Iterative alignment is performed using \texttt{KMA} to align reads against reverse-translated CARD sequences for high-sensitivity identification.}\\
 	\textbf{Technical Notes}: \texttt{KMA} (K-mer Alignment) is used find the reverse-translated ARGs with the proximity filtering option to determine the surrounding regions of ARGs. This is done iteratively for each gene increasing the ARG-associated database. \\
@@ -348,7 +349,7 @@ This pipeline is designed for \textbf{comprehensive metagenomic analysis of ARGs
 	\textbf{Rationale}: \texttt{metaSPAdes} may have created contigs that DO NOT contain ARGs, and have instead assembled them into a more matching contig (a false-positive misassembly) - this can happen because of the different databases being used; also parallelization of methods like this increases robustness because it has been confirmed independently from different starting points (bottom-up vs top-down approach). This allows us to filter ARG-containing contigs. \\
 	\textbf{Notes:} \texttt{RGI} is the official scanner of \texttt{CARD}.
 	
-	\subsection{Read-mapping}
+	\subsection*{Read-mapping}
 		\item \textbf Checking coverage statistics on contigs using raw reads\\
 	\textbf{Technical Notes}: \texttt{Samtools} is used here to map the raw reads from the larger database back to the assembled contigs and then calculates the coverage over the entire contig. \\
 	\textbf{Rationale}: Read-mapping is a quality control protocol used in metagenomics, to determine the quality of the assembly. High-coverage means that many of the k-mers align well with that region of the contig, while low coverage is evidence of inconsistent mapping and that the contigs should be refined, split, or discarded.
@@ -465,7 +466,7 @@ This pipeline is designed for \textbf{comprehensive metagenomic analysis of ARGs
 
 
 
-	\subsection{Contiguous chimeras}
+	\subsection*{Contiguous chimeras}
 	
 	\item \textbf{On a parallel process: taxonomic profiling is done using \texttt{Kraken2} and \texttt{SprayNPray}. and aligned with the ARG-raw reads and ARG-contigs databases}\\
 	\textbf{Technical Notes}: \texttt{Kraken2} uses k-mer-based classification to assign taxonomy based on raw-reads. While \texttt{SprayNPray} complements this by assigning taxonomy at contig level. \\
@@ -493,7 +494,7 @@ This pipeline is designed for \textbf{comprehensive metagenomic analysis of ARGs
 	\textbf{Note} \texttt{Bray-Curtis} (dis-)similarity is most often used as a presence or absence diversity metric.
 	
 
-\subsubsection{Plasmids}
+\subsection*{Plasmids}
 
 
 	\item \textbf{Determination of putative plasmids}\\
@@ -514,7 +515,7 @@ This pipeline is designed for \textbf{comprehensive metagenomic analysis of ARGs
 	\textbf{Rationale}: \texttt{oriTfinder} looks for \texttt{origin of transfer} sites (\texttt{oriT}), which are characteristics of conjugative plasmid . This whole sub-pipeline is to look for evidence of conjugative plasmid transfer as the cause of these chimeric contigs. Normalization and percentage counts are used here to further check whether these "plasmids" align with our understanding of the average plasmid copy number. \\
 	\textbf{Note}: Will also be drafting a script to do sliding window analysis of \texttt{GC-skews} - as different characteristics of this curve can be interpreted in different ways. 
 
-\subsection{Phages}		
+\subsection*{Phages}		
 	
 \item \textbf{Phage influence signatures}\\
 \textbf{Technical Notes}: They will be determined using a variety of tools:
@@ -554,7 +555,7 @@ This pipeline is designed for \textbf{The essentials in metagenomics}, which inc
 \section*{Specifics:}
 
 
-\subsection{Quality control (Pre-processing)}		
+\subsection*{Quality control (Pre-processing)}		
 
 \textbf{Raw trimming of raw metagenomic data} 
 \\ \textbf{Technical Notes}: \texttt{FastQC} is used on \textbf{raw reads}
@@ -576,10 +577,31 @@ This pipeline is designed for \textbf{The essentials in metagenomics}, which inc
 \\ 
 \\
 
-% Add more pipelines as necessary...
+\subsection*{Metagenomic Taxonomy}	
+\textbf{Taxonomy from Cleaned Reads} 
+\\ \textbf{Technical Notes}: \texttt{Kraken2} is used on \textbf{raw reads} to determine which species they came from. 
+\\ \textbf{Rationale}: Taxonomy based on reads is standard on metagenomics instead of using assembled contigs because information is lost during the assembly process. By using cleaned reads we make sure that: 
+	 \begin{enumerate}
+	 	\item We are maximizing the amount of data
+	 	\item We are not being biased by low quality reads
+	 \end{enumerate}
+\textbf{Notes}: There are many ways in which taxonomy is assigned to raw reads the \texttt{Kraken-based} packages use a curated database that links k-mers from your database to k-mers generated from their database (usually manually curated).  
+\\ \textbf{Notes}: Others like \texttt{MetaPhlan} first create "markers" that are based off of known sequences, and then scan your raw reads for these markers, which it then checks for under what taxon/taxa that marker fell under. \\
 
-
-
+\subsection*{Diversity analysis}	
+\textbf{Diversity analysis per site or sample} 
+\\ \textbf{Technical Notes}: Here \texttt{Bracken} - an extension of the \texttt{Kraken} packages or \texttt{Qiime2} are often used to calculate diversity. Instead I opted to create my own \texttt{Python} script because:
+	 \begin{enumerate}
+	\item I find that the diversity indices in either tools are limited to only the most often used i.e. the most popular indices - so it is not comprehensive
+	\item I've had problems integrating them into the pipeline because some dependency limitations, un-updated scripts, and a pre-processing step that requires converting all of \texttt{Kraken2, Bracken} files, then importing them to \texttt{Qimme2} which is too time-consuming and inefficient - my script just automatically calulates from \texttt{Bracken} outputs and just puts out all the possible (non-phylogenetic-based-which you would need a phylogenetic tree to build first) indices out there.  
+	\end{enumerate}
+\textbf{Rationale}: Taxonomy based on reads is standard on metagenomics instead of using assembled contigs because information is lost during the assembly process. By using cleaned reads we make sure that: 
+\begin{enumerate}
+	\item We are maximizing the amount of data
+	\item We are not being biased by low quality reads
+\end{enumerate}
+\textbf{Notes}: There are many ways in which taxonomy is assigned to raw reads the \texttt{Kraken-based} packages use a curated database that links k-mers from your database to k-mers generated from their database (usually manually curated).  
+\\ \textbf{Notes}: Others like \texttt{MetaPhlan} first create "markers" that are based off of known sequences, and then scan your raw reads for these markers, which it then checks for under what taxon/taxa that marker fell under. \\
 
 
 
