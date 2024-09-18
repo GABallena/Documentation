@@ -674,6 +674,68 @@ This is a module that will be part of a bigger pipeline. The idea here to is ran
 \end{tcolorbox}
 
 
+\newpage
+\setcounter{section}{1}
+\setcounter{subsection}{0}
+\section*{bootstrapping\_rawreads.smk}
+\section*{Stage: Further refinement}   
+\section*{Purpose: Bootstrapping the taxo\_metagenomic pipeline itself}
+
+Bootstrapping is the process of randomly selecting from a pool of samples (with replacement) and using that in a specific process you want to bootstrap. This is a standard method used in molecular phylogenetics to determine the robustness of trees where a $>$ 70 support from bootstrapped data is considered robust enough. 
+
+
+\begin{tcolorbox}[colback=gray!10!white, coltitle=white, colframe=gray!80!black, title=The principle of bootstrapping in phylogenetics]
+	Phylogenetics uses this statistical technique because (in principle) it effectively means that removing parts of the entire sequence does not alter the topology of the tree. 
+	
+	Here I'm adapting this method with \texttt{Kraken2}'s taxonomic profiling to see whether the taxonomic support of its k-mer assignment is also consistent even with changes in the sampling sites.
+	
+	This is still WIP because I plan to go step further and start bootstrapping the raw reads themselves to see if changes in reads changes the topology of taxonomic assignment. 
+\end{tcolorbox}
+
+\textbf{Directory setup of temporary files}
+\\ \textbf{Technical Notes}:Snakemake starts by ensuring the existence of necessary directories. Most notably, the temporary bootstrap directories.\\
+\textbf{Rationale}: Bootstrapping is sometimes done iteratively thousands of times, so making this a temporary directory helps manage space. 
+\\ \textbf{Notes}:
+\\
+\\
+\textbf{Sample Identification}
+\\ \textbf{Technical Notes}:The workflow identifies sample names by parsing filenames in the raw reads directory.\\
+\textbf{Rationale}: Inclusion of these in the script allows the user to flexibly configure the naming convention and the directory in which they want to bootstrap. 
+\\ \textbf{Notes}: Presently it looks for \_R1.fastq.gz and it's associated pair, \_R2.fastq.gz in the raw\_reads directory. 
+\\
+\\
+\textbf{Bootstrapping}
+\\ \textbf{Technical Notes}:This executes \texttt{bootstrap\_reads.py} in the scripts directory to start bootstrapping the paired-end reads and outputs them in the temporary folders I mentioned earlier. \\
+\textbf{Rationale}: Moving bootstrapping logic into a Python script leverages its ability to create randomizations from its libraries. Also it allows us to define a \texttt{seed} so it is reproducible (if you want to reproduce) the results anyway.
+\\ \textbf{Note:} The number of bootstraps and the fraction of samples you want to retain can be controlled in the config.yaml file in the configuration folder. \\
+\textbf{On a personal note}: Before writing this part of the document (Sep 19, 2024, 3:00 AM), I decided to change the bootstrapping rule. It used to rely on a simplified approximation. The probability of not being selected after \(N\) independent draws from a sample of size \(N\) is given by:
+
+\[
+P = \left( 1 - \frac{1}{N} \right)^N
+\]
+
+This is a well-known mathematical equation describing the probability of not selecting a sample at least once in \(N\) draws. As \( N \to \infty \), this probability approaches:
+
+\[
+\frac{1}{e}
+\]
+
+
+Previously, I used the probability of a sample \textit{being selected}, which is:
+
+\[
+1 - \frac{1}{e}
+\]
+
+This was used as an approximation for bootstrapping by shuffling and adjusting the sample size. However, the updated script now performs \textbf{actual bootstrapping}, sampling with replacement, which is a more accurate statistical method for resampling.\\
+\\
+
+
+\textbf{Run \texttt{kraken\_pipeline.bash}}
+\\ \textbf{Technical Notes}: This Shellscript (or bash file) is used to automate the processing of all files from the bootstrapping. It runs them under \texttt{Kraken2} then \texttt{Bracken} to generate taxonomy profiles for all of them. It also creates a log file for each replicate to provide traceability and error checking, helping diagnose any issues with specific replicates or samples. \\
+\textbf{Rationale}: Read why I'm bootstrapping from the textbox above. The reason why I also included \texttt{Bracken} and measurements diversity metrics in the analysis per sampling replicate is so we can analyze how the topology of diversity also changes - similiar to how we look at topology of phylogenetic trees. The final process consolidates all the diversity metrics (alpha diversity) and matrices (beta diversity) into a TSV file.
+\\ \textbf{Note:} The decision to use Snakemake and Shellscripts here is so that the bootstrapping comes first before the pipeline is introduced. Otherwise Snakemake will run the entire thing in parallel, taking up so much memory because it runs \texttt{Kraken2} for every single sample instead of doing it in batches - which takes up so much unnecessary time. 
+
 
 
 \setcounter{section}{1}
