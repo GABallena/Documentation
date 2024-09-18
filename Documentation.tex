@@ -1,259 +1,279 @@
 \documentclass[11pt]{report}
 \usepackage{geometry}
-\geometry{a4paper, margin=.5in}
+\geometry{a4paper, margin=1in}  % Adjusted margin for better readability
 \usepackage{fancyhdr}
 \usepackage{graphicx}
 \usepackage{hyperref}
-\usepackage{enumitem}  % For checkboxes and itemize options
-\usepackage{amssymb}   % For basic symbols like checkmark
+\usepackage{enumitem}
+\usepackage{amssymb}
 \usepackage{fontawesome}
 \usepackage{multicol}
-\usepackage[x11names]{xcolor}  % For colored background
+\usepackage[x11names]{xcolor}
 \usepackage{amsmath}
-\usepackage{multirow}  % for multirow cells if needed
-\usepackage{array}  % for column formatting
+\usepackage{multirow}
+\usepackage{array}
 \usepackage{adjustbox}
-\usepackage{xcolor}  % Add this to your preamble for color support
-\usepackage{tcolorbox}  % For colored box around the note
+\usepackage{tcolorbox}
 \usepackage{ulem}
 \usepackage[utf8]{inputenc}
 \usepackage{titlesec}
-\usepackage{mathptmx} % Times New Roman-like font for text and math
+\usepackage{mathptmx}  % Times New Roman-like font
 \usepackage{setspace}
 \onehalfspacing
-\usepackage{multicol}
- \setlength{\extrarowheight}{-50pt}
-\usepackage{enumitem}
-\setlist{itemsep=1pt, parsep=1pt}
+\usepackage{microtype}
+\usepackage{ragged2e}
+\usepackage{listings}
+\usepackage{array}
+\lstset{breaklines=true}
 
-% Define simple symbols using basic LaTeX
-\newcommand{\done}{\checkmark}  % Checkmark for completed
-\newcommand{\pending}{$\square$}  % Empty square for uncompleted
-\newcommand{\refine}{$\circlearrowright$}  % Circle arrow for needs refinement
-\newcommand{\issue}{$\triangle$}  % Triangle for unexpected issues
+% Define simple symbols
+\newcommand{\done}{\checkmark}
+\newcommand{\pending}{$\square$}
+\newcommand{\refine}{$\circlearrowright$}
+\newcommand{\issue}{$\triangle$}
 \newcommand{\draft}{\faPencil}
-  % Simple pencil-like symbol for draft
 \newcommand{\moved}{\faArrowCircleRight}
 
+% Custom colors
+\definecolor{lightgreen}{rgb}{0.65, 0.95, 0.65}  % Slightly softer green
+\definecolor{lightorange}{rgb}{1.0, 0.85, 0.65}
+\definecolor{lightcoral}{rgb}{0.94, 0.6, 0.6}
 
-% Define custom colors
-\definecolor{lightgreen}{rgb}{0.56, 0.93, 0.56}  % Define light green
-\definecolor{lightorange}{rgb}{1.0, 0.8, 0.6}     % Define light orange
-\definecolor{lightcoral}{rgb}{0.94, 0.5, 0.5}      % Define light coral
+\newcommand{\highlightessential}[1]{\colorbox{lightgreen}{#1}}
+\newcommand{\highlightoptional}[1]{\colorbox{lightorange}{#1}}
+\newcommand{\highlightrobust}[1]{\colorbox{lightcoral}{#1}}
+\newcommand{\deprecated}[1]{\sout{#1}}
 
-% Define new commands for highlighted task descriptions
-\newcommand{\highlightessential}[1]{\colorbox{lightgreen}{#1}}  % Green highlight
-\newcommand{\highlightoptional}[1]{\colorbox{lightorange}{#1}}  % Orange highlight
-\newcommand{\highlightrobust}[1]{\colorbox{lightcoral}{#1}}  % Red highlight	
-% Define new command for deprecated (strikethrough)
-\newcommand{\deprecated}[1]{\sout{#1}}  % Strikethrough for deprecated tasks
-  
-% Set up the fancy header
+% Fancy headers
 \pagestyle{fancy}
 \fancyhf{}
 \fancyhead[L]{\textbf{Research Diary}}
+\fancyhead[C]{\leftmark}  % Adds section title in the header
 \fancyhead[R]{\thepage}
 
-% Title and author details
-\title{One ARM Project 4 Metagenomics Pipeline}
-\author{Gerald Amiel}
-\date{\today}
+\title{\Huge \textbf{ONE ARM Metagenomics Pipeline}}
+\author{\Large Prepared for and by: Project 4}
+\date{\Large Last updated \today}
 
 \begin{document}
-
+	\sloppy
 	
-% Single-column section
-\begin{multicols}{1}
-	\section*{Project Overview}
-	Metagenomic analysis of ARGs in NCR hospitals, wastewaters, and surface waters
-\end{multicols}
-
-% Two-column section (without page break)
-\begin{multicols}{2}
-
-\section*{Legend}
-\begin{tabular}{p{0.45\linewidth} p{0.45\linewidth}} % Each column takes 45% of the line width
-	% Column 1: Symbols list
-	\begin{itemize}
-		\item [\done] Done
-		\item [\pending] Pending
-		\item [\refine] Needs refinement
-		\item [\issue] Unexpected issues
-		\item [\draft] Drafted
-		\item [\moved] Moved
-	\end{itemize}
-	&
-	% Column 2: Color-coded descriptions
-	\begin{itemize}
-		\item \highlightessential{Essential}
-		\item \highlightoptional{Optional}
-		\item \highlightrobust{Robust}
-		\item \deprecated{Deprecated}  % Added deprecated to the description
-	\end{itemize}
-\end{tabular}
-
-
-
-
+	% Title page
+	\maketitle
+	\thispagestyle{empty}
 	
-	\section*{HPC preparation}
-	\begin{itemize}
+	% Start main document
+	\newpage
+	
+	% Project overview in a single column
+% Abstract-style tcolorbox settings
+\tcbset{
+	colback=gray!15,        % Light gray background for the box
+	colframe=black,         % Black border
+	width=\linewidth,       % Box takes full width
+	boxrule=0.5mm,          % Border thickness
+	arc=0mm,                % No rounded corners
+	auto outer arc,
+	fonttitle=\bfseries,    % Bold title
+	coltitle=black,         % Black title color
+}
+
+% Journal abstract-style box
+
+
+	\begingroup
+	\raggedright
+	\colorbox{gray!15}{%
+		\parbox{\dimexpr\textwidth-2\fboxsep\relax}{ % Ensures the box takes the full width
+			\vspace{0.5em} % Add space at the top of the box
+			\textbf{Project overview} \\
+			\onehalfspacing % Adjust line spacing for readability
+			Metagenomic analysis of Antibiotic/Antimicrobial Resistance Genes (ARGs) in NCR (Metro Manila) hospitals, wastewaters, and surface waters.
+			\vspace{0.5em} % Add space at the bottom of the box
+		}
+	}
+	\endgroup
+		\begin{multicols}{2}
+\begin{tcolorbox}[title=Legend]
+	\begin{tabular}{p{0.45\linewidth} p{0.45\linewidth}}
+		\begin{itemize}
+			\item [\done] Done
+			\item [\pending] Pending
+			\item [\refine] Needs refinement
+			\item [\issue] Unexpected issues
+			\item [\draft] Drafted
+			\item [\moved] Moved
+		\end{itemize}
+		&
+		\begin{itemize}
+			\item \highlightessential{Essential}
+			\item \highlightoptional{Optional}
+			\item \highlightrobust{Robust}
+			\item \deprecated{Deprecated}
+		\end{itemize}
+	\end{tabular}
+\end{tcolorbox}	
+	% Two-column layout for the rest of the document
+
+		
+	
+\section*{HPC Preparation}
+\begin{itemize}
 		\item [\pending] \highlightessential{Confirmation of Robustness of analysis}
-			\begin{itemize}
-				\item [\pending] Agree upon the type of analyses
-			\end{itemize}
-			\item [\done] \highlightessential{Set up config files}
-		\begin {itemize}
-		\item [\pending] \highlightessential{ARG-metagenomics pipeline}
-		
-		
-	\end{itemize}
+		\begin{itemize}
+			\item [\pending] Agree upon the type of analyses
+		\end{itemize}
 		\item [\pending] \highlightessential{\texttt{SLURM} request management}
 		\begin{itemize}
+			\item [\pending] \highlightessential{Send email for HPC usage requests}
 			\item [\pending] \highlightessential{Setup Docker containers for \texttt{SLURM}}
 			\item [\pending] \highlightoptional{\texttt{SLURM} container for simulations}
 			\item [\pending] \highlightoptional{Automation of \texttt{SLURM} requests}
 		\end{itemize}
-
-	\end{itemize}
-	
-\section*{File management}
-\begin{itemize}
-	\item [\pending] \highlightoptional{\texttt{BAM} file parsing}
-	\item [\pending] \highlightoptional{Interconversion between \texttt{SAM} and \texttt{BAM}}
 \end{itemize}
-
-\section*{Raw read processing}
-\begin{itemize}
-	\item [\done] \highlightessential{Read quality control}
-	\begin{itemize}
-		\item [\pending] \highlightrobust{Data visualization}
-		\item [\pending] \highlightrobust{Determination of optimal tool/s}
-		\item [\pending] \highlightrobust{Determination of optimal parameters}
-		\item [\pending] \highlightrobust{Tool combination randomization script}
-	\end{itemize}
-\end{itemize}
-	
-\section*{Assembly \& Binning}
-\begin{itemize}
-	\item [\pending] Testing binning pipeline
-	\begin{itemize}
-		\item [\done] \highlightrobust{\texttt{CD-HIT-EST} clustering}
-		\item [\done] Assembly tools
+		
+		\section*{File Management}
 		\begin{itemize}
-			\item [\done] \highlightessential{\texttt{MEGAHIT}}
-			\item [\pending] \highlightoptional{\texttt{VELVET}}
-			\item [\pending] \highlightoptional{\texttt{meta-SPAdes}}
+			\item [\pending] \highlightoptional{\texttt{BAM} file parsing}
+			\item [\pending] \highlightoptional{Interconversion between \texttt{SAM} and \texttt{BAM}}
 		\end{itemize}
-		\item [\pending] \highlightrobust{Benchmarking between all of them}
-		\item [\draft] \highlightrobust{Iterative assembly}
-		\item [\draft] \highlightessential{Contig quality checking}
-	\end{itemize}
-	\item [\issue] \texttt{MetaWrap} binning
-	\begin{itemize}
-		\item [\pending] Testing on datasets of higher depth
-	\end{itemize}
-	\item [\pending] Refinement of bins
+		
+		\section*{Raw Read Processing}
+		\begin{itemize}
+			\item [\pending] \highlightrobust{Data visualization}
+			\item [\pending] \highlightrobust{Determination of optimal tool/s}
+			\item [\pending] \highlightrobust{Determination of optimal parameters}
+			\item [\pending] \highlightrobust{Tool combination randomization script}
+		\end{itemize}
+		
+		\section*{Assembly \& Binning}
+		\begin{itemize}
+			\item [\pending] Testing binning pipeline
+			
+\subsection*{Creation of assembly scripts}
+
+\item  [\pending] \highlightessential{metaSPAdes}
+\item [\pending] \highlightrobust{MASURCA}
+\item [\pending] \highlightrobust{PLASS}
+\item [\pending] \highlightrobust{AbySS}
+
+\subsection*{ Testing of Assembly Scripts}
+
+\item  [\pending] \highlightessential{metaSPAdes}
+\item [\pending] \highlightrobust{MASURCA}
+\item [\pending] \highlightrobust{PLASS}
+\item [\pending] \highlightrobust{AbySS}
+\item [\pending] \highlightrobust{KMA-iterative}
+\subsection*{Further investigation of scripts}
+\item [\pending] \highlightrobust{Benchmarking between all of them}
+\item [\draft] \highlightrobust{Iterative assembly}
+\item [\draft] \highlightessential{Contig quality checking}
+\subsection*{Pipeline integration}
+\item [\issue] \highlightrobust{\texttt{MetaWrap} binning}
+\item [\pending] Testing on datasets of higher depth for MetaWrap tests
+\item [\pending] \highlightrobust{Refinement of bins}
+		\end{itemize}
+		
+		\section*{Annotation}
+		\subsection*{ARG-related scripts}
+		\begin{itemize}
+\item [\refine] \highlightessential{\texttt{RGI}}
+\item [\refine] \highlightessential{\texttt{ShortBRED}}
+\item [\refine] \highlightoptional{\texttt{AMRFinder}}
+		\end{itemize}
+\subsection*{Testing of Annotation Scripts}
+\begin{itemize}
+\item [\pending] \highlightessential{\texttt{RGI}}
+\item [\pending] \highlightessential{\texttt{ShortBRED}}
+\item [\pending] \highlightoptional{\texttt{AMRFinder}}
+\end{itemize}
+			
+\subsection*{Taxonomy releated scripts}
+\begin{itemize}
+	\item [\pending] \highlightoptional{\texttt{MetaPhlan4}}
+\end{itemize}
+		
+		% Continue with other sections as needed
+
+\section*{Complete}
+
+% General taxo-metagenomics pipeline section
+\subsection*{General Taxo-Metagenomics Pipeline}
+
+\highlightessential{Creation of modular scripts}
+\begin{itemize}
+	\item [\done] \highlightessential{FasQC script}
+	\item [\done] \highlightessential{Trimmomatic script}
+	\item [\done] \highlightessential{Kraken2 script}
+	\item [\done] \highlightessential{Bracken script}
+	\item [\done] \highlightessential{In-house diversity calcs script}
 \end{itemize}
 
+\highlightessential{Test Run of Modular Scripts}
+\begin{itemize}
+	\item [\done] \highlightessential{FasQC script}
+	\item [\done] \highlightessential{Trimmomatic script}
+	\item [\done] \highlightessential{Kraken2 script}
+	\item [\done] \highlightessential{Bracken script}
+	\item [\done] \highlightessential{In-house diversity calcs script}
+\end{itemize}
 
-	
-\section*{Annotation}
-\par\noindent\hspace{1cm}\highlightessential{\textbf{\large ARGs}}  % Indented and highlighted
+\subsection*{Other Completed Pipeline Tasks}
+\begin{itemize}
+	\item [\done] \highlightessential{Integration with config folder}
+	\item [\done] \highlightoptional{Testing with simulated datasets}
+	\item [\done] \highlightessential{Pipeline integration (metagenomics\_general.smk)}
 	\begin{itemize}
-		\item [\refine]\highlightessential{Script to identify ARGs from short-reads}
-			\begin{itemize}
-				\item [\refine] \highlightessential{\texttt{RGI}}
-				\item [\refine] \highlightessential{\texttt{ShortBRED}}
-				\item [\refine] \highlightoptional{\texttt{AMRFinder}}
-			\end{itemize}
-		\item [\refine] \highlightessential{Script to quantify ARGs per sampling site}
-			\begin{itemize}
-				\item [\refine] \highlightessential{\texttt{ShortBRED}}
-			\end{itemize}
-		\item [\done] \highlightessential{Script diversity calculations per site}
-		\item 
+		\item [\done] \highlightessential{\texttt{FastQC}}
+		\item [\done] \highlightessential{\texttt{Trimmomatic}}
+		\item [\done] \highlightessential{\texttt{Kraken2}}
+		\item [\done] \highlightessential{\texttt{Bracken}}
+		\item [\issue] \deprecated{\texttt{QIIME2}}
+		\item [\done] \highlightessential{Change \texttt{QIIME2} to in-house diversity script}
+		\item [\done] \highlightessential{Aggregate diversity metrics}
 	\end{itemize}
-\par\noindent\hspace{1cm}\highlightessential{\textbf{\large Taxonomy}}  % Indented and highlighted
-	\begin{itemize}
-		\item Rapid taxonomy via short reads
-			\begin{itemize}
-				\item [\pending] \highlightoptional{\texttt{MetaPhlan4}}
-				
-			\end{itemize}
-	\end{itemize}
-\par\noindent\hspace{1cm}\highlightoptional{\textbf{\large Genomic context}}  % Indented and highlighted
-	\begin{itemize}
-		\item 
-	\end{itemize}
-\par\noindent\hspace{1cm}\highlightoptional{\textbf{\large Network analysis}}  % Indented and highlighted
-	\begin{itemize}
-		\item 
-	\end{itemize}
-\par\noindent\hspace{1cm}\highlightrobust{\textbf{\large Associated pathogens}}  % Indented and highlighted
-	\begin{itemize}
-		\item 
-	\end{itemize}
-	
-\section*{Complete} 
+	\item [\done] \highlightessential{Testing pipeline with simulated datasets}
+\end{itemize}
 
-
-\par\noindent\highlightessential{\textbf{\large General taxo-metagenomics pipeline}}
-	\begin{itemize}
-		\item [\done] \highlightessential{Integration with config folder}
-		\item [\done] \highlightoptional{Testing with simulated datasets}
-		\item [\done] \highlightessential{Pipeline integration}
-			\begin{itemize}
-				\item [\done] \highlightessential{\texttt{FastQC}}
-				\item [\done] \highlightessential{\texttt{Trimmomatic}}
-				\item [\done] \highlightessential{\texttt{Kraken2}}
-				\item [\done] \highlightessential{\texttt{Bracken}}
-				\item [\issue] \deprecated{\texttt{QIIME2}}
-				\item [\done] \highlightessential{Change \texttt{QIIME2} to in-house diversity script}
-				\item [\done] \highlightessential{Aggregate diversity metrics}
-			\end{itemize}
-	\end{itemize}
-
-
-[\pending] \par\noindent\highlightessential{\textbf{\large File management}}
+\subsection*{File Management}
 \begin{itemize}
 	\item [\done] \highlightessential{Compression and decompression scripts}
 	\item [\done] \highlightessential{Demultiplexing script}
-
+	\item [\done] \highlightessential{Testing compression and decompression script on multiple datasets}
+	\item [\done] \highlightessential{Testing demultiplexing script on multiple datasets}
 \end{itemize}
-\par\noindent\highlightessential{\textbf{\large Read quality control}}
-	\begin{itemize}
-		\item [\done] \highlightessential{Initial raw read QC}
-		\item [\done] \highlightessential{Standard Trimming (Trimmomatic)}
-		\item [\done] \highlightessential{Raw Read QC after trimming}
-		\item [\done] \highlightrobust{Parametric randomization script}
-		\item [\done] \highlightrobust{Parsing QC metrics of all iterations}
-		\item [\done] \highlightrobust{Bootstrapping script}
 
-	\end{itemize}
-\par\noindent\highlightessential{\textbf{\large Pipeline preparation for HPC}}
+\subsection*{Read Quality Control}
+\highlightessential{Script Creation}
+\begin{itemize}
+	\item [\done] \highlightessential{Creation of parsing script for FastQC metrics for multiple sites}
+	\item [\done] \highlightrobust{Parametric randomization script}
+	\item [\done] \highlightrobust{Parsing QC metrics of all iterations}
+	\item [\done] \highlightrobust{Bootstrapping script}
+\end{itemize}
+
+\highlightessential{Script Test-Runs}
+\begin{itemize}
+	\item [\done] \highlightessential{\parbox[t]{\linewidth}{Parsing and aggregation of FastQC metrics from multi-site data (N=10)}}
+	\item [\done] \highlightrobust{\parbox[t]{\linewidth}{Randomization of trimming parameters from different trimmers simultaneously (6 trimmers total)}}
+	\item [\done] \highlightrobust{\parbox[t]{\linewidth}{Bootstrapping of randomization of trimming parameters. 6 Trimmers, 1000 bootstraps}}
+\end{itemize}
+
+
+\subsection*{Pipeline Preparation for HPC}
 \begin{itemize}
 	\item [\done] \highlightessential{Calculate using quotation from PGC}
-	\item [\pending] \highlightessential{Set up config files}  % Add label here for consistency
-	\item [\done] \highlightessential{Taxo-metagenomics pipeline}	
+	\item [\done] \highlightessential{Set up config files}
+	\item [\done] \highlightessential{Taxo-metagenomics pipeline}
 \end{itemize}
 
-\par\noindent\highlightessential{\textbf{\large ARGs}}  % Indented and highlighted
-\begin{itemize}
-	\item [\done] \highlightessential{Identification of relevant ARG databases}
-	\begin{itemize}
-		\item \highlightessential{CARD}
-		\item \highlightoptional{NCBI AMR Database}
-	\end{itemize}
-	\item [\refine]\highlightessential{Script to identify ARGs from short-reads}
-\end{itemize}
-\par\noindent\highlightoptional{{\textbf{\large Detection of HGT}}}	
+	\end{multicols}
 
-\par\noindent\highlightrobust{{\textbf{\large HGT mechanisms}}}
+
 \onecolumn
 \newpage
 \setcounter{section}{1}  % Resets section numbering
-\end{multicols}
+
 
 
 \newpage
@@ -604,6 +624,56 @@ This pipeline is designed for \textbf{The essentials in metagenomics}, which inc
 \\ \textbf{Notes}: Others like \texttt{MetaPhlan} first create "markers" that are based off of known sequences, and then scan your raw reads for these markers, which it then checks for under what taxon/taxa that marker fell under. \\
 
 
+\newpage
+\setcounter{section}{1}
+\setcounter{subsection}{0}
+\section*{trim\_randomizer.smk}
+\section*{Stage: Done}   
+\section*{Purpose: Randomization of trimming parameters}
+
+This is a module that will be part of a bigger pipeline. The idea here to is randomize parameters in a variety of trimmers in this case \texttt{Trimmomatic},
+\texttt{fastp}, \texttt{CutAdapt}, \texttt{BBDuk}, and \texttt{Sickle} - famous bioinformatics trimming tools. \texttt{Trimmomatic} and \texttt{Sickle} in particular are widely used in \texttt{Illumina}-based data.\\ 
+\\
+\textbf{Random Parameter Generation}
+\\ \textbf{Technical Notes}: Random parameters are generated for each trimming tool (Trimmomatic, Fastp, Cutadapt, BBDuk, Sickle). This is done using the \texttt{random module}, which creates random values for parameters such as quality scores, read length, adapter sequences, and error rates. These parameters are stored in the \texttt{generated\_parameters} dictionary to ensure consistency across iterations for each sample.\\
+\textbf{Rationale}:By randomizing parameters, the workflow allows for testing different parameter sets across multiple iterations to find optimal settings for trimming and quality control.
+\\ \textbf{Notes}: This approach helps with parameter exploration, particularly when you are unsure which trimming settings will give the best results. The randomness provides variability, which can highlight which parameters consistently lead to good results.
+  \\
+\\ 
+\textbf{Log Parameters to a \texttt{TSV} File}
+\\ \textbf{Technical Notes}: Each set of generated parameters is logged into a separate TSV file (e.g., \texttt{trimmomatic\_params.tsv}, \texttt{fastp\_params.tsv}). The file headers are written only once, and parameters are appended as the trimming steps proceed. This is done in a structured way so that you can track the exact parameters used for each sample and iteration.\\
+\textbf{Rationale}:Logging ensures reproducibility and transparency in bioinformatics workflows. Having a record of all the parameter values used in each iteration is crucial for comparing results and for future reference
+\\ \textbf{Notes}: This practice is a standard in scientific workflows where random parameter generation is involved. It helps maintain a clear audit trail of the steps performed and aids in troubleshooting or refining workflows later.
+  \\
+\\ 
+\textbf{Define \texttt{Rules} for Each Tool}
+\\ \textbf{Technical Notes}: The script uses \texttt{Snakemake rules} to define separate rules for each tool which include
+	\begin{enumerate}
+		\item Input folder (as the script is designed to go through all the \texttt{FASTQ} samples within the folder)
+		\item Output folder, where the processed files will be saved (e.g., trimmed paired and unpaired reads). The script is designed to keep all the \texttt{trimmed reads} in separate files. 
+		\item Params: Fetches the parameters to be randomized. 
+	\end{enumerate} 
+\textbf{Rationale}:Using Snakemake here allows for parallel execution of the workflow. This parallelization if very important as the generation of random paramaters is created using a random \texttt{seed}. Using a random \texttt{seed} like this allows us to replicate what the parameters that had the optimal results were by tracking down what seed was assigned as dictated in the \texttt{TSV} file.\\
+\textbf{Note} keep in mind that this will create a large number of folders if you decide to iterate many times - as each iteration, per tool, will have its own folder full of trimmed reads, per sample/site.
+  \\
+\\ 
+\textbf{Interpretation and Analysis of Results (TBA)}
+\\ \textbf{Technical Notes}: Once all iterations have completed, the trimmed files can be analyzed to determine which parameters led to the best results in terms of quality and length distribution of reads. There are many different metrics that can be used to interpret the results, including (but not limited to)
+
+\begin{enumerate}
+	\item Quality Scores - significant differences in quality among sites and across entire sequences (Phred score, Contamination, Adapter Removal, N Content, Length Distribution, etc.). Can be done using tools like \texttt{FastQC}
+	\item Visualization can be done using \texttt{Rstudio} or \texttt{Python's matplotlib} to visually look for differences in abnormalities. 
+\end{enumerate} 
+\textbf{Rationale}:Evaluating read quality and assessing key metrics post-trimming helps to ensure that the data is suitable for downstream analyses. Optimal trimming should maximize the number of high-quality, usable reads while eliminating low-quality bases and adapter contamination.\\
+\begin{tcolorbox}[colback=gray!10!white, coltitle=white, colframe=gray!80!black, title=A Personal Note]
+	I have long pondered upon the idea of creating a graph with \texttt{biological information} on the y-axis and \texttt{read length} on the x-axis. I hypothesize that we will find a \textbf{"sweet spot" }wherein we can optimize the amount of \texttt{information/read} using such trimmers. Unfortunately, it is extremely difficult to define what \texttt{a biological sequence} really is, because technically you can generate any random sequence - whether protein or nucleotide. That's the main reason I have been stuck on this problem for quite a while, I've been trying to find the answer first.
+	
+	The core difficulty here lies in defining what constitutes biological information in a meaningful, quantifiable way. Since any random sequence of nucleotides or proteins could be technically "valid" (false-positives). 
+	
+	When people are asked this question they often give \textbf{DESCRIPTIONS} of what a \texttt{biological sequence} is but not what \textbf{DEFINES} a \texttt{biological sequence}. I understand that there are many characteristics that can help in determining the signal from the noise, but I am just not satisfied with whether this "thing" checks most (if not all) the boxes - I need a non-subjective answer to this problem. 
+\end{tcolorbox}
+
+
 
 
 \setcounter{section}{1}
@@ -621,7 +691,7 @@ This pipeline is designed for \textbf{The essentials in metagenomics}, which inc
 % Research Diary
 \section*{September 18, 2024}
 
-\subsection{To-do List}
+\subsection*{To-do List}
 \begin{itemize}
 	\item [\pending] Call for a group meeting regarding logistics (or when they will be available via Zoom call)
 	
@@ -657,25 +727,25 @@ This pipeline is designed for \textbf{The essentials in metagenomics}, which inc
 		
 \end{itemize}
 
-\subsection{Completed Tasks}
+\subsection*{Completed Tasks}
 \begin{itemize}
 	\item [\done] raw API results now readable stored in TSV file 
 	\item [\done] Created symlinks in private (repo) to .git folders in public repos to enable tracking of Git and Github activities
 	\item [\done] Resolved residual time-tracking activities within the local computer
 \end{itemize}
 
-\subsection{Scripts Worked On}
+\subsection*{Scripts Worked On}
 \begin{itemize}
 	\item [\done] checkingAPI.sh (now updated to make the raw API results readable)
 \end{itemize}
 
 
-\subsection{Issues Encountered}
+\subsection*{Issues Encountered}
 \begin{itemize}
 	\item 
 \end{itemize}
 
-\subsection{Need to Troubleshoot}
+\subsection*{Need to Troubleshoot}
 \begin{itemize}
 	\item 
 \end{itemize}
@@ -684,7 +754,7 @@ This pipeline is designed for \textbf{The essentials in metagenomics}, which inc
 % Research Diary
 \section*{September 17, 2024}
 
-\subsection{To-do List}
+\subsection*{To-do List}
 \begin{itemize}
 	\item [\moved] Call for a group meeting regarding logistics 
 	
@@ -697,14 +767,14 @@ This pipeline is designed for \textbf{The essentials in metagenomics}, which inc
 	\end{itemize}
 \end{itemize}
 
-\subsection{Completed Tasks}
+\subsection*{Completed Tasks}
 \begin{itemize}
 	\item Setup wakatime in VS Code and Ubuntu to track my coding productivity
 	\item Helped in receiving and moving the autoclave and fridge needed by the Program
 	
 \end{itemize}
 
-\subsection{Scripts Worked On}
+\subsection*{Scripts Worked On}
 \begin{itemize}
 	\item \deprecated{rawAPIformatter.sh}
 	\item [\done] checkingAPI.sh
@@ -712,13 +782,13 @@ This pipeline is designed for \textbf{The essentials in metagenomics}, which inc
 \end{itemize}
 
 
-\subsection{Issues Encountered}
+\subsection*{Issues Encountered}
 \begin{itemize}
 	\item [\done] Connection blockage from wakatime API
 	\item [\moved] raw API results is unreadable
 \end{itemize}
 
-\subsection{Need to Troubleshoot}
+\subsection*{Need to Troubleshoot}
 \begin{itemize}
 	\item conky display of wakatime API for desktop
 \end{itemize}
@@ -735,7 +805,7 @@ This pipeline is designed for \textbf{The essentials in metagenomics}, which inc
 % Research Diary
 \section*{September 16, 2024}
 
-\subsection{To-do List}
+\subsection*{To-do List}
 \begin{itemize}
 	\item [\moved] Call for a group meeting regarding logistics
 	
@@ -747,7 +817,7 @@ This pipeline is designed for \textbf{The essentials in metagenomics}, which inc
 	\end{itemize}
 \end{itemize}
 
-\subsection{Completed Tasks}
+\subsection*{Completed Tasks}
 \begin{itemize}
 	\item [\done] Updated GitHub repositories; created new repositories: \texttt{Documentation} and \texttt{Confidential}
 	\item [\done] Created a new bash script to track progress across all repositories
@@ -759,7 +829,7 @@ This pipeline is designed for \textbf{The essentials in metagenomics}, which inc
 	
 \end{itemize}
 
-\subsection{Scripts Worked On}
+\subsection*{Scripts Worked On}
 \begin{itemize}
 	\item \texttt{Project4/ARG\_MGE.smk} - updated
 	\item [\done] \texttt  {Project4/calculate\_contig\_quality.py} 
@@ -767,12 +837,12 @@ This pipeline is designed for \textbf{The essentials in metagenomics}, which inc
 \end{itemize}
 
 
-\subsection{Issues Encountered}
+\subsection*{Issues Encountered}
 \begin{itemize}
 	\item [\done] Could not access GitHub, needed to reset the SSH keys and update my Git histories for version control
 \end{itemize}
 
-\subsection{Need to Troubleshoot}
+\subsection*{Need to Troubleshoot}
 \begin{itemize}
 	\item None identified at this time
 \end{itemize}
