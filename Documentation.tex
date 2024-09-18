@@ -1,6 +1,6 @@
-\documentclass[11pt]{article}
+\documentclass[11pt]{report}
 \usepackage{geometry}
-\geometry{a4paper, margin=1in}
+\geometry{a4paper, margin=.5in}
 \usepackage{fancyhdr}
 \usepackage{graphicx}
 \usepackage{hyperref}
@@ -18,6 +18,13 @@
 \usepackage{ulem}
 \usepackage[utf8]{inputenc}
 \usepackage{titlesec}
+\usepackage{mathptmx} % Times New Roman-like font for text and math
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{multicol}
+ \setlength{\extrarowheight}{-50pt}
+\usepackage{enumitem}
+\setlist{itemsep=1pt, parsep=1pt}
 
 % Define simple symbols using basic LaTeX
 \newcommand{\done}{\checkmark}  % Checkmark for completed
@@ -54,15 +61,17 @@
 
 \begin{document}
 	
-	\twocolumn
-	% Cover page with project details
-	\maketitle
-	
-	\section{Project Overview}
+% Single-column section
+\begin{multicols}{1}
+	\section*{Project Overview}
 	Metagenomic analysis of ARGs in NCR hospitals, wastewaters, and surface waters
+\end{multicols}
 
-\section{Legend}
-\begin{tabular}{p{0.45\linewidth} p{0.45\linewidth}}  % Two columns, each taking 45% of the text width
+% Two-column section (without page break)
+\begin{multicols}{2}
+
+\section*{Legend}
+\begin{tabular}{p{0.45\linewidth} p{0.45\linewidth}} % Each column takes 45% of the line width
 	% Column 1: Symbols list
 	\begin{itemize}
 		\item [\done] Done
@@ -84,8 +93,9 @@
 
 
 
+
 	
-	\section{HPC preparation}
+	\section*{HPC preparation}
 	\begin{itemize}
 		\item [\pending] \highlightessential{Confirmation of Robustness of analysis}
 			\begin{itemize}
@@ -97,22 +107,22 @@
 		
 		
 	\end{itemize}
-		\item [\pending] \highlightessential{SLURM}
+		\item [\pending] \highlightessential{\texttt{SLURM} request management}
 		\begin{itemize}
-			\item [\pending] \highlightessential{Setup Docker containers for SLURM}
-			\item [\pending] \highlightoptional{SLURM container for simulations}
-			\item [\pending] \highlightoptional{Automation of SLURM requests}
+			\item [\pending] \highlightessential{Setup Docker containers for \texttt{SLURM}}
+			\item [\pending] \highlightoptional{\texttt{SLURM} container for simulations}
+			\item [\pending] \highlightoptional{Automation of \texttt{SLURM} requests}
 		\end{itemize}
 
 	\end{itemize}
 	
-\section{File management}
+\section*{File management}
 \begin{itemize}
-	\item [\pending] \highlightoptional{BAM file parsing}
-	\item [\pending] \highlightoptional{Interconversion between SAM and BAM}
+	\item [\pending] \highlightoptional{\texttt{BAM} file parsing}
+	\item [\pending] \highlightoptional{Interconversion between \texttt{SAM} and \texttt{BAM}}
 \end{itemize}
 
-\section{Raw read processing}
+\section*{Raw read processing}
 \begin{itemize}
 	\item [\done] \highlightessential{Read quality control}
 	\begin{itemize}
@@ -123,22 +133,22 @@
 	\end{itemize}
 \end{itemize}
 	
-\section{Assembly \& Binning}
+\section*{Assembly \& Binning}
 \begin{itemize}
 	\item [\pending] Testing binning pipeline
 	\begin{itemize}
-		\item [\done] \highlightrobust{CD-HIT-EST clustering}
+		\item [\done] \highlightrobust{\texttt{CD-HIT-EST} clustering}
 		\item [\done] Assembly tools
 		\begin{itemize}
-			\item [\done] \highlightessential{MEGAHIT}
-			\item [\pending] \highlightoptional{VELVET}
-			\item [\pending] \highlightoptional{meta-SPAdes}
+			\item [\done] \highlightessential{\texttt{MEGAHIT}}
+			\item [\pending] \highlightoptional{\texttt{VELVET}}
+			\item [\pending] \highlightoptional{\texttt{meta-SPAdes}}
 		\end{itemize}
 		\item [\pending] \highlightrobust{Benchmarking between all of them}
 		\item [\draft] \highlightrobust{Iterative assembly}
 		\item [\draft] \highlightessential{Contig quality checking}
 	\end{itemize}
-	\item [\issue] MetaWrap binning
+	\item [\issue] \texttt{MetaWrap} binning
 	\begin{itemize}
 		\item [\pending] Testing on datasets of higher depth
 	\end{itemize}
@@ -147,23 +157,18 @@
 
 
 	
-\section{Annotation}
+\section*{Annotation}
 \par\noindent\hspace{1cm}\highlightessential{\textbf{\large ARGs}}  % Indented and highlighted
 	\begin{itemize}
-		\item [\done] \highlightessential{Identification of relevant ARG databases}
-			\begin{itemize}
-				\item \highlightessential{CARD}
-				\item \highlightoptional{NCBI AMR Database}
-			\end{itemize}
 		\item [\refine]\highlightessential{Script to identify ARGs from short-reads}
 			\begin{itemize}
-				\item [\refine] \highlightessential{RGI}
-				\item [\refine] \highlightessential{ShortBRED}
-				\item [\refine] \highlightoptional{AMRFinder}
+				\item [\refine] \highlightessential{\texttt{RGI}}
+				\item [\refine] \highlightessential{\texttt{ShortBRED}}
+				\item [\refine] \highlightoptional{\texttt{AMRFinder}}
 			\end{itemize}
 		\item [\refine] \highlightessential{Script to quantify ARGs per sampling site}
 			\begin{itemize}
-				\item [\refine] \highlightessential{ShortBRED}
+				\item [\refine] \highlightessential{\texttt{ShortBRED}}
 			\end{itemize}
 		\item [\done] \highlightessential{Script diversity calculations per site}
 		\item 
@@ -172,7 +177,7 @@
 	\begin{itemize}
 		\item Rapid taxonomy via short reads
 			\begin{itemize}
-				\item [\pending] \highlightoptional{MetaPhlan4}
+				\item [\pending] \highlightoptional{\texttt{MetaPhlan4}}
 				
 			\end{itemize}
 	\end{itemize}
@@ -189,7 +194,7 @@
 		\item 
 	\end{itemize}
 	
-\section{Complete} 
+\section*{Complete} 
 
 
 \par\noindent\highlightessential{\textbf{\large General taxo-metagenomics pipeline}}
@@ -198,12 +203,12 @@
 		\item [\done] \highlightoptional{Testing with simulated datasets}
 		\item [\done] \highlightessential{Pipeline integration}
 			\begin{itemize}
-				\item [\done] \highlightessential{FastQC}
-				\item [\done] \highlightessential{Trimmomatic}
-				\item [\done] \highlightessential{Kraken2}
-				\item [\done] \highlightessential{Bracken}
-				\item [\issue] \deprecated{QIIME2}
-				\item [\done] \highlightessential{Change QIIME2 to in-house diversity script}
+				\item [\done] \highlightessential{\texttt{FastQC}}
+				\item [\done] \highlightessential{\texttt{Trimmomatic}}
+				\item [\done] \highlightessential{\texttt{Kraken2}}
+				\item [\done] \highlightessential{\texttt{Bracken}}
+				\item [\issue] \deprecated{\texttt{QIIME2}}
+				\item [\done] \highlightessential{Change \texttt{QIIME2} to in-house diversity script}
 				\item [\done] \highlightessential{Aggregate diversity metrics}
 			\end{itemize}
 	\end{itemize}
@@ -247,7 +252,7 @@
 \onecolumn
 \newpage
 \setcounter{section}{1}  % Resets section numbering
-
+\end{multicols}
 
 
 \newpage
@@ -288,7 +293,7 @@ I have separated them into folders/repositories (shameless plug here: \href{http
 \titleformat{\part}[display]
 {\normalfont\Huge\bfseries\centering} % Title formatting
 {} % No label (e.g., "Part I")
-{-120pt} % This adjusts the space between the top of the page and the title. Reduce or increase this value as needed.
+{-80pt} % This adjusts the space between the top of the page and the title. Reduce or increase this value as needed.
 {\Huge} % Title font size
 
 \part{Project 4}
@@ -300,18 +305,18 @@ This pipeline is designed for \textbf{comprehensive metagenomic analysis of ARGs
 
 \section*{Specifics:}
 \begin{itemize}
-	\subsection{Preprocessing}
-	\item \textbf{It first uses PEAR to merge paired-end reads.}\\
-	\textbf{Technical Notes}: PEAR (Paired-End reAd mergeR) compares paired-reads to correct infer the likely  bases on its associated pair\\
+	\subsection*{Preprocessing}
+	\item \textbf{It first uses \texttt{PEAR} to merge paired-end reads.}\\
+	\textbf{Technical Notes}: \texttt{PEAR (Paired-End reAd mergeR)} compares paired-reads to correct infer the likely  bases on its associated pair\\
 	\textbf{Rationale}: The main goal here is to ensure good read quality for downstream analyses and to maximize the amount of data by reducing gaps in the sequence and improving confidence of base calls within that region.\\
-	\textbf{Note:} Another tool, PandaSeq which does the same thing is used later, this usage of PEAR here is because it is more optimized for larger datasets - which in this case are trimmed reads.
+	\textbf{Note:} Another tool, \texttt{PandaSeq} which does the same thing is used later, this usage of \texttt{PEAR} here is because it is more optimized for larger datasets - which in this case are trimmed reads.
 	
-	\item \textbf{Followed by conversion from FASTQ to FASTA using \texttt{seqtk}.}\\
-	\textbf{Technical Notes}: \texttt{seqtk} converts compressed FASTQ files to FASTA. \\
-	\textbf{Rationale}: Some tools cannot work on FASTQ formats.
+	\item \textbf{Followed by conversion from \texttt{FASTQ} to \texttt{FASTA} using \texttt{seqtk}.}\\
+	\textbf{Technical Notes}: \texttt{seqtk} converts compressed \texttt{FASTQ} files to \texttt{FASTA}. \\
+	\textbf{Rationale}: Some tools cannot work on \texttt{FASTQ} formats.
 	
-	\item \textbf{Translation of the CARD-protein homologues database \texttt{transeq}, and then reverse-translates these proteins to nucleotides for alignment.}\\
-	\textbf{Technical Notes}: \texttt{transeq} from EMBOSS translates nucleotide sequences to protein sequences based on \textbf{standard genetic code}. \texttt{backtranseq} reverses this to allow iterative alignments with nucleotide sequences. \\
+	\item \textbf{Translation of the \texttt{CARD-protein homologues database} \texttt{transeq}, and then reverse-translates these proteins to nucleotides for alignment.}\\
+	\textbf{Technical Notes}: \texttt{transeq} from \texttt{EMBOSS} translates nucleotide sequences to protein sequences based on \textbf{standard genetic code}. \texttt{backtranseq} reverses this to allow iterative alignments with nucleotide sequences. \\
 	\textbf{Rationale}: This leverages conserved protein-level information, which is lost at the nucleotide level due to synonymous mutations - while also increasing the sensitivity to potential ARG proteins from k-mer alignment. See Nature Methods, doi: doi.org/10.1038/s41592-019-0437-4 (2019) for more details.
 	
 	\subsection{Metagenomic assembly of ARG-contigs}
@@ -328,7 +333,7 @@ This pipeline is designed for \textbf{comprehensive metagenomic analysis of ARGs
 	
 	\item \textbf{Merged reads are assembled into contigs using \texttt{metaSPAdes}.}\\
 	\textbf{Technical Notes}: \texttt{metaSPAdes} is then used to create contiguous sequences from these local regions by extending them using reads from the whole metagenomic pool. Additionally, Contigs are filtered by length here to remove possible artefacts. \\
-	\textbf{Rationale}: \texttt{metaSPAdes} was chosen as, while being slower than \texttt{MEGAHIT}, it is optimized in handling highly diverse and mixed microbial populations. CARD is used here because it is manually curated and updated regularly - in order to be included in the database, there must be clinical data (ASTs) involved in the study.
+	\textbf{Rationale}: \texttt{metaSPAdes} was chosen as, while being slower than \texttt{MEGAHIT}, it is optimized in handling highly diverse and mixed microbial populations. CARD is used here because it is manually curated and updated regularly - in order to be included in the database, there must be clinical data (e.g. ASTs(Antimicrobial susceptibility testing)) involved in the study.
 \\	 \textbf{Notably, this would decrease the sensitivity of our ARGs - and would mostly be biased towards those reported in the clinical setting}. To counter this, we could also incorporate other tools such as \texttt{ResFinder}, the \texttt{NCBI AMR Database}, and \texttt{ARG-ANNOT}
 \\	\textbf{Notes:} Filtering of contig length is handled by a python script that determines the minimum ARG sequence dictated by \texttt{CARD}.
 \\	\textbf{Notes:} Contigs are further extended using contigextender to form scaffolds 
@@ -341,7 +346,7 @@ This pipeline is designed for \textbf{comprehensive metagenomic analysis of ARGs
 	\item \textbf{Confirmation of contigs with ARGs using \texttt{RGI}.}\\
 	\textbf{Technical Notes}: \texttt{RGI} scan the contigs and check whether which contigs created by \texttt{metaSPAdes} have ARGs in them. \\
 	\textbf{Rationale}: \texttt{metaSPAdes} may have created contigs that DO NOT contain ARGs, and have instead assembled them into a more matching contig (a false-positive misassembly) - this can happen because of the different databases being used; also parallelization of methods like this increases robustness because it has been confirmed independently from different starting points (bottom-up vs top-down approach). This allows us to filter ARG-containing contigs. \\
-	\textbf{Notes:} RGI is the official scanner of CARD.
+	\textbf{Notes:} \texttt{RGI} is the official scanner of \texttt{CARD}.
 	
 	\subsection{Read-mapping}
 		\item \textbf Checking coverage statistics on contigs using raw reads\\
@@ -359,7 +364,7 @@ This pipeline is designed for \textbf{comprehensive metagenomic analysis of ARGs
  
 		\subsubsection{Read mapping more details}
 	\textbf {Read mapping tools} \\
-	\textbf{Technical Notes}: Four (4) Tools will be used in parallel to do the read mapping process \texttt{BWA} \texttt{Bowtie} \texttt{KMA}, and \texttt{minimap2}, their parameters have been adjusted to map reads at 95 percent identity to the contigs.  \\
+	\textbf{Technical Notes}: Four (4) Tools will be used in parallel to do the read mapping process \texttt{BWA} \texttt{Bowtie} \texttt{KMA}, and \texttt{minimap2}, their parameters have been adjusted to map reads at 95 \% identity to the contigs.  \\
 	
 \begin{table}[h!]
 	\centering
@@ -367,20 +372,20 @@ This pipeline is designed for \textbf{comprehensive metagenomic analysis of ARGs
 		\begin{tabular}{|p{3cm}|p{3cm}|p{3cm}|p{3cm}|p{3cm}|}
 			\hline
 			\textbf{Mapper} & \textbf{K-mer Length} & \textbf{Mismatch Penalty} & \textbf{Gap Opening Penalty} & \textbf{Gap Extension Penalty} \\ \hline
-			BWA & 21 & 5 & 7 & 2 \\ \hline
-			BWA & 31 & 4 & 6 & 2 \\ \hline
-			BWA & 51 & 3 & 5 & 1 \\ \hline
-			Bowtie2 & - & 4,2 & 5,2 & 5,2 \\ \hline
-			KMA & Default & 95\% identity & Automatic & Automatic \\ \hline
-			Minimap2 & - & 5 & 7,2 & 4,1 \\ \hline
+			\texttt{BWA} & 21 & 5 & 7 & 2 \\ \hline
+			\texttt{BWA} & 31 & 4 & 6 & 2 \\ \hline
+			\texttt{BWA} & 51 & 3 & 5 & 1 \\ \hline
+			\texttt{Bowtie2} & - & 4,2 & 5,2 & 5,2 \\ \hline
+			\texttt{KMA} & Default & 95\% identity & Automatic & Automatic \\ \hline
+			\texttt{Minimap2} & - & 5 & 7,2 & 4,1 \\ \hline
 		\end{tabular}
 	\end{adjustbox}
 	\caption{Example table of mapper configurations without command example}
 	\label{tab:mapper_configurations}
 \end{table}
 	
-	\textbf{Rationale}: 95 percent identity is used to increase sensitivity - as is standard for determining homologous sequences. This adjustment was made because k-mers are either attach or don't. Parallelization is used to increase robusness.\\
-	\textbf{Note} K-mer extension is used to increase the accuracy of mapping. BWA k-mer lengths can be adjusted, while KMA does it by default. The others, cannot be adjusted. \\
+	\textbf{Rationale}: 95 \% identity is used to increase sensitivity - as is standard for determining homologous sequences. This adjustment was made because k-mers are either attach or don't. Parallelization is used to increase robusness.\\
+	\textbf{Note} K-mer extension is used to increase the accuracy of mapping. \texttt{BWA} k-mer lengths can be adjusted, while \texttt{KMA} does it by default. The others, cannot be adjusted. \\
 	% Then within your document:
 	\tcbset{
 		colback=lightgray!30, colframe=black, 
@@ -400,13 +405,13 @@ This pipeline is designed for \textbf{comprehensive metagenomic analysis of ARGs
 		\begin{tabular}{|p{2.5cm}|p{2.5cm}|p{2.5cm}|p{2.5cm}|p{2.5cm}|}
 			\hline
 			\textbf{Tool} & \textbf{K-mer Length} & \textbf{Mismatch Penalty} & \textbf{Gap Opening Penalty} & \textbf{Gap Extension Penalty} \\ \hline
-			BWA & 21, 31, 51 & 5, 4, 3 & 1000 & 1000 \\ \hline
-			Bowtie2 & - & 4,2 & 1000,1000 & 1000,1000 \\ \hline
-			KMA & - & 95\% identity & Automatic & Automatic \\ \hline
-			Minimap2 & - & 5 & 1000,1000 & 1000,1000 \\ \hline
+			\texttt{BWA} & 21, 31, 51 & 5, 4, 3 & 1000 & 1000 \\ \hline
+			\texttt{Bowtie2} & - & 4,2 & 1000,1000 & 1000,1000 \\ \hline
+			\texttt{KMA} & - & 95\% identity & Automatic & Automatic \\ \hline
+			\texttt{Minimap2} & - & 5 & 1000,1000 & 1000,1000 \\ \hline
 		\end{tabular}
 	\end{adjustbox}
-	\caption{Alignment parameters for ungapped alignments across BWA, Bowtie2, KMA, and Minimap2}
+	\caption{Alignment parameters for ungapped alignments across \texttt{BWA}, \texttt{Bowtie2}, \texttt{KMA}, and \texttt{Minimap2}}
 	\label{tab:alignment_parameters}
 \end{table}
 	
@@ -428,7 +433,7 @@ This pipeline is designed for \textbf{comprehensive metagenomic analysis of ARGs
 				\item \texttt{-evalue 1e-5}
 				\item \texttt{-gapopen 5}
 				\item \texttt{-gapextend 2}
-				\item \texttt{-matrix BLOSUM62}
+				\item \texttt{-matrix \texttt{BLOSUM62}}
 			\end{itemize} \\ \hline
 			
 			\textbf{blastp} & 
@@ -442,7 +447,7 @@ This pipeline is designed for \textbf{comprehensive metagenomic analysis of ARGs
 				\item \texttt{-evalue 1e-5}
 				\item \texttt{-gapopen 5}
 				\item \texttt{-gapextend 2}
-				\item \texttt{-matrix BLOSUM62}
+				\item \texttt{-matrix \texttt{BLOSUM62}}
 			\end{itemize} \\ \hline
 			
 		\end{tabular}
@@ -468,7 +473,7 @@ This pipeline is designed for \textbf{comprehensive metagenomic analysis of ARGs
 	
 	\item \textbf{Detects structural variants (SVs) in contigs using \texttt{Manta} and identifies \textit{chimeric contigs} based on SVs and taxonomic classification.}\\
 	\textbf{Technical Notes}: \texttt{Manta} identifies large genomic rearrangements such as insertions, deletions, and duplications. \\
-	\textbf{Rationale}: Chimeric contigs may be due to systematic error or real biological signals. These chimeric contigs can be detected by Kraken2 and SprayNPray (i.e.) when a portion of a contig is being assigned to different taxa. The rationale behind this step is to investigate whether structural variations are present - which may be evidence of horizontal gene transfer (HGT) events. 
+	\textbf{Rationale}: Chimeric contigs may be due to systematic error or real biological signals. These chimeric contigs can be detected by \texttt{Kraken2} and \texttt{SprayNPray} (i.e.) when a portion of a contig is being assigned to different taxa. The rationale behind this step is to investigate whether structural variations are present - which may be evidence of horizontal gene transfer (HGT) events. 
 	
 	\item \textbf{Or perhaps due to mobile genetic elements like transposons}\\
 	\textbf{Technical Notes}: Tools such as the following can be used:
@@ -482,10 +487,10 @@ This pipeline is designed for \textbf{comprehensive metagenomic analysis of ARGs
 	
 	
 	
-	\item \textbf{Sketching contigs followed by calculating Bray-Curtis diversity.}\\
-	\textbf{Technical Notes}: \texttt{Mash Sketch} uses a MinHash approach to generate a presence/absence profile of ARGs across contigs. This gives us a quick snapshot of what the contigs “look like” in terms of ARG content. For Bray-Curtis diversity, we calculate a dissimilarity matrix from the abundance data of ARGs, followed by a PCoA plot to visualize similarities between contigs based on their ARG profiles. \\
-	\textbf{Rationale}: The \texttt{Mash Sketch} helps rapidly identify the genetic makeup of contigs in terms of ARGs, which provides a foundation for further investigation. By applying Bray-Curtis diversity and using PCoA, we can group contigs based on their ARG similarity. If contigs with the same sketch group together, we can trace them back to their taxonomic IDs to identify the microbial hosts.However, if contigs have similar ARG profiles but belong to different taxa, this could serve as \textbf{evidence for \textbf{Horizontal Gene Transfer (HGT)}}. This dual approach allows us to trace ARG spread and potential HGT events in a metagenomic context. \\
-	\textbf{Note} Bray-Curtis similarity is most often used as a presence or absence diversity metric.
+	\item \textbf{\texttt{Sketching} contigs followed by calculating \texttt{Bray-Curtis} diversity.}\\
+	\textbf{Technical Notes}: \texttt{Mash Sketch} uses a MinHash approach to generate a presence/absence profile of ARGs across contigs. This gives us a quick snapshot of what the contigs “look like” in terms of ARG content. For \texttt{Bray-Curtis} diversity, we calculate a dissimilarity matrix from the abundance data of ARGs, followed by a PCoA plot to visualize similarities between contigs based on their ARG profiles. \\
+	\textbf{Rationale}: The \texttt{Mash Sketch} helps rapidly identify the genetic makeup of contigs in terms of ARGs, which provides a foundation for further investigation. By applying \texttt{Bray-Curtis} diversity and using PCoA, we can group contigs based on their ARG similarity. If contigs with the same sketch group together, we can trace them back to their taxonomic IDs to identify the microbial hosts.However, if contigs have similar ARG profiles but belong to different taxa, this could serve as \textbf{evidence for \textbf{Horizontal Gene Transfer (HGT)}}. This dual approach allows us to trace ARG spread and potential HGT events in a metagenomic context. \\
+	\textbf{Note} \texttt{Bray-Curtis} (dis-)similarity is most often used as a presence or absence diversity metric.
 	
 
 \subsubsection{Plasmids}
@@ -506,8 +511,8 @@ This pipeline is designed for \textbf{comprehensive metagenomic analysis of ARGs
 	\text{Plasmid Percentage} = \left( \frac{\text{Plasmid Reads}}{\text{Total Reads}} \right) \times 100
 	\]
 
-	\textbf{Rationale}: \texttt{oriTfinder} looks for origin of transfer sites (oriT), which are characteristics of conjugative plasmid . This whole sub-pipeline is to look for evidence of conjugative plasmid transfer as the cause of these chimeric contigs. Normalization and percentage counts are used here to further check whether these "plasmids" align with our understanding of the average plasmid copy number. \\
-	\textbf{Note}: Will also be drafting a script to do sliding window analysis of GC-skews - as different characteristics of this curve can be interpreted in different ways. 
+	\textbf{Rationale}: \texttt{oriTfinder} looks for \texttt{origin of transfer} sites (\texttt{oriT}), which are characteristics of conjugative plasmid . This whole sub-pipeline is to look for evidence of conjugative plasmid transfer as the cause of these chimeric contigs. Normalization and percentage counts are used here to further check whether these "plasmids" align with our understanding of the average plasmid copy number. \\
+	\textbf{Note}: Will also be drafting a script to do sliding window analysis of \texttt{GC-skews} - as different characteristics of this curve can be interpreted in different ways. 
 
 \subsection{Phages}		
 	
@@ -574,7 +579,7 @@ This pipeline is designed for \textbf{The essentials in metagenomics}, which inc
 % Add more pipelines as necessary...
 
 
-\newpage
+
 
 
 
@@ -586,7 +591,7 @@ This pipeline is designed for \textbf{The essentials in metagenomics}, which inc
 \titleformat{\part}[display]
 {\normalfont\Huge\bfseries\centering} % Title formatting
 {} % No label (e.g., "Part I")
-{-120pt} % This adjusts the space between the top of the page and the title. Reduce or increase this value as needed.
+{-80pt} % This adjusts the space between the top of the page and the title. Reduce or increase this value as needed.
 {\Huge} % Title font size
 
 \part{Daily entries}
