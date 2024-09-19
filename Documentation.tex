@@ -66,6 +66,9 @@
 % Array package for better table formatting
 \usepackage{array}
 
+\usepackage{lineno}[switch]
+
+
 
 
 % Define simple symbols
@@ -191,6 +194,7 @@
 		
 		\section*{Raw Read Processing}
 		\begin{itemize}
+			\item [\pending] \highlightessential{Pipeline integration of \texttt{raw.bash} }
 			\item [\pending] \highlightrobust{Data visualization}
 			\item [\pending] \highlightrobust{Determination of optimal tool/s}
 			\item [\pending] \highlightrobust{Determination of optimal parameters}
@@ -201,26 +205,26 @@
 		\begin{itemize}
 			\item [\pending] Testing binning pipeline
 			
-\textbf{Creation of assembly scripts}
+\subsection*{Creation}
 
 \item  [\pending] \highlightessential{metaSPAdes}
 \item [\pending] \highlightrobust{MASURCA}
 \item [\pending] \highlightrobust{PLASS}
 \item [\pending] \highlightrobust{AbySS}
 
-\textbf{ Testing of Assembly Scripts}
+\subsection*{Testing}
 
 \item  [\pending] \highlightessential{metaSPAdes}
 \item [\pending] \highlightrobust{MASURCA}
 \item [\pending] \highlightrobust{PLASS}
 \item [\pending] \highlightrobust{AbySS}
 \item [\pending] \highlightrobust{KMA-iterative}
-\textbf{Further investigation of scripts}
+
 \item [\pending] \highlightrobust{Benchmarking between all of them}
 \item [\draft] \highlightrobust{Iterative assembly}
 \item [\draft] \highlightessential{Contig quality checking}
-\textbf{Pipeline integration}
-\item [\issue] \highlightrobust{\texttt{MetaWrap} binning}
+\subsection*{Integration}
+\item [\issue] \highlightrobust{\texttt{MetaWrap} binning} \\ \texttt{Binning.smk}
 \item [\pending] Testing on datasets of higher depth for MetaWrap tests
 \item [\pending] \highlightrobust{Refinement of bins}
 		\end{itemize}
@@ -228,14 +232,14 @@
 		\section*{Annotation}
 		\textbf{ARG-related scripts}
 		\begin{itemize}
-\item [\refine] \highlightessential{\texttt{RGI}}
-\item [\refine] \highlightessential{\texttt{ShortBRED}}
+\item [\refine] \highlightessential{\texttt{RGI}} \\ \deprecated{\texttt{prokka\_ARG.bash}, \\ \texttt{shortbred\_ARG.bash}}
+\item [\refine] \highlightessential{\texttt{ShortBRED}} \\ \texttt{shortbred\_ARG.bash}
 \item [\refine] \highlightoptional{\texttt{AMRFinder}}
 		\end{itemize}
 \textbf{Testing of Annotation Scripts}
 \begin{itemize}
 \item [\pending] \highlightessential{\texttt{RGI}}
-\item [\pending] \highlightessential{\texttt{ShortBRED}}
+\item [\pending] \highlightessential{\texttt{ShortBRED}} \\ \texttt{shortbred\_ARG.bash}
 \item [\pending] \highlightoptional{\texttt{AMRFinder}}
 \end{itemize}
 			
@@ -249,65 +253,90 @@
 \section*{Complete}
 
 % General taxo-metagenomics pipeline section
+\linenumbers*
 \textbf{General Taxo-Metagenomics Pipeline}
 
 \highlightessential{Creation of modular scripts}
 \begin{itemize}
-	\item [\done] \highlightessential{FasQC script}
-	\item [\done] \highlightessential{Trimmomatic script}
-	\item [\done] \highlightessential{Kraken2 script}
-	\item [\done] \highlightessential{Bracken script}
-	\item [\done] \highlightessential{In-house diversity calcs script}
+	\item [\done] \highlightessential{FasQC script for raw reads} \\ \texttt{raw.bash}
+	\item [\done] \highlightessential{Trimmomatic script} \\ \texttt{\deprecated{Trimmomatic.bash}}
+ 	\\ \texttt{trimming-cleaning-checking.py}
+	\item [\done] \highlightessential{\deprecated{fastp}} \\ \texttt{\deprecated{fastp.bash}} \\ \texttt{trimming-cleaning-checking.py}
+	\item [\done] \highlightessential{Script to check if reads PASS or FAIL} \\ \texttt{\deprecated{FastQC.bash}} \\ \texttt{trimming-cleaning-checking.py}
+		\item [\done] \highlightessential{FasQC script for trimmed reads} \\
+		\texttt{\deprecated{FastQC\_check.py}} \\
+		\texttt{trimming-cleaning-checking.py}
+	\item [\done] \highlightessential{Kraken2 script} \\
+	\texttt{krakenpipeline.bash}
+	\item [\done] \highlightessential{Bracken script} \\ 
+	\texttt{krakenpipeline.bash}
+	\item [\done] \highlightessential{In-house diversity calcs script} \\ \texttt{calculate\_diversity.py}
 \end{itemize}
 
 \highlightessential{Test Run of Modular Scripts}
 \begin{itemize}
-	\item [\done] \highlightessential{FasQC script}
-	\item [\done] \highlightessential{Trimmomatic script}
-	\item [\done] \highlightessential{Kraken2 script}
-	\item [\done] \highlightessential{Bracken script}
-	\item [\done] \highlightessential{In-house diversity calcs script}
+	\item [\done] \highlightessential{FasQC script} \texttt{raw.bash}
+	\item [\done] \highlightessential{Trimmomatic script} \\ \texttt{\deprecated{Trimmomatic.bash}} \\ \texttt{trimming-cleaning-checking.py}
+	\item [\done] \highlightessential{\deprecated{fastp}} \\ \texttt{\deprecated{fastp.bash}} \\ \texttt{trimming-cleaning-checking.py}
+	\item [\done] \highlightessential{Kraken2 script} \\ \texttt{krakenpipeline.bash}
+	\item [\done] \highlightessential{Bracken script} \\ \texttt{krakenpipeline.bash}
+	\item [\done] \highlightessential{In-house diversity calcs script} \\ \texttt{calculate\_diversity.py}
 \end{itemize}
 
 \textbf{Other Completed Pipeline Tasks}
 \begin{itemize}
 	\item [\done] \highlightessential{Integration with config folder}
 	\item [\done] \highlightoptional{Testing with simulated datasets}
-	\item [\done] \highlightessential{Pipeline integration (metagenomics\_general.smk)}
+	\item [\done] \highlightessential{Pipeline integration} \\
+	\texttt{metagenomics\_general.smk}
 	\begin{itemize}
-		\item [\done] \highlightessential{\texttt{FastQC}}
-		\item [\done] \highlightessential{\texttt{Trimmomatic}}
-		\item [\done] \highlightessential{\texttt{Kraken2}}
-		\item [\done] \highlightessential{\texttt{Bracken}}
-		\item [\issue] \deprecated{\texttt{QIIME2}}
-		\item [\done] \highlightessential{Change \texttt{QIIME2} to in-house diversity script}
-		\item [\done] \highlightessential{Aggregate diversity metrics}
+		\item [\done] \highlightessential{\texttt{FastQC}} \\ \texttt{trimming-cleaning-checking.py}
+		\item [\done] \highlightessential{\texttt{Trimmomatic}} \\ \texttt{trimming-cleaning-checking.py}
+		\item [\done]  \highlightessential{\texttt{Kraken2}} \\ \texttt{krakenpipeline.bash}
+		\item [\done]  \highlightessential{\texttt{Bracken}} \\ \texttt{krakenpipeline.bash}
+		\item [\issue] \deprecated{\texttt{QIIME2}} \texttt{krakenpipeline.bash}
+		\item [\done] \highlightessential{Change \texttt{QIIME2} to in-house diversity script} \texttt{calculate\_diversity.py}
+		\item [\done] \highlightessential{Aggregate diversity metrics} \\ \texttt{calculate\_diversity.py}
+		\item [\done] \highlightessential{Aggregate quality metrics} \\ \texttt{summary\_stat.bash}
+		\item [\done] \highlightrobust{Remove \texttt{fastp} from Shellscript}
 	\end{itemize}
-	\item [\done] \highlightessential{Testing pipeline with simulated datasets}
+	\item [\done] \highlightessential{Testing pipeline with simulated datasets} \\
+	\texttt{metagenomics\_general.smk}
 \end{itemize}
 
 \textbf{File Management}
 \begin{itemize}
 	\item [\done] \highlightessential{Compression and decompression scripts}
 	\item [\done] \highlightessential{Demultiplexing script}
-	\item [\done] \highlightessential{Testing compression and decompression script on multiple datasets}
-	\item [\done] \highlightessential{Testing demultiplexing script on multiple datasets}
+	\item [\done] \highlightessential{Testing on multiple datasets}
 \end{itemize}
 
 \textbf{Read Quality Control}
-\highlightessential{Script Creation}
+\subsection*{Creation}
 \begin{itemize}
-	\item [\done] \highlightessential{Creation of parsing script for FastQC metrics for multiple sites}
-	\item [\done] \highlightrobust{Parametric randomization script}
-	\item [\done] \highlightrobust{Parsing QC metrics of all iterations}
-	\item [\done] \highlightrobust{Bootstrapping script}
+	\item [\done] \highlightrobust{Parametric randomization script} \\
+	\texttt{trim\_randomizer.smk}
+		\begin{enumerate}
+			\item \texttt{Trimmomatic}
+			\item \texttt{CutAdapt}
+			\item \texttt{BBDuk}
+			\item \texttt{Sickle}
+			\item \texttt{fastp}
+		\end{enumerate}
+	\item [\done] \highlightrobust{Parsing QC metrics of all iterations} \\
+	\texttt{parseFastQC.py}
+	\item [\done] \highlightrobust{Bootstrapping script} \\
+	\texttt{bootstrapping\_rawreads.smk}
 \end{itemize}
 
-\highlightessential{Script Test-Runs}
+\subsection*{Test-run}
 \begin{itemize}
-	\item [\done] \highlightessential{\parbox[t]{\linewidth}{Parsing and aggregation of FastQC metrics from multi-site data (N=10)}}
-	\item [\done] \highlightrobust{\parbox[t]{\linewidth}{Randomization of trimming parameters from different trimmers simultaneously (6 trimmers total)}}
-	\item [\done] \highlightrobust{\parbox[t]{\linewidth}{Bootstrapping of randomization of trimming parameters. 6 Trimmers, 1000 bootstraps}}
+	\item [\done] \highlightessential{\parbox[t]{\linewidth}{Parsing and aggregation of FastQC metrics from multi-site data (N=10)}} \\
+	\texttt{summary\_stat.bash}
+	\item [\done] \highlightrobust{\parbox[t]{\linewidth}{Randomization of trimming parameters from different trimmers simultaneously (5 trimmers total)}} \\
+	\texttt{trim\_randomizer.smk}
+	\item [\done]  \highlightrobust{\parbox[t]{\linewidth}{Bootstrapping of randomization of trimming parameters. 5 Trimmers, 1000 bootstraps}} \\
+	\texttt{bootstrapping\_rawreads.smk}
 \end{itemize}
 
 
@@ -317,13 +346,8 @@
 	\item [\done] \highlightessential{Set up config files}
 	\item [\done] \highlightessential{Taxo-metagenomics pipeline}
 \end{itemize}
+\end{multicols}
 
-	\end{multicols}
-
-
-\onecolumn
-\newpage
-\setcounter{section}{1}  % Resets section numbering
 
 
 
@@ -389,74 +413,81 @@ I have separated them into folders/repositories (shameless plug here: \href{http
 \setcounter{section}{0}
 \setcounter{subsection}{0}
 
+\linenumbers*
 \section{ARG-MGE.smk}
 \textbf{Stage: Draft}   
 \textbf{General Purpose}
 
 This pipeline is designed for \textbf{comprehensive metagenomic analysis of ARGs}, it also includes placeholders for analyses of \textbf{mobile genetic elements (MGEs)}, and \textbf{plasmid detection}. It integrates tools for \textbf{read quality control, assembly, annotation, taxonomic profiling, and structural variant (SV) detection} to provide a high-resolution view of the genetic components in metagenomic samples.
+\\
+\\
+\textbf{Preprocessing} \\
+\rule{\linewidth}{0.5mm}
+\subsection{Pair merging}
+\textbf{Technical Notes}: \texttt{PEAR (Paired-End reAd mergeR)} compares paired-reads to correct infer the likely  bases on its associated pair\\
+\textbf{Rationale}: The main goal here is to ensure good read quality for downstream analyses and to maximize the amount of data by reducing gaps in the sequence and improving confidence of base calls within that region. \texttt{seqtk} then converts compressed \texttt{FASTQ} files to \texttt{FASTA}. \\
+\textbf{Rationale}\\
+\textbf{Note:} Another tool, \texttt{PandaSeq} which does the same thing is used later, this usage of \texttt{PEAR} here is because it is more optimized for larger datasets - which in this case are trimmed reads.
+\textbf{Note:} Conversion is necessary here as some tools cannot read FASTQ files, and instead rely on FASTA formats.
 
-\textbf{Specifics:}
-\begin{itemize}
-	\subsection{Preprocessing}
-	\item \textbf{It first uses \texttt{PEAR} to merge paired-end reads.}\\
-	\textbf{Technical Notes}: \texttt{PEAR (Paired-End reAd mergeR)} compares paired-reads to correct infer the likely  bases on its associated pair\\
-	\textbf{Rationale}: The main goal here is to ensure good read quality for downstream analyses and to maximize the amount of data by reducing gaps in the sequence and improving confidence of base calls within that region.\\
-	\textbf{Note:} Another tool, \texttt{PandaSeq} which does the same thing is used later, this usage of \texttt{PEAR} here is because it is more optimized for larger datasets - which in this case are trimmed reads.
+\subsection{Translation and Reverse Translation}	
+\textbf{Technical Notes}: \texttt{transeq} from \texttt{EMBOSS} translates nucleotide sequences to protein sequences based on \textbf{standard genetic code}. \texttt{backtranseq} reverses this to allow iterative alignments with nucleotide sequences. \\
+\textbf{Rationale}: This leverages conserved protein-level information, which is lost at the nucleotide level due to synonymous mutations - while also increasing the sensitivity to potential ARG proteins from k-mer alignment. See Nature Methods, doi: doi.org/10.1038/s41592-019-0437-4 (2019) for more details.
+\\
+\\
+\textbf{Metagenomic Assembly} \\
+\rule{\linewidth}{0.5mm}
+\subsection{Iterative alignment of ARG-contigs}
+\textbf{Technical Notes}: \texttt{KMA} (K-mer Alignment) is used find the reverse-translated ARGs with the proximity filtering option to determine the surrounding regions of ARGs. This is done iteratively for each gene increasing the ARG-associated database. \\
+\textbf{Rationale}: Firstly, \texttt{KMA} is used because, unlike \texttt{Bowtie2} and \texttt{BWA-MEM}, which were created specifically for Human metagenomics, KMA does not suffer (or suffers less) from multi-allelic databases. Secondly, iterative alignment using this process allows us to contextualize the region wherein ARGs reside - thereby narrowing our focus onto these local regions instead of looking at the global genomic context.
+\textbf{Notes:} The script is designed to have a cap on the number of iterations KMA creates, increasing the database size. 
 	
-	\item \textbf{Followed by conversion from \texttt{FASTQ} to \texttt{FASTA} using \texttt{seqtk}.}\\
-	\textbf{Technical Notes}: \texttt{seqtk} converts compressed \texttt{FASTQ} files to \texttt{FASTA}. \\
-	\textbf{Rationale}: Some tools cannot work on \texttt{FASTQ} formats.
+\subsection{Merging of paired reads}
+\textbf{Technical Notes}: \texttt{PANDASeq} is then used to further refine the paired-reads collated in the ARG-related genes database. \\
+\textbf{Rationale}: \texttt{PANDASeq} was chosen as, while being slower than \texttt{PEAR}, it is more accurate. This mergins step is included to ensure that only high-confidence reads are assembled. 
+\textbf{Note:} We leverage the fact that the ARG-related genes database is smaller compared to the raw metagenomic reads database.
 	
-	\item \textbf{Translation of the \texttt{CARD-protein homologues database} \texttt{transeq}, and then reverse-translates these proteins to nucleotides for alignment.}\\
-	\textbf{Technical Notes}: \texttt{transeq} from \texttt{EMBOSS} translates nucleotide sequences to protein sequences based on \textbf{standard genetic code}. \texttt{backtranseq} reverses this to allow iterative alignments with nucleotide sequences. \\
-	\textbf{Rationale}: This leverages conserved protein-level information, which is lost at the nucleotide level due to synonymous mutations - while also increasing the sensitivity to potential ARG proteins from k-mer alignment. See Nature Methods, doi: doi.org/10.1038/s41592-019-0437-4 (2019) for more details.
-	
-	\subsection{Metagenomic assembly of ARG-contigs}
-		
-	\item \textbf{Iterative alignment is performed using \texttt{KMA} to align reads against reverse-translated CARD sequences for high-sensitivity identification.}\\
-	\textbf{Technical Notes}: \texttt{KMA} (K-mer Alignment) is used find the reverse-translated ARGs with the proximity filtering option to determine the surrounding regions of ARGs. This is done iteratively for each gene increasing the ARG-associated database. \\
-	\textbf{Rationale}: Firstly, \texttt{KMA} is used because, unlike \texttt{Bowtie2} and \texttt{BWA-MEM}, which were created specifically for Human metagenomics, KMA does not suffer (or suffers less) from multi-allelic databases. Secondly, iterative alignment using this process allows us to contextualize the region wherein ARGs reside - thereby narrowing our focus onto these local regions instead of looking at the global genomic context.
-	\textbf{Notes:} The script is designed to have a cap on the number of iterations KMA creates, increasing the database size. 
-	
-	\item \textbf{Merging ARG-related reads database with \texttt{PANDASeq}.}\\
-	\textbf{Technical Notes}: \texttt{PANDASeq} is then used to further refine the paired-reads collated in the ARG-related genes database. \\
-	\textbf{Rationale}: \texttt{PANDASeq} was chosen as, while being slower than \texttt{PEAR}, it is more accurate. This mergins step is included to ensure that only high-confidence reads are assembled. 
-	\textbf{Note:} We leverage the fact that the ARG-related genes database is smaller compared to the raw metagenomic reads database.
-	
-	\item \textbf{Merged reads are assembled into contigs using \texttt{metaSPAdes}.}\\
-	\textbf{Technical Notes}: \texttt{metaSPAdes} is then used to create contiguous sequences from these local regions by extending them using reads from the whole metagenomic pool. Additionally, Contigs are filtered by length here to remove possible artefacts. \\
-	\textbf{Rationale}: \texttt{metaSPAdes} was chosen as, while being slower than \texttt{MEGAHIT}, it is optimized in handling highly diverse and mixed microbial populations. CARD is used here because it is manually curated and updated regularly - in order to be included in the database, there must be clinical data (e.g. ASTs(Antimicrobial susceptibility testing)) involved in the study.
+\subsection{Guided Metagenomic Assembly}
+\textbf{Technical Notes}: \texttt{metaSPAdes} is then used to create contiguous sequences from these local regions by extending them using reads from the whole metagenomic pool. Additionally, Contigs are filtered by length here to remove possible artefacts. \\
+\textbf{Rationale}: \texttt{metaSPAdes} was chosen as, while being slower than \texttt{MEGAHIT}, it is optimized in handling highly diverse and mixed microbial populations. CARD is used here because it is manually curated and updated regularly - in order to be included in the database, there must be clinical data (e.g. ASTs(Antimicrobial susceptibility testing)) involved in the study.
 \\	 \textbf{Notably, this would decrease the sensitivity of our ARGs - and would mostly be biased towards those reported in the clinical setting}. To counter this, we could also incorporate other tools such as \texttt{ResFinder}, the \texttt{NCBI AMR Database}, and \texttt{ARG-ANNOT}
-\\	\textbf{Notes:} Filtering of contig length is handled by a python script that determines the minimum ARG sequence dictated by \texttt{CARD}.
+\\	\textbf{Notes:} Filtering of contig length is handled by a python script called \texttt{minimum\_length\_CARD.py}.
 \\	\textbf{Notes:} Contigs are further extended using contigextender to form scaffolds 
 \\	\textbf{Notes:} Might add other contig extendending programs like \texttt{GapFiller} - which leverages mate-pair information 
+\\
+\\
+\textbf{Contig Quality Checks} \\
+\rule{\linewidth}{0.5mm}
 	
-	\item \textbf{\texttt{Python} script is created to do another round of checking contig quality for downstream analysis, \texttt{R} scripts are used to visualize the data.} \\
-	\textbf{Technical Notes}: The \texttt{Python} script will measure standard contig quality metrics e.g. N50, L50 etc. \\
-	\textbf{Rationale}: Should be obvious why
-	
-	\item \textbf{Confirmation of contigs with ARGs using \texttt{RGI}.}\\
-	\textbf{Technical Notes}: \texttt{RGI} scan the contigs and check whether which contigs created by \texttt{metaSPAdes} have ARGs in them. \\
-	\textbf{Rationale}: \texttt{metaSPAdes} may have created contigs that DO NOT contain ARGs, and have instead assembled them into a more matching contig (a false-positive misassembly) - this can happen because of the different databases being used; also parallelization of methods like this increases robustness because it has been confirmed independently from different starting points (bottom-up vs top-down approach). This allows us to filter ARG-containing contigs. \\
-	\textbf{Notes:} \texttt{RGI} is the official scanner of \texttt{CARD}.
-	
-	\subsection{Read-mapping}
-		\item \textbf Checking coverage statistics on contigs using raw reads\\
-	\textbf{Technical Notes}: \texttt{Samtools} is used here to map the raw reads from the larger database back to the assembled contigs and then calculates the coverage over the entire contig. \\
-	\textbf{Rationale}: Read-mapping is a quality control protocol used in metagenomics, to determine the quality of the assembly. High-coverage means that many of the k-mers align well with that region of the contig, while low coverage is evidence of inconsistent mapping and that the contigs should be refined, split, or discarded.
-\\	\textbf{Note} If there are persistent (after further refinement and reassemblies) sudden differences in coverage across a contig, that contig could be chimeric, meaning, it could be from two different populations. 
+\subsection{Confirmation of contigs with ARGs}
+\textbf{Technical Notes}: \texttt{RGI} scan the contigs and check whether which contigs created by \texttt{metaSPAdes} have ARGs in them. \\
+\textbf{Rationale}: \texttt{metaSPAdes} may have created contigs that DO NOT contain ARGs, and have instead assembled them into a more matching contig (a false-positive misassembly) - this can happen because of the different databases being used; also parallelization of methods like this increases robustness because it has been confirmed independently from different starting points (bottom-up vs top-down approach). This allows us to filter ARG-containing contigs. \\
+\textbf{Notes:} \texttt{RGI} is the official scanner of \texttt{CARD}.
+
+
+
+\subsection{Standard Contig Quality Metrics}
+\textbf{Technical Notes}:A custom \texttt{Python} script \texttt{calculate\_contig\_quality.py} is created to do another round of checking contig quality for downstream analysis, \texttt{R} scripts (TBA) are used to visualize the data. \\
+\textbf{Technical Notes}: The \texttt{Python} script will measure standard contig quality metrics e.g. N50, L50. \\
+\textbf{Rationale}:
+\textbf{Note}:
+
+\subsection{Read-mapping}
+\textbf{Technical Notes}: \texttt{Samtools} is used here to map the raw reads from the larger database back to the assembled contigs and then calculates the coverage over the entire contig. \\
+\textbf{Rationale}: Read-mapping is a quality control protocol used in metagenomics, to determine the quality of the assembly. High-coverage means that many of the k-mers align well with that region of the contig, while low coverage is evidence of inconsistent mapping and that the contigs should be refined, split, or discarded.\\
+\textbf{Note} If there are persistent (after further refinement and reassemblies) sudden differences in coverage across a contig, that contig could be chimeric, meaning, it could be from two different populations. 
 \\ \textbf{Extra note} A \texttt{Python} script is included in the pipeline that is determine visualize and check how the coverage changes over contig regions. In general, they could be interpreted as the following:
-	\begin{enumerate}
-		\textbf {Smooth, Uniform Coverage}: Typically shown by well-assembled contigs. \\
-		\textbf {Sharp Coverage Drop}: May need to be split or flagged for reassembly. May also be a misassembly point (chimeric contitg) or caused by a structural variant  \\
-		\textbf {Coverage Gaps}: Regions with little to no read support; a strong indicator of misassembly. \\
-		\textbf {Gradual Drops}: Overlapping reads, repetitive or duplicate regions, partial HGT, sequence heterogeneity, or coverage differences due to a mixed population. Repeats and duplications can be filtered out using tools like \texttt{RepeatMasker} or \texttt{BLAST} \\\textbf{(to be added to the script)} \\
-		\textbf {Sharp increase}: May be due to repetitive or duplicated regions, the assembler decided to collapse all the reads into that one contig, amplification bias from PCR, HGT, SV, chimeras.
-	\end{enumerate}
- 
-		\textbf{Read mapping more details}
-	\textbf {Read mapping tools} \\
-	\textbf{Technical Notes}: Four (4) Tools will be used in parallel to do the read mapping process \texttt{BWA} \texttt{Bowtie} \texttt{KMA}, and \texttt{minimap2}, their parameters have been adjusted to map reads at 95 \% identity to the contigs.  \\
+\begin{enumerate}
+	\item \textbf{Smooth, Uniform Coverage}: Typically shown by well-assembled contigs.
+	\item \textbf{Sharp Coverage Drop}: May need to be split or flagged for reassembly. May also be a misassembly point (chimeric contig) or caused by a structural variant.
+	\item \textbf{Coverage Gaps}: Regions with little to no read support; a strong indicator of misassembly.
+	\item \textbf{Gradual Drops}: Overlapping reads, repetitive or duplicate regions, partial HGT, sequence heterogeneity, or coverage differences due to a mixed population. Repeats and duplications can be filtered out using tools like \texttt{RepeatMasker} or \texttt{BLAST} (to be added to the script).
+	\item \textbf{Sharp Increase}: May be due to repetitive or duplicated regions, amplification bias from PCR, HGT, SV, chimeras.
+\end{enumerate}
+
+
+\subsubsection{Read mapping parameters}
+\textbf{Technical Notes}: Four (4) Tools will be used in parallel to do the read mapping process \texttt{BWA} \texttt{Bowtie} \texttt{KMA}, and \texttt{minimap2}, their parameters have been adjusted to map reads at 95 \% identity to the contigs.
 	
 \begin{table}[h!]
 	\centering
@@ -474,18 +505,17 @@ This pipeline is designed for \textbf{comprehensive metagenomic analysis of ARGs
 	\end{adjustbox}
 	\caption{Example table of mapper configurations without command example}
 	\label{tab:mapper_configurations}
-\end{table}
-	
-	\textbf{Rationale}: 95 \% identity is used to increase sensitivity - as is standard for determining homologous sequences. This adjustment was made because k-mers are either attach or don't. Parallelization is used to increase robusness.\\
-	\textbf{Note} K-mer extension is used to increase the accuracy of mapping. \texttt{BWA} k-mer lengths can be adjusted, while \texttt{KMA} does it by default. The others, cannot be adjusted. \\
+\end{table} 
+\textbf{Rationale}: 95 \% identity is used to increase sensitivity - as is standard for determining homologous sequences. This adjustment was made because k-mers are either attach or don't. Parallelization is used to increase robusness.\\
+\textbf{Note} K-mer extension is used to increase the accuracy of mapping. \texttt{BWA} k-mer lengths can be adjusted, while \texttt{KMA} does it by default. The others, cannot be adjusted. \\
 	% Then within your document:
-	\tcbset{
-		colback=lightgray!30, colframe=black, 
-		width=\linewidth, boxrule=0.5mm,
-		arc=2mm, auto outer arc,
-		fonttitle=\bfseries
-	}
-	
+\tcbset{
+	colback=lightgray!30, colframe=black, 
+	width=\linewidth, boxrule=0.5mm,
+	arc=2mm, auto outer arc,
+	fonttitle=\bfseries
+}
+
 	\begin{tcolorbox}[title=Note (\today)]
 		I chose to change the script to not allow gaps during this phase as we already used reverse translation earlier to correct for synonymous codons, and protein sequences are more important when it comes to ARG function, the new values are below. I also added protein-based read mapping. 
 	\end{tcolorbox}
@@ -551,21 +581,25 @@ This pipeline is designed for \textbf{comprehensive metagenomic analysis of ARGs
 
 \textbf{Rationale}: The main rationale for adding a protein-based read mapping protocol is because ARGs are primarily about their \textit{\textbf{protein-protein interactions}} (biological relevance). This method also accounts for frameshifts with higher specificity to homologous regions. \\
 \textbf{On a personal note}: This approach may also require further exploration into whether protein-protein interactions are altered—perhaps by investigating changes in binding sites. Which is a story for another day (\textit{\textbf{why do I do this to myself?}})
-\\
 
-
-
-
-
-\subsubsection{Taxonomic profiling of reads and contigs}
+\subsection{Taxonomic profiling of reads and contigs}
 \textbf{Technical Notes}: \texttt{Kraken2} uses k-mer-based classification to assign taxonomy based on raw-reads. While \texttt{SprayNPray} complements this by assigning taxonomy at the contig level. \\
 \textbf{Rationale}: By comparing their respective databases with our ARG-related databases, we will be able to connect our reads and/or contigs to their corresponding taxa, uncovering the microbial hosts responsible for carrying and potentially spreading ARGs in the environment.
 
-\subsubsection{Detect structural variants (SVs) in contigs}
+\subsection{Detect structural variants (SVs) in contigs}
 \textbf{Technical Notes}: \texttt{Manta} identifies large genomic rearrangements such as insertions, deletions, and duplications. \\
 \textbf{Rationale}: Chimeric contigs may be due to systematic error or real biological signals. These chimeric contigs can be detected by \texttt{Kraken2} and \texttt{SprayNPray} (i.e., when a portion of a contig is being assigned to different taxa). The rationale behind this step is to investigate whether structural variations are present — which may be evidence of horizontal gene transfer (HGT) events.
 
-\subsection{Mobile Genetic Elements (TBA)}
+\subsection{Sketching contigs followed by calculating \texttt{Bray-Curtis} diversity}
+\textbf{Technical Notes}: \texttt{Mash Sketch} uses a MinHash approach to generate a presence/absence profile of ARGs across contigs. This gives us a quick snapshot of what the contigs “look like” in terms of ARG content. For \texttt{Bray-Curtis} diversity, we calculate a dissimilarity matrix from the abundance data of ARGs, followed by a PCoA plot to visualize similarities between contigs based on their ARG profiles. \\
+\textbf{Rationale}: The \texttt{Mash Sketch} helps rapidly identify the genetic makeup of contigs in terms of ARGs, which provides a foundation for further investigation. By applying \texttt{Bray-Curtis} diversity and using PCoA, we can group contigs based on their ARG similarity. If contigs with the same sketch group together, we can trace them back to their taxonomic IDs to identify the microbial hosts. However, if contigs have similar ARG profiles but belong to different taxa, this could serve as \textbf{evidence for \textbf{Horizontal Gene Transfer (HGT)}}. This dual approach allows us to trace ARG spread and potential HGT events in a metagenomic context. \\
+\textbf{Note}: \texttt{Bray-Curtis} (dis-)similarity is most often used as a presence or absence diversity metric.
+\\
+\\ 
+\textbf{Transposition} \\
+\rule{\linewidth}{0.5mm}
+
+\subsection{Determination of Transposons (TBA)}
 \textbf{Technical Notes}: Tools such as the following can be used:
 \begin{itemize}
 	\item \texttt{HMMER3} suite
@@ -573,16 +607,12 @@ This pipeline is designed for \textbf{comprehensive metagenomic analysis of ARGs
 \end{itemize}
 
 \textbf{Rationale}:  % The rationale here should be filled in with relevant details.
+\\
+\\ 
+\textbf{Plasmids} \\
+\rule{\linewidth}{0.5mm}
 
-\subsubsection{Sketching contigs followed by calculating \texttt{Bray-Curtis} diversity}
-\textbf{Technical Notes}: \texttt{Mash Sketch} uses a MinHash approach to generate a presence/absence profile of ARGs across contigs. This gives us a quick snapshot of what the contigs “look like” in terms of ARG content. For \texttt{Bray-Curtis} diversity, we calculate a dissimilarity matrix from the abundance data of ARGs, followed by a PCoA plot to visualize similarities between contigs based on their ARG profiles. \\
-\textbf{Rationale}: The \texttt{Mash Sketch} helps rapidly identify the genetic makeup of contigs in terms of ARGs, which provides a foundation for further investigation. By applying \texttt{Bray-Curtis} diversity and using PCoA, we can group contigs based on their ARG similarity. If contigs with the same sketch group together, we can trace them back to their taxonomic IDs to identify the microbial hosts. However, if contigs have similar ARG profiles but belong to different taxa, this could serve as \textbf{evidence for \textbf{Horizontal Gene Transfer (HGT)}}. This dual approach allows us to trace ARG spread and potential HGT events in a metagenomic context. \\
-\textbf{Note}: \texttt{Bray-Curtis} (dis-)similarity is most often used as a presence or absence diversity metric.
-
-
-\subsection{Plasmids}
-
-\subsubsection{Determination of putative plasmids}
+\subsection{Determination of putative plasmids}
 \textbf{Technical Notes}: The tools listed below will be used in parallel. Plasmids are considered valid when all 4 tools predict plasmid signatures in the contig.
 \begin{itemize}
 	\item \texttt{PlasPredict} pipeline
@@ -598,11 +628,12 @@ If plasmid signatures are present, \texttt{plasmidSPAdes} along with \texttt{Gap
 \]
 
 \textbf{Rationale}: \texttt{oriTfinder} looks for \texttt{origin of transfer} sites (\texttt{oriT}), which are characteristics of conjugative plasmid . This whole sub-pipeline is to look for evidence of conjugative plasmid transfer as the cause of these chimeric contigs. Normalization and percentage counts are used here to further check whether these "plasmids" align with our understanding of the average plasmid copy number. \\
-\textbf{Note}: Will also be drafting a script to do sliding window analysis of \texttt{GC-skews} - as different characteristics of this curve can be interpreted in different ways. 
-
-\subsection{Phages}		
+\textbf{Note}: Will also be drafting a script to do sliding window analysis of \texttt{GC-skews} - as different characteristics of this curve can be interpreted in different ways. \\
+\\ 
+\textbf{Phages} \\
+\rule{\linewidth}{0.5mm}	
 	
-\subsubsection{Phage influence signatures}
+\subsection{Phage influence signatures}
 \textbf{Technical Notes}: They will be determined using a variety of tools:
 \begin{itemize}
 	\item \texttt{VirSorter}: Identifies viral signatures within microbial genomes and separates prophages from bacterial sequences.
@@ -612,21 +643,24 @@ If plasmid signatures are present, \texttt{plasmidSPAdes} along with \texttt{Gap
 \textbf{Rationale}:This analysis aims to detect potential phage signatures in the chimeric contigs. Since phages are mobile genetic elements, their involvement in transferring ARGs through transduction is highly relevant.Phages, especially temperate phages, can integrate into bacterial genomes and excise themselves, sometimes carrying host genetic material, such as ARGs, with them.The integration and excision signatures detected in contigs will provide evidence of possible transduction events in our datasets, supporting the hypothesis of ARG dissemination via phages.
 
 
-\subsubsection{Phage Signature Extraction and Phylogenetic Analysis}
+\subsection{Phage Signature Extraction and Phylogenetic Analysis}
 \textbf{Technical Notes}: Phage-associated genes will be extracted from the chimeric contigs, followed by phylogenetic analysis to uncover evolutionary relationships.\texttt{FastTree} will be used to build a phylogenetic tree based on the extracted phage genes.For visualization, tools like \texttt{iTOL} or \texttt{FigTree} can be used to generate an interpretable phylogenetic tree.
 
 
 \textbf{Rationale}:Phage genes embedded in chimeric contigs (their taxonomy) may serve as strong evidence of horizontal gene transfer (HGT) events. The aim here is to check the evolutionary origins of the phage genes found in our dataset and their potential involvement in the dissemination of ARGs.
-
-
-\subsubsection{Future Considerations}: 
+\\
+\\
+\\ 
+\textbf{Homework?} \\
+\rule{\linewidth}{0.5mm}
+\subsection{Future Considerations}: 
 Will continue improving this section (everything regarding HGT) by evaluating the results from these tools, aligning them with ARG presence, and refining the approach for identifying conjugation, transposon, and transduction events within chimeric contigs. This may also involve validating phage activity—\textit{again, why do I do this to myself?}
 
-\end{itemize}
+
 
 
 \newpage
-
+\linenumbers*
 \section{metagenomics\_general.smk}
 \textbf{Stage: Done} \\   
 \textbf{General Purpose taxo-metagenomics}
@@ -641,10 +675,8 @@ This pipeline is designed for \textbf{The essentials in metagenomics}, which inc
 \textbf{Raw trimming of raw metagenomic data} 
 \\ \textbf{Technical Notes}: \texttt{FastQC} is used on \textbf{raw reads}
 \\ \textbf{Rationale}: This is mainly used as a point of comparison - determine whether the next step (trimming) was effective. This pre-processing step is the starting point in any and all metagenomics pipelines. 
-\\ \textbf{Notes}: This whole quality control steps are interconnected with each other. \\
-\\ 
-\\
-\subsubsection{Trimming} 
+\\ \textbf{Notes}: This whole quality control steps are interconnected with each other. 
+\subsection{Trimming} 
 \textbf{Technical Notes}: \texttt{Trimmomatic} is used on \textbf{raw reads}
 \\ \textbf{Rationale}: Trimming involves removing low quality bases (often depending on something called the Phred Score - which is just a measure of how "confident" we are that the base on that site was accurate), adapters, and filtering reads that go below a specific length threshold. 
 \\ \textbf{Notes}: Journals often report the parameters on \texttt{Trimmomatic} (or any trimmer they decide to use); this is often so that the study is reproducible, should one decide to actually reproduce the study starting from scratch (raw reads). 
@@ -654,10 +686,12 @@ This pipeline is designed for \textbf{The essentials in metagenomics}, which inc
 \textbf{Quality checks of post-trimmed data} 
 \\ \textbf{Technical Notes}: \texttt{FastQC} is used on \textbf{trimmed reads} to determine how effective the trimming process was. 
 \\ \textbf{Rationale}: If the trimming process was effective, we should notice a better quality reads here, otherwise, we might have to adjust the trimming parameters. 
-\\ \textbf{Notes}: Determination of whether the trimmed reads are "clean enough" is more of an art rather than actual science, though thresholds exist like Phred $>$ 20 or Phred $>$ 30 depending on how strict you are as a researcher. \\
-\\ 
+\\ \textbf{Notes}: Determination of whether the trimmed reads are "clean enough" is more of an art rather than actual science, though thresholds exist like Phred $>$ 20 or Phred $>$ 30 depending on how strict you are as a researcher. 
 \\
-
+\\
+\\ 
+\textbf{Processing cleaned reads} \\
+\rule{\linewidth}{0.5mm}
 \subsection{Metagenomic Taxonomy}	
 \textbf{Taxonomy from Cleaned Reads} 
 \\ \textbf{Technical Notes}: \texttt{Kraken2} is used on \textbf{raw reads} to determine which species they came from. 
@@ -686,7 +720,7 @@ This pipeline is designed for \textbf{The essentials in metagenomics}, which inc
 
 
 \newpage
-
+\linenumbers*
 \section{trim\_randomizer.smk}
 \textbf{Stage: Done}   \\
 \textbf{Purpose: Randomization of trimming parameters}
@@ -731,7 +765,7 @@ This is a module that will be part of a bigger pipeline. The idea here to is ran
 
 
 \newpage
-
+\linenumbers*
 \section{bootstrapping\_rawreads.smk}
 \textbf{Stage:} Further refinement
 
@@ -789,11 +823,143 @@ This was used as an approximation for bootstrapping by shuffling and adjusting t
 \textbf{Rationale}: Read why I'm bootstrapping from the textbox above. The reason why I also included \texttt{Bracken} and measurements diversity metrics in the analysis per sampling replicate is so we can analyze how the topology of diversity also changes - similiar to how we look at topology of phylogenetic trees. The final process consolidates all the diversity metrics (alpha diversity) and matrices (beta diversity) into a TSV file.
 \\ \textbf{Note:} The decision to use Snakemake and Shellscripts here is so that the bootstrapping comes first before the pipeline is introduced. Otherwise Snakemake will run the entire thing in parallel, taking up so much memory because it runs \texttt{Kraken2} for every single sample instead of doing it in batches - which takes up so much unnecessary time. 
 
+\newpage
+\linenumbers*
+\section{Binning.smk}
+\textbf{Stage: To test on higher coverage data} \\   
+\textbf{Binning pipeline to create high quality (Metagenome Assembled Genomes) MAGs} \\
+\textbf{Specifics:} This pipeline passes through multiple quality checks during binning of using a variety of tools (both wrappers and modules) including \texttt{MetaWrap}, \texttt{DasTool}, \texttt{CheckM2}, \texttt{MagPurify} etc. 
+
+\subsection{Universal Configurations}
+\textbf{Technical Notes}: The pipeline allows the user to configure settings they want for the binning process. By default, the settings are Minimum Contig Length (2500bp), Completeness (50\%), {Contamination (10\%). \\
+\textbf{Rationale}: The default settings were curated by me and the reason I chose them is because of the following
+	\begin{enumerate}
+		\item Longer contigs tend to represent more complete genomic fragments. Setting a threshold of 2500bp ensures better assembly quality. Others prefer a lower threshold for more sensitivity like 2000 bp.
+		\item Completeness 50\% and Contamination 10\% are actually based from a standard called the \texttt{MIMAG} standards. 
+	\end{enumerate} 
+\textbf{Notes}: Making configurations universal this way creates consistency across the script, i.e. when specifically asked by a specific tool, this returns a universal parameter. \\
+\textbf{Notes}: Additionally, the user can specify the memory usage and number of threads they want to allocate per tool as well as other tool-specific parameters at the top of the script for ease of use. \textit{I plan to add this to the configuration file soon once I have tested the file to be working at higher coverage - since you can't make high quality bins with low read counts - and my PC can't practically handle that sorry.}
 
 
+\subsection{\texttt{FastUniq} (Deduplication)}
+\textbf{Technical Notes}: \texttt{FastUniq} used to remove duplicate reads. \\
+\textbf{Rationale}: Since we are focused on creating MAGs or genomes based on populations of genomes, removing duplicates is less risky during binning and is thus included. It also allows us to completely remove amplification bias from \texttt{PCR} reactions. Moreoever, deduplication reduces redundancy and thereby memory usage downstream.\\
+
+\subsection{\texttt{Seqtk} (\texttt{FASTA} Conversion)}
+\textbf{Technical Notes}: Seqtk converts FASTQ to FASTA. \\
+\textbf{Rationale}: This conversion prepares sequences for tools that require FASTA inputs, such as \texttt{CD-HIT-EST}. \\
+\textbf{Notes}: I used to include a decompress-then-compress mechanism in the script to minimize memory storage but according to my calculations from the sequencing facility quotations, re-compressing may actually be more costly when done throughout the pipeline. Hence, it should be more cost-efficient to start compressing files ones the bins are done. 
+
+\subsection{\texttt{CD-HIT-EST} (Clustering) at Identity: 90\%}
+\textbf{Technical Notes}: \texttt{CD-HIT-EST} clusters similar sequences at 90\% identity. \\
+\textbf{Rationale}: Clustering reduces redundancy in the contig data while maintaining closely related sequences. \\ 
+\textbf{Notes}:I chose 90\% ID because that's what I often see in published journals that is all Perhaps, the 90\% identity threshold balances removing duplicates while preserving diversity and that higher thresholds would result in fewer clusters but might oversimplify the data. \textit{Fine, I'll make it my homework assignment why this specific threshold is used (I HAVE TO KNOW)}.
+\\
+\\
+\\ 
+\textbf{Bin Refinement} \\
+\rule{\linewidth}{0.5mm}
+\subsection{\texttt{MetaWRAP} Binning and Reassembly}
+\textbf{Technical Notes}: \texttt{MetaWRAP} is what is known as a wrapper program - meaning it makes use of other tools as its modules. For the binning process in particular it uses 3:\texttt{MetaBAT2}, \texttt{MaxBin2}, and \texttt{CONCOCT}. Each binning process goes through internal quality control checks and the one with the best bin-qualities are selected. It also has a reassembly feature wherein it reassembles the contigs again to try and further refine the bins.\\
+\textbf{Rationale}: Using 3 binners in parallel and choosing the best bins, quality checking, and then reassembling (not-so-good) bins make the binning process very robust, creating very refined bins \textit{not sponsored by the way, talking as a fellow researcher}. \\
+\textbf{Notes}: No moving forward, the process of further refinement of bins seems redundant. But do note that I have checked and validated that the process used in refining and checking by the tools used here cover different metrics - and therefore can be seen as parallel processes.  
+
+\subsection{DAS Tool (Bin Refinement)}
+\textbf{Technical Notes}: \texttt{DAS\_Tool} is very similar to \texttt{MetaWrap} in that they both choose the best bins from a pool of bins from different binners (in this pipeline DAS Tool is designed to \textbf{ALSO} use information from \texttt{MetaBAT2}, \texttt{MaxBin2}, and \texttt{CONCOCT} outputs to improve binning)  \\
+\textbf{Rationale}: However, as rationale for including it, is that it focuses more on single-copy gene (SCG) analysis. In contrast, in  \texttt{MetaWrap}, bins are evaluated using completeness and contamination thresholds. \\
+\textbf{Notes}: Notably, in the checking phase of this pipeline we will not be using DAS\_Tool for SCG analysis. It is optimized for refining bins not quality checking bins. Instead we will use a more updated and optimized software for the latter called \texttt{BUSCO}. 
+
+\subsection{MAGpurify (Contamination Removal)}
+\textbf{Technical Notes}: MAGpurify is also a bin refiner, in a sense that it uses several modules to detect and \textbf{prune} contamination in genome bins. It also uses other metrics to define bin quality specifically it looks for differences in 
+	\begin{enumerate}
+		\item \textbf{Phylo-markers},
+		\item \textbf{Clade-markers}, 
+		\item \textbf{Tetranucleotide-frequencies},
+		\item \textbf{GC-content},
+		\item and then removes \textbf{known-contaminants} from it's manually curated database (created back in 2013)
+	\end{enumerate}   
+\textbf{Rationale}: This step improves genome quality by removing low-confidence contigs or contamination from other taxa. Each module targets different contamination types (phylogenetic, clade, etc.). \\
+\textbf{Notes}: Similar to \texttt{DAS\_tool}, \texttt{MAGPurify} is relatively old (in the bioinformatics world where new tools are being published every day). So in checking our bins we will be using more recently updated tools. 
+\\
+\\
+\\ 
+\textbf{Quality checking} \\
+\rule{\linewidth}{0.5mm}
+
+
+\subsection{\texttt{MetaQUAST} (Assembly Quality Assessment)} 
+\textbf{Technical Notes}: \texttt{MetaQUAST} assesses the quality of genome assemblies via the following:
+	\begin{enumerate}
+		\item N50 and L50 to determine contiguity
+		\item Number of contigs to determine fragmentation
+		\item GC content - since a single MAG should have a constant GC content across its entirety (usually)
+		\item Alignment to a reference sequence
+		
+\textbf{Additionally, it also detects} other metrics using modular tools
+		
+		\item structural variations (requires \texttt{GRIDSS})
+		\item presence or rRNA (requires \texttt{SILVA})
+		\item Conserved gene sets (requires \texttt{BUSCO})
+		
+	\end{enumerate}
+\textbf{Rationale}: This step quantifies the completeness and accuracy of the assembled genomes, and is updated frequently. \\
+\textbf{Notes}: Using reference genomes improves the accuracy of the assessment, but it’s optional if references are unavailable. \\
+
+\begin{tcolorbox}[colback=gray!10!white, coltitle=white, colframe=gray!80!black, title=A Personal Note]
+	\textbf{Personal Note}: As of this writing, \texttt{BUSCO} has updated beyond the version required by \texttt{QUAST} (\texttt{BUSCO} od9). Unfortunately, this version is not available in the archives (you'll encounter a 404 error). Likewise, \texttt{SILVA} and \texttt{GRIDSS} frequently update. I recommend downloading each separately and manually linking their databases to avoid potential issues with \texttt{QUAST}'s download management. \textit{Good luck and have fun!} 
+\end{tcolorbox}
+
+
+
+\subsection{\texttt{dRep} (Dereplication)}
+\textbf{Technical Notes}: dRep dereplicates genomes by clustering them based on similarity. \\
+\textbf{Rationale}: Dereplication reduces redundancy in the assembled genome data, ensuring unique genome representations. Basically \texttt{CD-HIT} but for whole genomes. \\
+\textbf{Notes}: \texttt{FastANI} is utilized for quick, precise clustering, and is part of the \texttt{dRep} package. It defaults to a 95\% ANI (Average Nucleotide Identity) threshold, a common yet somewhat subjective metric used to determine microbial species boundaries. This is often sufficient for microbial genomes due to their high gene density, frequently organized in operons. However, it may not be as suitable for eukaryotic genomes, which are laden with repetitive elements.
+
+\begin{tcolorbox}[colback=gray!10!white, coltitle=white, colframe=gray!80!black, title=A Personal Note]
+	\textbf{Personal Note}: I cannot find a newer version of either dRep or FastANI (both dating back to 2013, basically ancient in bioinformatics terms). There's a newer version called \texttt{pyani}, which is available in \texttt{Bioconda}, that might be a good replacement. However, I still need to reverse-engineer its source code to fully understand how it operates. Might be worth trying!
+\end{tcolorbox}
+
+
+\subsection{\texttt{CheckM2}} \textbf{Technical Notes}: \texttt{CheckM2} is used to predict genome completeness and contamination using \texttt{low-memory mode} (essential for resource-limited systems like mine; remember to adjust this on HPC systems). \ \textbf{Rationale}: \texttt{CheckM2} is an updated version of \texttt{CheckM}, but many tools in this pipeline haven't been updated to recognize it. I haven't tested whether aliasing \texttt{CheckM2} as \texttt{CheckM} would work, so it’s added here as a final step to ensure the results meet \texttt{MIMAG} standards for completeness and contamination.
+
+\linenumbers*
+\section{krakenpipeline.bash}
+\textbf{Stage: Done} \\   
+\textbf{The entire basic taxo-metagenomic pipeline with the usual tools} \\
+\textbf{Specifics:} This pipeline passes through a loop between \texttt{FastQC} and \texttt{Trimmomatic} before progressing to \texttt{Kraken2} then \texttt{Bracken} then calculate\_diversity.py. 
+
+
+
+
+
+
+
+\newpage
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\textbf{Project Side scripts}}
+\fancyhead[C]{\leftmark}  % Adds section title in the header
+\fancyhead[R]{\thepage}
+
+
+
+
+\part{Project Side Scripts}
+
+
+\renewcommand{\thesection}{\arabic{section}}
+\setcounter{section}{0}
+\setcounter{subsection}{0}
+
+\linenumbers*
+\section{}
 \setcounter{section}{1}
 \setcounter{subsection}{0}
 
+
+\newpage
 % Redefine the \part command to move the title closer to the top of the page
 \titleformat{\part}[display]
 {\normalfont\Huge\bfseries\centering} % Title formatting
@@ -801,8 +967,33 @@ This was used as an approximation for bootstrapping by shuffling and adjusting t
 {-80pt} % This adjusts the space between the top of the page and the title. Reduce or increase this value as needed.
 {\Huge} % Title font size
 
+\newpage
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\textbf{Project Main scripts}}
+\fancyhead[C]{\leftmark}  % Adds section title in the header
+\fancyhead[R]{\thepage}
 
 
+
+
+\part{Project Main Scripts}
+
+
+\renewcommand{\thesection}{\arabic{section}}
+\setcounter{section}{0}
+\setcounter{subsection}{0}
+
+\linenumbers*
+\section{}
+\setcounter{section}{1}
+\setcounter{subsection}{0}
+
+
+\newpage
+
+\nolinenumbers
 \part{Daily entries}
 
 % Research Diary
@@ -817,10 +1008,12 @@ This was used as an approximation for bootstrapping by shuffling and adjusting t
 \setcounter{subsection}{0}
 
 % First entry, decrease the counter after each section
-\section{September 18, 2024}
+\section{September 20, 2024}
 
 
-\textbf{To-do List}
+\textbf{To-do List} \\
+\textbf{Note:} This should've been yesterday's to-do list, but my landline was down, possibly due to the weather—it's been raining all day.
+
 \begin{itemize}
 	\item [\pending] Call for a group meeting regarding logistics (or when they will be available via Zoom call)
 	
@@ -880,8 +1073,63 @@ This was used as an approximation for bootstrapping by shuffling and adjusting t
 \end{itemize}
 
 \newpage
-% Research Diary
-\section{September 17, 2024}
+
+\section{September 19, 2024}
+
+
+\textbf{To-do List}
+\begin{itemize}
+	\item [\pending] Try to complete LaTeX documentation of scripts
+	
+	\begin{itemize}
+		\item [\done] Project 4 pipelines
+			\begin{itemize}
+				\item [\done] ARG-MGE.smk
+				\item [\done] metagenomics\_pipeline.smk
+				\item [\done] Binning\_.smk
+			\end{itemize}
+		\item [\moved] Project Main pipelines
+		\item [\moved] Project Side pipelines
+		
+	
+\end{itemize}
+	\item [\done] Counter-check Project4 scripts with documentation to see redundancies
+\end{itemize}
+
+\textbf{Completed Tasks}
+\begin{itemize}
+	\item [\done] Deleted redundancies in Project 4 scripts 
+		\begin{itemize}
+			\item FastQC\_check.py
+			\item fastp.bash
+			\item README.md (since this document exists and is more comprehensive)
+			\item fastp metrics from summary\_stat.bash
+		\end{itemize}
+	\item [\done] Decided to move to Project Side K-mer\_diversity.smk as it is not essential (yet). 
+	\item [\done] Finally resolved an issue with wakatime not integrating properly with TeXStudio
+	\item [\done] I realize now that the entry dates were one-day behind.  
+\end{itemize}
+
+\textbf{Scripts Worked On}
+\begin{itemize}
+	\item calculate\_contig\_quality.py now updated to calculate coverage statistics. 
+\end{itemize}
+
+
+\textbf{Issues Encountered}
+\begin{itemize}
+	\item 
+\end{itemize}
+
+\textbf{Need to Troubleshoot}
+\begin{itemize}
+	\item 
+\end{itemize}
+
+\newpage
+
+
+\section{September 18, 2024}
 
 \textbf{To-do List}
 \begin{itemize}
@@ -932,7 +1180,7 @@ This was used as an approximation for bootstrapping by shuffling and adjusting t
 
 
 % Research Diary
-\section{September 16, 2024}
+\section{September 17, 2024}
 
 \textbf{To-do List}
 \begin{itemize}
