@@ -468,20 +468,19 @@ This pipeline is designed for \textbf{comprehensive metagenomic analysis of ARGs
 
 \subsection{Standard Contig Quality Metrics}
 \textbf{Technical Notes}:A custom \texttt{Python} script \texttt{calculate\_contig\_quality.py} is created to do another round of checking contig quality for downstream analysis, \texttt{R} scripts (TBA) are used to visualize the data. \\
-\textbf{Technical Notes}: The \texttt{Python} script will measure standard contig quality metrics e.g. N50, L50. \\
-\textbf{Rationale}:
-\textbf{Note}:
+\textbf{Notes}: The \texttt{Python} script will measure standard contig quality metrics: N50, L50, GC-content, and coverage, as well as more robust metrics: N90 and L90.
+
 
 \subsection{Read-mapping}
 \textbf{Technical Notes}: \texttt{Samtools} is used here to map the raw reads from the larger database back to the assembled contigs and then calculates the coverage over the entire contig. \\
 \textbf{Rationale}: Read-mapping is a quality control protocol used in metagenomics, to determine the quality of the assembly. High-coverage means that many of the k-mers align well with that region of the contig, while low coverage is evidence of inconsistent mapping and that the contigs should be refined, split, or discarded.\\
 \textbf{Note} If there are persistent (after further refinement and reassemblies) sudden differences in coverage across a contig, that contig could be chimeric, meaning, it could be from two different populations. 
-\\ \textbf{Extra note} A \texttt{Python} script is included in the pipeline that is determine visualize and check how the coverage changes over contig regions. In general, they could be interpreted as the following:
+\\ \textbf{Extra note} A \texttt{Python} script \texttt{plot\_and\_detect\_intermediate\_coverage.py} is included in the pipeline that is determine visualize and check how the coverage changes over contig regions. In general, they could be interpreted as the following:
 \begin{enumerate}
 	\item \textbf{Smooth, Uniform Coverage}: Typically shown by well-assembled contigs.
 	\item \textbf{Sharp Coverage Drop}: May need to be split or flagged for reassembly. May also be a misassembly point (chimeric contig) or caused by a structural variant.
 	\item \textbf{Coverage Gaps}: Regions with little to no read support; a strong indicator of misassembly.
-	\item \textbf{Gradual Drops}: Overlapping reads, repetitive or duplicate regions, partial HGT, sequence heterogeneity, or coverage differences due to a mixed population. Repeats and duplications can be filtered out using tools like \texttt{RepeatMasker} or \texttt{BLAST} (to be added to the script).
+	\item \textbf{Gradual Drops}: Overlapping reads, repetitive or duplicate regions, partial HGT, sequence heterogeneity, or coverage differences due to a mixed population. Repeats and duplications can be filtered out using tools like \texttt{RepeatMasker} or \texttt{BLAST} (TBA).
 	\item \textbf{Sharp Increase}: May be due to repetitive or duplicated regions, amplification bias from PCR, HGT, SV, chimeras.
 \end{enumerate}
 
@@ -516,7 +515,7 @@ This pipeline is designed for \textbf{comprehensive metagenomic analysis of ARGs
 	fonttitle=\bfseries
 }
 
-	\begin{tcolorbox}[title=Note (\today)]
+	\begin{tcolorbox}[title=Note, coltitle=white]
 		I chose to change the script to not allow gaps during this phase as we already used reverse translation earlier to correct for synonymous codons, and protein sequences are more important when it comes to ARG function, the new values are below. I also added protein-based read mapping. 
 	\end{tcolorbox}
 
@@ -620,7 +619,7 @@ This pipeline is designed for \textbf{comprehensive metagenomic analysis of ARGs
 	\item \texttt{PlasmidFinder}
 	\item \texttt{MOBSuite} plasmid marker annotator
 \end{itemize}
-If plasmid signatures are present, \texttt{plasmidSPAdes} along with \texttt{GapFiller} will be used to check if the contig can circularize. \texttt{oriTfinder} will then be applied to contigs with fewer than 4 fragments. A \texttt{Python} script will calculate GC skews of the chimeric contig and compare it to its taxonomic counterparts. Another \texttt{Python} script will normalize the data according to \texttt{16S rRNA} from trimmed reads. Lastly, plasmid percentage will be calculated based on reads mapped to putative plasmids over the total reads.
+If plasmid signatures are present, \texttt{plasmidSPAdes} along with \texttt{GapFiller} will be used to check if the contig can circularize. \texttt{oriTfinder} will then be applied to contigs with fewer than 4 fragments. A \texttt{Python} script (TBA) will calculate GC skews of the chimeric contig and compare it to its taxonomic counterparts. Another \texttt{Python} script (TBA) will normalize the data according to \texttt{16S rRNA} from trimmed reads. Lastly, plasmid percentage will be calculated based on reads mapped to putative plasmids over the total reads.
 
 \textbf{Equation}:
 \[
@@ -628,7 +627,7 @@ If plasmid signatures are present, \texttt{plasmidSPAdes} along with \texttt{Gap
 \]
 
 \textbf{Rationale}: \texttt{oriTfinder} looks for \texttt{origin of transfer} sites (\texttt{oriT}), which are characteristics of conjugative plasmid . This whole sub-pipeline is to look for evidence of conjugative plasmid transfer as the cause of these chimeric contigs. Normalization and percentage counts are used here to further check whether these "plasmids" align with our understanding of the average plasmid copy number. \\
-\textbf{Note}: Will also be drafting a script to do sliding window analysis of \texttt{GC-skews} - as different characteristics of this curve can be interpreted in different ways. \\
+\textbf{Note}: Will also be drafting a script (TBA) to do sliding window analysis of \texttt{GC-skews} - as different characteristics of this curve can be interpreted in different ways. \\
 \\ 
 \textbf{Phages} \\
 \rule{\linewidth}{0.5mm}	
@@ -705,7 +704,7 @@ This pipeline is designed for \textbf{The essentials in metagenomics}, which inc
 
 \subsection{Diversity analysis}	
 \textbf{Diversity analysis per site or sample} 
-\\ \textbf{Technical Notes}: Here \texttt{Bracken} - an extension of the \texttt{Kraken} packages or \texttt{Qiime2} are often used to calculate diversity. Instead I opted to create my own \texttt{Python} script because:
+\\ \textbf{Technical Notes}: Here \texttt{Bracken} - an extension of the \texttt{Kraken} packages or \texttt{Qiime2} are often used to calculate diversity. Instead I opted to create my own \texttt{Python} script \texttt{calculate\_diversity.py} because:
 	 \begin{enumerate}
 	\item I find that the diversity indices in either tools are limited to only the most often used i.e. the most popular indices - so it is not comprehensive
 	\item I've had problems integrating them into the pipeline because some dependency limitations, un-updated scripts, and a pre-processing step that requires converting all of \texttt{Kraken2, Bracken} files, then importing them to \texttt{Qimme2} which is too time-consuming and inefficient - my script just automatically calulates from \texttt{Bracken} outputs and just puts out all the possible (non-phylogenetic-based-which you would need a phylogenetic tree to build first) indices out there.  
@@ -1108,6 +1107,7 @@ This was used as an approximation for bootstrapping by shuffling and adjusting t
 	\item [\done] Decided to move to Project Side K-mer\_diversity.smk as it is not essential (yet). 
 	\item [\done] Finally resolved an issue with wakatime not integrating properly with TeXStudio
 	\item [\done] I realize now that the entry dates were one-day behind.  
+	\item [\done] Also added the names of the python scripts I refer for proper documentation. 
 \end{itemize}
 
 \textbf{Scripts Worked On}
