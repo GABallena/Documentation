@@ -619,7 +619,7 @@ This pipeline is designed for \textbf{comprehensive metagenomic analysis of ARGs
 	\item \texttt{PlasmidFinder}
 	\item \texttt{MOBSuite} plasmid marker annotator
 \end{itemize}
-If plasmid signatures are present, \texttt{plasmidSPAdes} along with \texttt{GapFiller} will be used to check if the contig can circularize. \texttt{oriTfinder} will then be applied to contigs with fewer than 4 fragments. A \texttt{Python} script (TBA) will calculate GC skews of the chimeric contig and compare it to its taxonomic counterparts. Another \texttt{Python} script (TBA) will normalize the data according to \texttt{16S rRNA} from trimmed reads. Lastly, plasmid percentage will be calculated based on reads mapped to putative plasmids over the total reads.
+If plasmid signatures are present, \texttt{plasmidSPAdes} along with \texttt{GapFiller} will be used to check if the contig can circularize. \texttt{oriTfinder} will then be applied to contigs with fewer than 4 fragments. A \texttt{Python} script (TBA) will calculate GC skews of the chimeric contig and compare it to its taxonomic counterparts. Another \texttt{Python} script (TBA) will normalize the data according to \texttt{16S rRNA} from trimmed reads. Lastly, plasmid percentage will be calculated based on reads mapped to putative plasmids over the total reads. A code snippet is present called \texttt{calculate\_plasmid\_percentage.py}.
 
 \textbf{Equation}:
 \[
@@ -926,7 +926,8 @@ This was used as an approximation for bootstrapping by shuffling and adjusting t
 \section{krakenpipeline.bash}
 \textbf{Stage: Done} \\   
 \textbf{The entire basic taxo-metagenomic pipeline with the usual tools} \\
-\textbf{Specifics:} This pipeline passes through a loop between \texttt{FastQC} and \texttt{Trimmomatic} before progressing to \texttt{Kraken2} then \texttt{Bracken} then calculate\_diversity.py. 
+\textbf{Specifics:} This pipeline passes through a loop between \texttt{FastQC} and \texttt{Trimmomatic} \texttt{trimming\_cleaning\_checking.py} before progressing to \texttt{Kraken2} then \texttt{Bracken} then \texttt{calculate\_diversity.py}. 
+\textbf{Notes}: This does not include \texttt{FastQC}-ing of raw reads (yet), you have to run \texttt{raw.bash} for that. Additionally, it also currently does not automate the production of aggregated summaries of the FastQC files for you (yet), you have to run \texttt{summary\_stat.bash} for that as well. 
 
 
 
