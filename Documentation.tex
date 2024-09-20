@@ -67,6 +67,8 @@
 \usepackage{array}
 
 \usepackage{lineno}[switch]
+\usepackage{dirtree} % For directory trees
+
 
 
 
@@ -643,30 +645,66 @@ If plasmid signatures are present, \texttt{plasmidSPAdes} along with \texttt{Gap
 
 
 \subsection{Phage Signature Extraction and Phylogenetic Analysis}
-\textbf{Technical Notes}: Phage-associated genes will be extracted from the chimeric contigs, followed by phylogenetic analysis to uncover evolutionary relationships.\texttt{FastTree} will be used to build a phylogenetic tree based on the extracted phage genes.For visualization, tools like \texttt{iTOL} or \texttt{FigTree} can be used to generate an interpretable phylogenetic tree.
+\textbf{Technical Notes}: Phage-associated genes will be extracted from the chimeric contigs, followed by phylogenetic analysis to uncover evolutionary relationships. \texttt{FastTree} will be used to build a phylogenetic tree based on the extracted phage genes. For visualization, tools like \texttt{iTOL} or \texttt{FigTree} can be used to generate an interpretable phylogenetic tree.
+
+\textbf{Rationale}: Phage genes embedded in chimeric contigs (their taxonomy) may serve as strong evidence of horizontal gene transfer (HGT) events. The aim here is to check the evolutionary origins of the phage genes found in our dataset and their potential involvement in the dissemination of ARGs.
+
+\subsection{Directory tree}
+\textbf{Notes:} The final directory tree should look like this to help you visualize. \textbf{Notice the multiple \texttt{path/to/} here as this is still (WIP)}:
+
+\dirtree{%
+	.1 /project\_root/.
+	.2 *path/to/cleaned\_reads/* (Prerequisite).
+	.2 path/to/merged\_reads/.
+	.2 *path/to/CARD\_db/* (Prerequisite - Database).
+	.2 path/to/output/.
+	.3 final\_annotated\_plasmids.fasta.
+	.3 fpkm\_normalized\_plasmids.txt.
+	.3 categorized\_MGEs.txt.
+	.3 final\_filtered\_contigs.fasta.
+	.2 path/to/logs/.
+	.3 predict\_plasmids.log.
+	.3 run\_mob\_suite.log.
+	.3 check\_plasmidfinder.log.
+	.3 calculate\_gc\_skew.log.
+	.2 path/to/plaspredict\_output/.
+	.2 *path/to/PFAM\_db/* (Prerequisite - Database).
+	.2 *path/to/TnpPred\_db/* (Prerequisite - Database).
+	.2 path/to/plasmid\_prediction/.
+	.3 predicted\_plasmids.fasta.
+	.3 plasmidfinder\_report.txt.
+	.3 oritfinder\_report.txt.
+	.3 tnpred\_report.txt.
+	.2 path/to/plasmidspades\_output/.
+	.3 plasmid\_assembly.fasta.
+	.2 path/to/mob\_suite\_output/.
+	.3 mob\_suite\_summary.txt.
+	.2 path/to/gc\_skew\_analysis/.
+	.3 gc\_skew\_plot.png.
+	.2 path/to/read\_mapping/.
+	.3 reads\_mapped\_to\_plasmids.bam.
+	.3 plasmid\_read\_count.txt.
+	.3 total\_read\_count.txt.
+}
 
 
-\textbf{Rationale}:Phage genes embedded in chimeric contigs (their taxonomy) may serve as strong evidence of horizontal gene transfer (HGT) events. The aim here is to check the evolutionary origins of the phage genes found in our dataset and their potential involvement in the dissemination of ARGs.
-\\
-\\
-\\ 
-\textbf{Homework?} \\
+
+
+
+
+
 \rule{\linewidth}{0.5mm}
-\subsection{Future Considerations}: 
+\textbf{Homework?} 
+\subsection{Future Considerations}
 Will continue improving this section (everything regarding HGT) by evaluating the results from these tools, aligning them with ARG presence, and refining the approach for identifying conjugation, transposon, and transduction events within chimeric contigs. This may also involve validating phage activity—\textit{again, why do I do this to myself?}
-
-
 
 
 \newpage
 \linenumbers*
 \section{metagenomics\_general.smk}
 \textbf{Stage: Done} \\   
-\textbf{General Purpose taxo-metagenomics}
-
-This pipeline is designed for \textbf{The essentials in metagenomics}, which includes \textbf{quality checking, filtering, and trimming of raw reads to clean reads}. As well as the usual \textbf{taxo-metagenomic analysis}. 
-
-\textbf{Specifics:}
+\textbf{General Purpose taxo-metagenomics}\\
+\textbf{Specifics:}This pipeline is designed for \textbf{The essentials in metagenomics}, which includes \textbf{quality checking, filtering, and trimming of raw reads to clean reads}. As well as the usual \textbf{taxo-metagenomic analysis}. 
 
 
 \subsection{Quality control (Pre-processing)}		
@@ -715,7 +753,41 @@ This pipeline is designed for \textbf{The essentials in metagenomics}, which inc
 	\item We are not being biased by low quality reads
 \end{enumerate}
 \textbf{Notes}: There are many ways in which taxonomy is assigned to raw reads the \texttt{Kraken-based} packages use a curated database that links k-mers from your database to k-mers generated from their database (usually manually curated).  
-\\ \textbf{Notes}: Others like \texttt{MetaPhlan} first create "markers" that are based off of known sequences, and then scan your raw reads for these markers, which it then checks for under what taxon/taxa that marker fell under. \\
+\\ \textbf{Notes}: Others like \texttt{MetaPhlan4} first create "markers" that are based off of known sequences, and then scan your raw reads for these markers, which it then checks for under what taxon/taxa that marker fell under. 
+
+\subsection{Directory tree}
+\dirtree{%
+	.1 /project\_root/.
+	.2 configs/.
+	.3 config.yaml.
+	.2 **path/to/raw\_reads\_dir/** \textit{(Prerequisite - Raw Data)}.
+	.3 sample1\_R1.fastq.gz.
+	.3 sample1\_R2.fastq.gz.
+	.3 sample2\_R1.fastq.gz.
+	.3 sample2\_R2.fastq.gz.
+	.2 **path/to/trimmed\_reads\_dir/** \textit{(Prerequisite - Trimmed Data)}.
+	.3 sample1\_R1\_paired.fastq.gz.
+	.3 sample1\_R2\_paired.fastq.gz.
+	.3 sample2\_R1\_paired.fastq.gz.
+	.3 sample2\_R2\_paired.fastq.gz.
+	.2 path/to/fastqc\_output\_dir/.
+	.2 path/to/kraken\_output\_dir/.
+	.3 sample1.k2report.
+	.3 sample1.kraken2.
+	.3 sample2.k2report.
+	.3 sample2.kraken2.
+	.2 path/to/bracken\_output\_dir/.
+	.3 sample1.bracken.
+	.3 sample1.breport.
+	.3 sample2.bracken.
+	.3 sample2.breport.
+	.2 path/to/cleaning\_results\_dir/.
+	.3 summary\_report.txt.
+	.2 logs/.
+	.3 calculate\_diversity.log.
+	.2 path/to/output/.
+	.3 diversity\_matrices.tsv.
+}
 
 
 \newpage
@@ -753,14 +825,72 @@ This is a module that will be part of a bigger pipeline. The idea here to is ran
 	\item Quality Scores - significant differences in quality among sites and across entire sequences (Phred score, Contamination, Adapter Removal, N Content, Length Distribution, etc.). Can be done using tools like \texttt{FastQC}
 	\item Visualization can be done using \texttt{Rstudio} or \texttt{Python's matplotlib} to visually look for differences in abnormalities. 
 \end{enumerate} 
-\textbf{Rationale}:Evaluating read quality and assessing key metrics post-trimming helps to ensure that the data is suitable for downstream analyses. Optimal trimming should maximize the number of high-quality, usable reads while eliminating low-quality bases and adapter contamination.\\
-\begin{tcolorbox}[colback=gray!10!white, coltitle=white, colframe=gray!80!black, title=A Personal Note]
-	I have long pondered upon the idea of creating a graph with \texttt{biological information} on the y-axis and \texttt{read length} on the x-axis. I hypothesize that we will find a \textbf{"sweet spot" }wherein we can optimize the amount of \texttt{information/read} using such trimmers. Unfortunately, it is extremely difficult to define what \texttt{a biological sequence} really is, because technically you can generate any random sequence - whether protein or nucleotide. That's the main reason I have been stuck on this problem for quite a while, I've been trying to find the answer first.
-	
-	The core difficulty here lies in defining what constitutes biological information in a meaningful, quantifiable way. Since any random sequence of nucleotides or proteins could be technically "valid" (false-positives). 
-	
-	When people are asked this question they often give \textbf{DESCRIPTIONS} of what a \texttt{biological sequence} is but not what \textbf{DEFINES} a \texttt{biological sequence}. I understand that there are many characteristics that can help in determining the signal from the noise, but I am just not satisfied with whether this "thing" checks most (if not all) the boxes - I need a non-subjective answer to this problem. 
-\end{tcolorbox}
+\textbf{Rationale}:Evaluating read quality and assessing key metrics post-trimming helps to ensure that the data is suitable for downstream analyses. Optimal trimming should maximize the number of high-quality, usable reads while eliminating low-quality bases and adapter contamination.\\ 
+\textbf{Notes} See Further Investigations \texttt{Box on Biological Information} for more possible details on this. 
+
+
+\subsection{Annotated Directory Tree with File Temporary files and Prerequisites}
+\dirtree{%
+	.1 /project\_root/.
+	.2 raw\_reads/ \textit{(permanent)} **(prerequisite)**.
+	.3 sample1\_R1.fastq.gz \textit{(permanent)} **(prerequisite)**.
+	.3 sample1\_R2.fastq.gz \textit{(permanent)} **(prerequisite)**.
+	.3 sample2\_R1.fastq.gz \textit{(permanent)} **(prerequisite)**.
+	.3 sample2\_R2.fastq.gz \textit{(permanent)} **(prerequisite)**.
+	.2 output\_dir/.
+	.3 fastp\_output/ \textit{(temporary)} \textit{(to be deleted)}.
+	.4 iteration\_1/.
+	.5 sample1\_R1\_fastp\_trimmed.fastq.gz \textit{(temporary)}.
+	.5 sample1\_R2\_fastp\_trimmed.fastq.gz \textit{(temporary)}.
+	.5 sample2\_R1\_fastp\_trimmed.fastq.gz \textit{(temporary)}.
+	.5 sample2\_R2\_fastp\_trimmed.fastq.gz \textit{(temporary)}.
+	.4 iteration\_2/.
+	.5 (same as iteration\_1 but with iteration\_2 files) \textit{(temporary)}.
+	.4 iteration\_3/.
+	.5 (same as iteration\_1 but with iteration\_3 files) \textit{(temporary)}.
+	.3 trimmomatic\_output/ \textit{(temporary)} \textit{(to be deleted)}.
+	.4 iteration\_1/.
+	.5 sample1\_R1\_paired.fastq.gz \textit{(temporary)}.
+	.5 sample1\_R1\_unpaired.fastq.gz \textit{(temporary)}.
+	.5 sample1\_R2\_paired.fastq.gz \textit{(temporary)}.
+	.5 sample1\_R2\_unpaired.fastq.gz \textit{(temporary)}.
+	.5 (same for sample2) \textit{(temporary)}.
+	.4 iteration\_2/.
+	.5 (same structure as iteration\_1) \textit{(temporary)}.
+	.4 iteration\_3/.
+	.5 (same structure as iteration\_1) \textit{(temporary)}.
+	.3 cutadapt\_output/ \textit{(temporary)} \textit{(to be deleted)}.
+	.4 iteration\_1/.
+	.5 sample1\_R1\_cutadapt\_trimmed.fastq.gz \textit{(temporary)}.
+	.5 sample1\_R2\_cutadapt\_trimmed.fastq.gz \textit{(temporary)}.
+	.4 iteration\_2/.
+	.5 (same structure as iteration\_1) \textit{(temporary)}.
+	.4 iteration\_3/.
+	.5 (same structure as iteration\_1) \textit{(temporary)}.
+	.3 bbduk\_output/ \textit{(temporary)} \textit{(to be deleted)}.
+	.4 iteration\_1/.
+	.5 sample1\_R1\_bbduk\_trimmed.fastq.gz \textit{(temporary)}.
+	.5 sample1\_R2\_bbduk\_trimmed.fastq.gz \textit{(temporary)}.
+	.4 iteration\_2/.
+	.5 (same structure as iteration\_1) \textit{(temporary)}.
+	.4 iteration\_3/.
+	.5 (same structure as iteration\_1) \textit{(temporary)}.
+	.3 sickle\_output/ \textit{(temporary)} \textit{(to be deleted)}.
+	.4 iteration\_1/.
+	.5 sample1\_R1\_sickle\_trimmed.fastq.gz \textit{(temporary)}.
+	.5 sample1\_R2\_sickle\_trimmed.fastq.gz \textit{(temporary)}.
+	.5 sample1\_singles\_sickle\_trimmed.fastq.gz \textit{(temporary)}.
+	.4 iteration\_2/.
+	.5 (same structure as iteration\_1) \textit{(temporary)}.
+	.4 iteration\_3/.
+	.5 (same structure as iteration\_1) \textit{(temporary)}.
+	.2 logs/ \textit{(permanent)} **(prerequisite)**.
+	.3 fastp\_params.tsv \textit{(permanent)} **(prerequisite)**.
+	.3 trimmomatic\_params.tsv \textit{(permanent)} **(prerequisite)**.
+	.3 cutadapt\_params.tsv \textit{(permanent)} **(prerequisite)**.
+	.3 bbduk\_params.tsv \textit{(permanent)} **(prerequisite)**.
+	.3 sickle\_params.tsv \textit{(permanent)} **(prerequisite)**.
+}
 
 
 \newpage
@@ -815,6 +945,46 @@ Previously, I used the probability of a sample \textit{being selected}, which is
 
 This was used as an approximation for bootstrapping by shuffling and adjusting the sample size. However, the updated script now performs \textbf{actual bootstrapping}, sampling with replacement, which is a more accurate statistical method for resampling.\\
 \\
+\subsection{Annotated Directory Tree with File Movement and Prerequisites}
+\dirtree{%
+	.1 /project\_root/.
+	.2 configs/.
+	.3 config.yaml **(prerequisite)**.
+	.2 path/to/raw\_reads\_dir/ \textit{(permanent)} **(prerequisite)**.
+	.3 sample1\_R1.fastq.gz \textit{(permanent)} **(prerequisite)**.
+	.3 sample1\_R2.fastq.gz \textit{(permanent)} **(prerequisite)**.
+	.3 sample2\_R1.fastq.gz \textit{(permanent)} **(prerequisite)**.
+	.3 sample2\_R2.fastq.gz \textit{(permanent)} **(prerequisite)**.
+	.2 path/to/temp\_bootstrap\_dir/ \textit{(temporary)} \textit{(to be deleted after pipeline resolves)}.
+	.3 sample1/ \textit{(temporary)}.
+	.4 rep\_1\_R1.fastq.gz \textit{(temporary)}.
+	.4 rep\_1\_R2.fastq.gz \textit{(temporary)}.
+	.4 rep\_2\_R1.fastq.gz \textit{(temporary)}.
+	.4 rep\_2\_R2.fastq.gz \textit{(temporary)}.
+	.4 total\_reads.txt \textit{(temporary)}.
+	.3 sample2/ \textit{(temporary)}.
+	.4 rep\_1\_R1.fastq.gz \textit{(temporary)}.
+	.4 rep\_1\_R2.fastq.gz \textit{(temporary)}.
+	.4 rep\_2\_R1.fastq.gz \textit{(temporary)}.
+	.4 rep\_2\_R2.fastq.gz \textit{(temporary)}.
+	.4 total\_reads.txt \textit{(temporary)}.
+	.3 rep\_1/ \textit{(temporary)}.
+	.4 diversity\_matrices\_sample1\_rep\_1.tsv \textit{(temporary)} \textit{(moved to diversity\_results/)}.
+	.4 diversity\_matrices\_sample2\_rep\_1.tsv \textit{(temporary)} \textit{(moved to diversity\_results/)}.
+	.3 rep\_2/ \textit{(temporary)}.
+	.4 diversity\_matrices\_sample1\_rep\_2.tsv \textit{(temporary)} \textit{(moved to diversity\_results/)}.
+	.4 diversity\_matrices\_sample2\_rep\_2.tsv \textit{(temporary)} \textit{(moved to diversity\_results/)}.
+	.2 logs/ \textit{(permanent)} **(prerequisite)**.
+	.3 metagenomics\_pipeline\_sample1\_rep\_1.log \textit{(permanent)} **(prerequisite)**.
+	.3 metagenomics\_pipeline\_sample1\_rep\_2.log \textit{(permanent)} **(prerequisite)**.
+	.3 metagenomics\_pipeline\_sample2\_rep\_1.log \textit{(permanent)} **(prerequisite)**.
+	.3 metagenomics\_pipeline\_sample2\_rep\_2.log \textit{(permanent)} **(prerequisite)**.
+	.2 diversity\_results/ \textit{(permanent)} \textit{(contains moved files)} **(prerequisite)**.
+	.3 diversity\_rep\_1.tsv \textit{(moved from temp\_bootstrap\_dir)}.
+	.3 diversity\_rep\_2.tsv \textit{(moved from temp\_bootstrap\_dir)}.
+	.2 aggregated\_results/ \textit{(permanent)} **(prerequisite)**.
+	.3 diversity\_aggregate.tsv \textit{(permanent)}.
+}
 
 
 \subsection{Run \texttt{kraken\_pipeline.bash}}
@@ -921,19 +1091,226 @@ This was used as an approximation for bootstrapping by shuffling and adjusting t
 
 
 \subsection{\texttt{CheckM2}} \textbf{Technical Notes}: \texttt{CheckM2} is used to predict genome completeness and contamination using \texttt{low-memory mode} (essential for resource-limited systems like mine; remember to adjust this on HPC systems). \ \textbf{Rationale}: \texttt{CheckM2} is an updated version of \texttt{CheckM}, but many tools in this pipeline haven't been updated to recognize it. I haven't tested whether aliasing \texttt{CheckM2} as \texttt{CheckM} would work, so it’s added here as a final step to ensure the results meet \texttt{MIMAG} standards for completeness and contamination.
+\subsection{Annotated Directory Tree with File Movements and Temporary Files}
+
+\dirtree{%
+	.1 /project\_root/.
+	.2 trimmed\_reads/ \textit{(prerequisite)}.
+	.3 site1\_R1\_paired.fastq.gz \textit{(permanent)}.
+	.3 site1\_R2\_paired.fastq.gz \textit{(permanent)}.
+	.3 site2\_R1\_paired.fastq.gz \textit{(permanent)}.
+	.3 site2\_R2\_paired.fastq.gz \textit{(permanent)}.
+	.2 fastuniq/ \textit{(temporary)} \textit{(to be deleted)}.
+	.3 site1\_R1\_uniq.fastq \textit{(temporary)}.
+	.3 site1\_R2\_uniq.fastq \textit{(temporary)}.
+	.3 site2\_R1\_uniq.fastq \textit{(temporary)}.
+	.3 site2\_R2\_uniq.fastq \textit{(temporary)}.
+	.2 fasta/ \textit{(permanent)}.
+	.3 site1\_R1\_clean.fasta \textit{(permanent)}.
+	.3 site1\_R2\_clean.fasta \textit{(permanent)}.
+	.3 site2\_R1\_clean.fasta \textit{(permanent)}.
+	.3 site2\_R2\_clean.fasta \textit{(permanent)}.
+	.2 megahit\_output/ \textit{(permanent)}.
+	.3 site1\_assembly/.
+	.4 site1\_filtered\_contigs.fa \textit{(permanent)}.
+	.3 site2\_assembly/.
+	.4 site2\_filtered\_contigs.fa \textit{(permanent)}.
+	.2 cdhit\_contigs/ \textit{(permanent)}.
+	.3 site1\_cdhit\_contigs.fasta \textit{(permanent)}.
+	.3 site2\_cdhit\_contigs.fasta \textit{(permanent)}.
+	.2 CLEAN\_READS/ \textit{(permanent)} \textit{(moved)}.
+	.3 site1/.
+	.4 site1\_1.fastq \textit{(moved from fastuniq)}.
+	.4 site1\_2.fastq \textit{(moved from fastuniq)}.
+	.3 site2/.
+	.4 site2\_1.fastq \textit{(moved from fastuniq)}.
+	.4 site2\_2.fastq \textit{(moved from fastuniq)}.
+	.2 binning\_output/ \textit{(permanent)}.
+	.3 site1\_binning\_output/.
+	.4 concoct\_bins.scaffolds2bin.tsv \textit{(permanent)}.
+	.4 metabat2\_bins.scaffolds2bin.tsv \textit{(permanent)}.
+	.4 maxbin2\_bins.scaffolds2bin.tsv \textit{(permanent)}.
+	.3 site2\_binning\_output/.
+	.4 (same as site1) \textit{(permanent)}.
+	.2 dastool\_output/ \textit{(permanent)}.
+	.3 DAS\_Tool\_bins\_site1 \textit{(permanent)}.
+	.3 DAS\_Tool\_bins\_site2 \textit{(permanent)}.
+	.2 reassembly\_output/ \textit{(permanent)}.
+	.3 site1\_reassembly\_output/.
+	.4 assembly.fasta \textit{(permanent)}.
+	.3 site2\_reassembly\_output/.
+	.4 assembly.fasta \textit{(permanent)}.
+	.2 magpurify\_output/ \textit{(permanent)}.
+	.3 site1\_cleaned.fasta \textit{(permanent)}.
+	.3 site2\_cleaned.fasta \textit{(permanent)}.
+	.2 metaquast\_output/ \textit{(permanent)}.
+	.3 site1\_metaquast\_output/.
+	.4 (MetaQUAST results) \textit{(permanent)}.
+	.3 site2\_metaquast\_output/.
+	.4 (MetaQUAST results) \textit{(permanent)}.
+	.2 dereplication\_output/ \textit{(permanent)}.
+	.3 dereplicated\_genomes/.
+	.4 dereplicated\_genomes.fasta \textit{(permanent)}.
+	.4 checkm2\_output/ \textit{(permanent)}.
+	.5 quality\_report.tsv \textit{(permanent)}.
+	.2 logs/ \textit{(permanent)}.
+	.3 run\_megahit\_site1.log \textit{(permanent)}.
+	.3 run\_cdhit\_site1.log \textit{(permanent)}.
+	.3 (logs for each step) \textit{(permanent)}.
+}
+
+
 
 \linenumbers*
 \section{krakenpipeline.bash}
 \textbf{Stage: Done} \\   
 \textbf{The entire basic taxo-metagenomic pipeline with the usual tools} \\
-\textbf{Specifics:} This pipeline passes through a loop between \texttt{FastQC} and \texttt{Trimmomatic} \texttt{trimming\_cleaning\_checking.py} before progressing to \texttt{Kraken2} then \texttt{Bracken} then \texttt{calculate\_diversity.py}. 
+\textbf{Specifics:} This pipeline passes through a loop between \texttt{FastQC} and \texttt{Trimmomatic} \texttt{trimming\_cleaning\_checking.py} before progressing to \texttt{Kraken2} then \texttt{Bracken} then \texttt{calculate\_diversity.py}. \\
 \textbf{Notes}: This does not include \texttt{FastQC}-ing of raw reads (yet), you have to run \texttt{raw.bash} for that. Additionally, it also currently does not automate the production of aggregated summaries of the FastQC files for you (yet), you have to run \texttt{summary\_stat.bash} for that as well. 
 
+\subsection{Directory tree}
+\dirtree{%
+	.1 /project\_root/.
+	.2 trimmed\_reads/ **\textit{(Prerequisite - Trimmed reads directory)}**.
+	.3 sample1\_R1\_paired.fastq.gz.
+	.3 sample1\_R2\_paired.fastq.gz.
+	.3 sample2\_R1\_paired.fastq.gz.
+	.3 sample2\_R2\_paired.fastq.gz.
+	.2 kraken\_db/ **\textit{(Prerequisite - Kraken2 database directory)}**.
+	.3 database files (.k2d, etc.).
+	.2 kraken\_output/ \textit{(Output directory for Kraken2 reports)}.
+	.3 sample1.k2report.
+	.3 sample1.kraken2.
+	.3 sample2.k2report.
+	.3 sample2.kraken2.
+	.2 bracken\_output/ \textit{(Output directory for Bracken reports)}.
+	.3 sample1.bracken.
+	.3 sample1.breport.
+	.3 sample2.bracken.
+	.3 sample2.breport.
+}
+
+\linenumbers*
+\section{raw.bash; completely optional}
+\textbf{Stage: Done} \\   
+\textbf{\texttt{FastQC} Automation script to run \texttt{FastQC} on raw reads} \\
+\textbf{Specifics:} This script takes raw reads and creates a summary report for each of them in  FasQC\_raw/\\
+\textbf{Notes:} \texttt{summary\_stat.bash} can already do that for you, so it's a bit redundant. \textbf{But if you're only interested in seeing QC from the raw reads, then have fun!} \\
+\textbf{Personal notes:} \textit{The only reason I am keeping this alive is because I am not quite sure yet if some pipelines rely on this and it's corresponding output files; \textbf{I have to check.}}
+
+
+\linenumbers*
+\section{summary\_stat.bash}
+\textbf{Stage: Done} \\   
+\textbf{\texttt{FastQC} Automation script} \\
+\textbf{Specifics:} This script takes reads from the \texttt{raw reads} directory and the \texttt{trimmed reads} directory, then creates a summary directory (if not already existent) (you can manually set this as user). The summary directory will contain summary statistics extracted from FastQC sub-directories, it also creates. It has two notable functions: \begin{enumerate}
+	\item Counts the \texttt{number of reads} in raw and trimmed directories.  
+	\item Extract quality metrics from \texttt{FastQC} subdirectories specifically: \texttt{per base sequence quality}, and \texttt{per sequence quality scores}.
+\end{enumerate} 
+It then saves them into a file the summary subfolder.  \\
+\textbf{Notes:} The way it counts reads from \texttt{FASTQ} file is by reading the number of lines and dividing it by 4 (since each read in a FASTQ file consists of 4 lines: sequence identifier, sequence, plus sign, and quality score). \\
+\textbf{Notes}: This does not include config file integration yet (TBA). \\ 
+\textbf{Notes}: Not integrated into any pipeline yet (TBA). 
+
+\subsection{Directory tree}
+\dirtree{%
+	.1 /project\_root/.
+	.2 **raw\_reads/** \textit{(Prerequisite - Raw Data)}.
+	.3 sample1.fastq.gz.
+	.3 sample2.fastq.gz.
+	.3 \dots.
+	.2 **trimmed\_reads/** \textit{(Prerequisite - Trimmed Data)}.
+	.3 sample1\_trimmed.fastq.gz.
+	.3 sample2\_trimmed.fastq.gz.
+	.3 \dots.
+	.2 summary\_statistics/.
+	.3 fastqc\_raw/.
+	.4 sample1\_fastqc.zip.
+	.4 sample2\_fastqc.zip.
+	.4 \dots.
+	.3 fastqc\_trimmed/.
+	.4 sample1\_trimmed\_fastqc.zip.
+	.4 sample2\_trimmed\_fastqc.zip.
+	.4 \dots.
+	.3 extracted\_metrics/.
+	.4 sample1\_base\_quality.txt.
+	.4 sample1\_sequence\_quality.txt.
+	.4 \dots.
+	.3 raw\_read\_counts.txt.
+	.3 trimmed\_read\_counts.txt.
+}
+
+
+\linenumbers*
+\section{plot\_and\_detect\_intermediate\_coverage.py}
+\textbf{Stage: Done} \\   
+\textbf{Processing of coverage data} \\
+\textbf{Specifics:} This script takes the coverage data from a coverage file, which is expected to have 3 columns: \texttt{chrom}(chromosome/contig name), \texttt{pos}(position along the contig), \texttt{cov}(coverage value at that specific position). It then takes the latter two columns and uses \texttt{matplotlib} to create a line plot of the coverage values - and saves it as an image.  \\
+\textbf{Notes:} Presently, it determines, intermediate coverage by looking first looking for the minimum and maximum value of coverage data. \\
+ 
+\begin{tcolorbox}[title=Sept 20 2024 Update, coltitle=white]
+I updated this one here to be a bit more robust in detection of chimeric contigs. Instead of visual inspection (which is a bit too subjective for my taste), I added 4 new features to this 
+	\begin{enumerate}
+		\item Sliding window approach to detect changes coverage (rather than visualization alone) other than that we apply sliding window to detect changes in:
+			\begin{enumerate}
+				\item Codon usage bias
+	 		\item GC content
+				\item Tetranucleotide frequencies
+			\end{enumerate}
+	\item Each of these "windows" are then subjected to ANOVA, to determine statistical significance and 
+	\item PCA, that combines all the (3) features to generate a 2D plot which to see whether different sections of the contig cluster differently - which would indicate likely chimerism. 
+	\end{enumerate}
+\end{tcolorbox} 
+
+\linenumbers*
+\section{Shortbred\_ARG.bash}
+\textbf{Stage: Back to drawing board and to test} \\   
+\textbf{Specifics:} Marks trimmed reads with ARGs 
+\textbf{Technical Details} This script takes cleaned reads (dicated by the user), unzips them (to FASTQ), then starts finding ARG-markers on them. Markers are determined by the function \texttt{shortbred\_identify.py} (instrinsic to the tool), taking first the \texttt{CARD} database and aligning it with the \texttt{RefSeq}. After that, it clusters the \texttt{RefSeq} database at 95\% similarity with those on the CARD database, to create markers. After that, it uses another function \texttt{shortbred\_quantify.py}\\
+\textbf{Notes:}  I included an additional step here that filters out specific keywords from the \texttt{FASTQ} files from a reference presently. It called \texttt{filter\_keywords.txt} which you can make yourself should you want to filter out specific ARGs that you consider "low-confidence", or just create the file and leave it blank (up to you). \\
 
 
 
+\begin{tcolorbox}[title=Sept 20 2024 Update, coltitle=white]
+	I am revisiting this process because:
+	\begin{itemize}
+		\item It turns out that ShortBRED is typically used on \textbf{contigs}, not raw reads. This makes sense because marker-based analyses are more accurate on contigs, as they reduce false positives and provide a clearer view of the genetic background. \\
+		\textbf{Note}: ShortBRED is used to quantify \textbf{genes}, and raw reads are fragmented sequences it is the \textbf{CONTIGS THAT CONTAIN GENES.}
+		
+		\item The current method of filtering low-confidence ARGs is inefficient: it creates a temporary file full of ARGs with the keywords, and then filters the marker database using those. There must be a more efficient way to skip this unnecessary step of generating temporary FASTQ files. 
+	\end{itemize}
+	
+	I have also streamlined the script to:
+	\begin{itemize}
+		\item Unzip FASTQ files in parallel.
+		\item Remove the temporary file afterwards.
+		\item Focus only on high-confidence ARGs. Previously, it also produced markers on the RefSeq database, but checking marker percentages turned out to be inefficient and pointless.
+		\item Add checks when directory creation or unzipping fails.
+		\item Use a consistent naming scheme.
+		\item and finally, it now \textbf{includes MEGAHIT assembly} and a filtering step that removes contigs below 200 bp before ShortBRED processing.
+	\end{itemize}
+	
+	The most important addition is the conversion from \texttt{FASTQ} to \texttt{FASTA} using \texttt{seqtk}. I had overlooked this step, as some tools cannot process \texttt{FASTQ} format.
+	
+	\medskip
+	
+\textbf{Personal Note}: Dear Reader, please be aware that ShortBRED is quite particular about FASTA headers. It requires the headers to be numeric identifiers, which adds an extra step of renaming all sequences to numbers. You'll also need to create an index to trace the original sequence headers back to their numeric counterparts.
 
+While troubleshooting, I encountered persistent naming errors that were confusing at first. After diving into the source code, I eventually discovered that ShortBRED requires headers to be strictly numeric. This unexpected requirement added to the complexity of the process and was not immediately obvious.
 
+	
+\end{tcolorbox}
+
+\linenumbers*
+\section{refseq\_bacteria.bash}
+\textbf{Stage: Done} \\   
+\textbf{\texttt{FastQC} Automation script to run download from the bacteria \texttt{RefSeq}} \\
+\textbf{Specifics:} This only downloads the ones that end in \texttt{.faa} as opposed to \texttt{.fna} - the latter are genomes, the former are just all the annotated proteins themselves, with a genome or not. \\
+\textbf{Notes:} This script is kept here because it was difficult to find the link to the \texttt{FTP site}, because \texttt{NCBI} seemed to have had a recent restructuring. 
+
+\begin{tcolorbox}[title=Sept 20 2024 Update, coltitle=white]
+Removed the hard-cap of 1-511.faa files, to add flexibility; now downloads without the need for the user to check how many to download. Also now uses aria2c, which has and intrinsic \texttt{redownload} unfinished files instead of \texttt{wget} function. 
+\end{tcolorbox}
 
 \newpage
 
@@ -992,6 +1369,44 @@ This was used as an approximation for bootstrapping by shuffling and adjusting t
 
 
 \newpage
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\textbf{Further investigations}}
+\fancyhead[C]{\leftmark}  % Adds section title in the header
+\fancyhead[R]{\thepage}
+
+\part{Further investigations}
+
+\renewcommand{\thesection}{\arabic{section}}
+\setcounter{section}{0}
+\setcounter{subsection}{0}
+
+This section comprises of concepts or ideas that require further investigation. They are written in boxes to help categorize them cleanly. I will refer to this section often as no script is perfect - and can be further improved. 
+
+\begin{tcolorbox}[colback=gray!10!white, coltitle=white, colframe=gray!80!black, title=Biological Information]
+	I have long pondered upon the idea of creating a graph with \texttt{biological information} on the y-axis and \texttt{read length} on the x-axis. I hypothesize that we will find a \textbf{"sweet spot" }wherein we can optimize the amount of \texttt{information/read} using such trimmers. Unfortunately, it is extremely difficult to define what \texttt{a biological sequence} really is, because technically you can generate any random sequence - whether protein or nucleotide. That's the main reason I have been stuck on this problem for quite a while, I've been trying to find the answer first.
+	
+	The core difficulty here lies in defining what constitutes biological information in a meaningful, quantifiable way. Since any random sequence of nucleotides or proteins could be technically "valid" (false-positives). 
+	
+	When people are asked this question they often give \textbf{DESCRIPTIONS} of what a \texttt{biological sequence} is but not what \textbf{DEFINES} a \texttt{biological sequence}. I understand that there are many characteristics that can help in determining the signal from the noise, but I am just not satisfied with whether this "thing" checks most (if not all) the boxes - I need a non-subjective answer to this problem. 
+\end{tcolorbox}
+
+
+
+
+
+
+
+\setcounter{section}{1}
+\setcounter{subsection}{0}
+
+
+\newpage
+
+
+
+
+
 
 \nolinenumbers
 \part{Daily entries}
@@ -1008,11 +1423,11 @@ This was used as an approximation for bootstrapping by shuffling and adjusting t
 \setcounter{subsection}{0}
 
 % First entry, decrease the counter after each section
-\section{September 20, 2024}
+\section{September 23, 2024}
 
 
 \textbf{To-do List} \\
-\textbf{Note:} This should've been yesterday's to-do list, but my landline was down, possibly due to the weather—it's been raining all day.
+\textbf{Note:} 
 
 \begin{itemize}
 	\item [\pending] Call for a group meeting regarding logistics (or when they will be available via Zoom call)
@@ -1051,14 +1466,14 @@ This was used as an approximation for bootstrapping by shuffling and adjusting t
 
 \textbf{Completed Tasks}
 \begin{itemize}
-	\item [\done] raw API results now readable stored in TSV file 
-	\item [\done] Created symlinks in private (repo) to .git folders in public repos to enable tracking of Git and Github activities
-	\item [\done] Resolved residual time-tracking activities within the local computer
+	\item [\done] 
+	\item [\done] 
+	\item [\done] 
 \end{itemize}
 
 \textbf{Scripts Worked On}
 \begin{itemize}
-	\item [\done] checkingAPI.sh (now updated to make the raw API results readable)
+	\item [\done] 
 \end{itemize}
 
 
@@ -1073,7 +1488,47 @@ This was used as an approximation for bootstrapping by shuffling and adjusting t
 \end{itemize}
 
 \newpage
+\section{September 20, 2024}
+\textbf{To-do List} \\
 
+
+\textbf{To do list}
+	\begin{itemize}
+		\item [\pending] Project4 Modules
+			\begin{itemize}
+				\item [\done] krakenpipeline.bash
+				\item [\done] raw.bash (optional)
+				\item [\done] summary\_stat.bash
+				\item [\done] plot\_and\_detect...py
+				\item [\done] refseq\_bacteria.bash 
+			\end{itemize}
+		\item [\done] Send the signed AR, PCF, and COS documents as pdf
+	\end{itemize}
+
+\textbf{Completed Tasks} 
+\begin{itemize}
+	\item [\done] Created directory trees template for each script (if relevant, which includes prerequisites and temporary folders)
+	\item [\done] Restructuring of this Documentation to include Further Investigations, Supplementary Data, and Information section for more streamlined reading of the script portions. 
+\end{itemize}
+
+\textbf{Scripts Worked On}
+\begin{itemize}
+	\item [\done] Improved plot\_and\_detect...py for more robust analysis (Details on its own section)
+	\item [\done] Drafted a fix to the Shortbred\_ARG.bash shell (Details on its own section)
+\end{itemize}
+
+
+\textbf{Issues Encountered}
+\begin{itemize}
+	\item Landline-based to-do list moved to next week due to landline down and it's weekend tomorrow so offices will be closed. 
+\end{itemize}
+
+\textbf{Need to Troubleshoot}
+\begin{itemize}
+	\item 
+\end{itemize}
+
+\newpage
 \section{September 19, 2024}
 
 
@@ -1119,7 +1574,7 @@ This was used as an approximation for bootstrapping by shuffling and adjusting t
 
 \textbf{Issues Encountered}
 \begin{itemize}
-	\item 
+	\item Landline-based to-do list moved due to landline down 
 \end{itemize}
 
 \textbf{Need to Troubleshoot}
@@ -1229,4 +1684,27 @@ This was used as an approximation for bootstrapping by shuffling and adjusting t
 \newpage
 \onecolumn
 
+
+\newpage
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\textbf{Further investigations}}
+\fancyhead[C]{\leftmark}  % Adds section title in the header
+\fancyhead[R]{\thepage}
+
+\part{Supplementary data}
+This will contain data on my investigations on standardized or simulated datasets. This is mainly a testing ground for the scripts, and their accompanying data visualizations. 
+
+\renewcommand{\thesection}{\arabic{section}}
+\setcounter{section}{0}
+\setcounter{subsection}{0}
+
+
+\part{Information dump}
+This is part is mainly created as an information dump outside of just bioinformatics, that perhaps we can one day apply to bioinformatic data analysis (mostly). This part could also serve as an index of papers that I've read regarding various topics that seem interesting to me and that I think can be applied in the wider field of computational or mathematical biology. 
+
+
+\renewcommand{\thesection}{\arabic{section}}
+\setcounter{section}{0}
+\setcounter{subsection}{0}
 \end{document}
