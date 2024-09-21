@@ -69,7 +69,7 @@
 \usepackage{lineno}[switch]
 \usepackage{dirtree} % For directory trees
 
-
+\usepackage{longtable} %loooong looong man
 
 
 
@@ -123,33 +123,28 @@
 	% Project overview in a single column
 % Abstract-style tcolorbox settings
 \tcbset{
-	colback=gray!15,        % Light gray background for the box
-	colframe=black,         % Black border
-	width=\linewidth,       % Box takes full width
-	boxrule=0.5mm,          % Border thickness
-	arc=0mm,                % No rounded corners
+	colback=gray!15,         % Light gray background
+	colframe=black,          % Black border
+	width=\linewidth,        % Box takes full width
+	boxrule=0.5mm,           % Border thickness
+	arc=0mm,                 % No rounded corners
 	auto outer arc,
-	fonttitle=\bfseries,    % Bold title
-	coltitle=black,         % Black title color
+	fonttitle=\bfseries,     % Bold title
+	coltitle=black,          % Title color
+	top=0.5em,               % Add space at the top of the box
+	bottom=0.5em,            % Add space at the bottom of the box
 }
 
-% Journal abstract-style box
 
-
-	\begingroup
-	\raggedright
-	\colorbox{gray!15}{%
-		\parbox{\dimexpr\textwidth-2\fboxsep\relax}{ % Ensures the box takes the full width
-			\vspace{0.5em} % Add space at the top of the box
-			\textbf{} \\
-			\onehalfspacing % Adjust line spacing for readability
-			Metagenomic analysis of Antibiotic/Antimicrobial Resistance Genes (ARGs) in NCR (Metro Manila) hospitals, wastewaters, and surface waters.
-			\vspace{0.5em} % Add space at the bottom of the box
-		}
-	}
-	\endgroup
-		\begin{multicols}{2}
-\begin{tcolorbox}[title=Legend]
+	
+	\begin{tcolorbox}
+		\raggedright
+		\onehalfspacing
+		\textbf{} % If you have a title, you can place it here, or leave it blank
+		Metagenomic analysis of Antibiotic/Antimicrobial Resistance Genes (ARGs) in NCR (Metro Manila) hospitals, wastewaters, and surface waters.
+	\end{tcolorbox}
+		
+\begin{tcolorbox}[title=Legend, coltitle=AntiqueWhite1]
 	\begin{tabular}{p{0.45\linewidth} p{0.45\linewidth}}
 		\begin{itemize}
 			\item [\done] Done
@@ -165,193 +160,138 @@
 			\item \highlightoptional{Optional}
 			\item \highlightrobust{Robust}
 			\item \deprecated{Deprecated}
+			\item TBA - needs further investigation
 		\end{itemize}
 	\end{tabular}
 \end{tcolorbox}	
 	% Two-column layout for the rest of the document
 
+
+
+
+
+\newpage
 		
-\renewcommand{\thesection}{\arabic{section}}  % This makes sections appear as 1, 2, 3 instead of 1.1, 1.2
+\chapter{Bioinformatics}
 
-\section{HPC Preparation}
-\begin{itemize}
-		\item [\pending] \highlightessential{Confirmation of Robustness of analysis}
-		\begin{itemize}
-			\item [\pending] Agree upon the type of analyses
-		\end{itemize}
-		\item [\pending] \highlightessential{\texttt{SLURM} request management}
-		\begin{itemize}
-			\item [\pending] \highlightessential{Send email for HPC usage requests}
-			\item [\pending] \highlightessential{Setup Docker containers for \texttt{SLURM}}
-			\item [\pending] \highlightoptional{\texttt{SLURM} container for simulations}
-			\item [\pending] \highlightoptional{Automation of \texttt{SLURM} requests}
-		\end{itemize}
-\end{itemize}
-		
-		\section*{File Management}
-		\begin{itemize}
-			\item [\pending] \highlightoptional{\texttt{BAM} file parsing}
-			\item [\pending] \highlightoptional{Interconversion between \texttt{SAM} and \texttt{BAM}}
-		\end{itemize}
-		
-		\section*{Raw Read Processing}
-		\begin{itemize}
-			\item [\pending] \highlightessential{Pipeline integration of \texttt{raw.bash} }
-			\item [\pending] \highlightrobust{Data visualization}
-			\item [\pending] \highlightrobust{Determination of optimal tool/s}
-			\item [\pending] \highlightrobust{Determination of optimal parameters}
-			\item [\pending] \highlightrobust{Tool combination randomization script}
-		\end{itemize}
-		
-		\section*{Assembly \& Binning}
-		\begin{itemize}
-			\item [\pending] Testing binning pipeline
-			
-\subsection*{Creation}
-
-\item  [\pending] \highlightessential{metaSPAdes}
-\item [\pending] \highlightrobust{MASURCA}
-\item [\pending] \highlightrobust{PLASS}
-\item [\pending] \highlightrobust{AbySS}
-
-\subsection*{Testing}
-
-\item  [\pending] \highlightessential{metaSPAdes}
-\item [\pending] \highlightrobust{MASURCA}
-\item [\pending] \highlightrobust{PLASS}
-\item [\pending] \highlightrobust{AbySS}
-\item [\pending] \highlightrobust{KMA-iterative}
-
-\item [\pending] \highlightrobust{Benchmarking between all of them}
-\item [\draft] \highlightrobust{Iterative assembly}
-\item [\draft] \highlightessential{Contig quality checking}
-\subsection*{Integration}
-\item [\issue] \highlightrobust{\texttt{MetaWrap} binning} \\ \texttt{Binning.smk}
-\item [\pending] Testing on datasets of higher depth for MetaWrap tests
-\item [\pending] \highlightrobust{Refinement of bins}
-		\end{itemize}
-		
-		\section*{Annotation}
-		\textbf{ARG-related scripts}
-		\begin{itemize}
-\item [\refine] \highlightessential{\texttt{RGI}} \\ \deprecated{\texttt{prokka\_ARG.bash}, \\ \texttt{shortbred\_ARG.bash}}
-\item [\refine] \highlightessential{\texttt{ShortBRED}} \\ \texttt{shortbred\_ARG.bash}
-\item [\refine] \highlightoptional{\texttt{AMRFinder}}
-		\end{itemize}
-\textbf{Testing of Annotation Scripts}
-\begin{itemize}
-\item [\pending] \highlightessential{\texttt{RGI}}
-\item [\pending] \highlightessential{\texttt{ShortBRED}} \\ \texttt{shortbred\_ARG.bash}
-\item [\pending] \highlightoptional{\texttt{AMRFinder}}
-\end{itemize}
-			
-\textbf{Taxonomy releated scripts}
-\begin{itemize}
-	\item [\pending] \highlightoptional{\texttt{MetaPhlan4}}
-\end{itemize}
-		
-		% Continue with other sections as needed
-
-\section*{Complete}
-
-% General taxo-metagenomics pipeline section
-\linenumbers*
-\textbf{General Taxo-Metagenomics Pipeline}
-
-\highlightessential{Creation of modular scripts}
-\begin{itemize}
-	\item [\done] \highlightessential{FasQC script for raw reads} \\ \texttt{raw.bash}
-	\item [\done] \highlightessential{Trimmomatic script} \\ \texttt{\deprecated{Trimmomatic.bash}}
- 	\\ \texttt{trimming-cleaning-checking.py}
-	\item [\done] \highlightessential{\deprecated{fastp}} \\ \texttt{\deprecated{fastp.bash}} \\ \texttt{trimming-cleaning-checking.py}
-	\item [\done] \highlightessential{Script to check if reads PASS or FAIL} \\ \texttt{\deprecated{FastQC.bash}} \\ \texttt{trimming-cleaning-checking.py}
-		\item [\done] \highlightessential{FasQC script for trimmed reads} \\
-		\texttt{\deprecated{FastQC\_check.py}} \\
-		\texttt{trimming-cleaning-checking.py}
-	\item [\done] \highlightessential{Kraken2 script} \\
-	\texttt{krakenpipeline.bash}
-	\item [\done] \highlightessential{Bracken script} \\ 
-	\texttt{krakenpipeline.bash}
-	\item [\done] \highlightessential{In-house diversity calcs script} \\ \texttt{calculate\_diversity.py}
-\end{itemize}
-
-\highlightessential{Test Run of Modular Scripts}
-\begin{itemize}
-	\item [\done] \highlightessential{FasQC script} \texttt{raw.bash}
-	\item [\done] \highlightessential{Trimmomatic script} \\ \texttt{\deprecated{Trimmomatic.bash}} \\ \texttt{trimming-cleaning-checking.py}
-	\item [\done] \highlightessential{\deprecated{fastp}} \\ \texttt{\deprecated{fastp.bash}} \\ \texttt{trimming-cleaning-checking.py}
-	\item [\done] \highlightessential{Kraken2 script} \\ \texttt{krakenpipeline.bash}
-	\item [\done] \highlightessential{Bracken script} \\ \texttt{krakenpipeline.bash}
-	\item [\done] \highlightessential{In-house diversity calcs script} \\ \texttt{calculate\_diversity.py}
-\end{itemize}
-
-\textbf{Other Completed Pipeline Tasks}
-\begin{itemize}
-	\item [\done] \highlightessential{Integration with config folder}
-	\item [\done] \highlightoptional{Testing with simulated datasets}
-	\item [\done] \highlightessential{Pipeline integration} \\
-	\texttt{metagenomics\_general.smk}
-	\begin{itemize}
-		\item [\done] \highlightessential{\texttt{FastQC}} \\ \texttt{trimming-cleaning-checking.py}
-		\item [\done] \highlightessential{\texttt{Trimmomatic}} \\ \texttt{trimming-cleaning-checking.py}
-		\item [\done]  \highlightessential{\texttt{Kraken2}} \\ \texttt{krakenpipeline.bash}
-		\item [\done]  \highlightessential{\texttt{Bracken}} \\ \texttt{krakenpipeline.bash}
-		\item [\issue] \deprecated{\texttt{QIIME2}} \texttt{krakenpipeline.bash}
-		\item [\done] \highlightessential{Change \texttt{QIIME2} to in-house diversity script} \texttt{calculate\_diversity.py}
-		\item [\done] \highlightessential{Aggregate diversity metrics} \\ \texttt{calculate\_diversity.py}
-		\item [\done] \highlightessential{Aggregate quality metrics} \\ \texttt{summary\_stat.bash}
-		\item [\done] \highlightrobust{Remove \texttt{fastp} from Shellscript}
-	\end{itemize}
-	\item [\done] \highlightessential{Testing pipeline with simulated datasets} \\
-	\texttt{metagenomics\_general.smk}
-\end{itemize}
-
-\textbf{File Management}
-\begin{itemize}
-	\item [\done] \highlightessential{Compression and decompression scripts}
-	\item [\done] \highlightessential{Demultiplexing script}
-	\item [\done] \highlightessential{Testing on multiple datasets}
-\end{itemize}
-
-\textbf{Read Quality Control}
-\subsection*{Creation}
-\begin{itemize}
-	\item [\done] \highlightrobust{Parametric randomization script} \\
-	\texttt{trim\_randomizer.smk}
-		\begin{enumerate}
-			\item \texttt{Trimmomatic}
-			\item \texttt{CutAdapt}
-			\item \texttt{BBDuk}
-			\item \texttt{Sickle}
-			\item \texttt{fastp}
-		\end{enumerate}
-	\item [\done] \highlightrobust{Parsing QC metrics of all iterations} \\
-	\texttt{parseFastQC.py}
-	\item [\done] \highlightrobust{Bootstrapping script} \\
-	\texttt{bootstrapping\_rawreads.smk}
-\end{itemize}
-
-\subsection*{Test-run}
-\begin{itemize}
-	\item [\done] \highlightessential{\parbox[t]{\linewidth}{Parsing and aggregation of FastQC metrics from multi-site data (N=10)}} \\
-	\texttt{summary\_stat.bash}
-	\item [\done] \highlightrobust{\parbox[t]{\linewidth}{Randomization of trimming parameters from different trimmers simultaneously (5 trimmers total)}} \\
-	\texttt{trim\_randomizer.smk}
-	\item [\done]  \highlightrobust{\parbox[t]{\linewidth}{Bootstrapping of randomization of trimming parameters. 5 Trimmers, 1000 bootstraps}} \\
-	\texttt{bootstrapping\_rawreads.smk}
-\end{itemize}
-
-
-\textbf{Pipeline Preparation for HPC}
-\begin{itemize}
-	\item [\done] \highlightessential{Calculate using quotation from PGC}
-	\item [\done] \highlightessential{Set up config files}
-	\item [\done] \highlightessential{Taxo-metagenomics pipeline}
-\end{itemize}
-\end{multicols}
-
-
-
+\begin{longtable}{|c|p{8cm}|c|c|c|c|c|c|}
+	\hline
+	\textbf{Section} & \textbf{Task} & \pending & \draft & \refine & \issue & \moved & \done \\ \hline
+	\endfirsthead
+	\hline
+	\textbf{Section} & \textbf{Task} & \pending & \draft & \refine & \issue & \moved & \done \\ \hline
+	\endhead
+	
+	\multirow{8}{*}{\textbf{HPC Preparation}} 
+	& \highlightessential{Confirmation of Required Robustness} & & & & & & X \\ 
+	& \highlightessential{Agree upon the type of analyses} & & & & & X & \\ 
+	& \multicolumn{7}{c|}{\textbf{SLURM request management}} \\
+	& \highlightessential{Calculate using quotation from PGC} & & & & & & X \\ 
+	& \highlightessential{Setup Docker containers for SLURM} & X & & & & & \\
+	& \highlightessential{SLURM container for simulations} & X & & & & & \\ 
+	& \highlightoptional{Automation of SLURM requests} & X & & & & & \\
+	& \highlightoptional{Send email for HPC usage requests} & & & X & & & \\ \hline
+	
+	\multirow{2}{*}{\textbf{File Management}} 
+	& \highlightoptional{BAM file parsing} & X & & & & & \\
+	& \highlightoptional{Interconversion between SAM and BAM} & X & & & & & \\ \hline
+	
+	\multirow{29}{*}{\textbf{Raw Read Processing}}
+	& \multicolumn{7}{c|}{\textbf{Create the script}} \\
+	& \highlightessential{Raw reads QC} & & & & & & X \\ 
+	& \multicolumn{7}{l}{\texttt{raw.bash}} \\ 
+	& \highlightessential{Raw reads trimming} & & & & & & X \\ 
+	& \multicolumn{7}{l}{\texttt{trimmomatic.bash}} \\ 
+	& \multicolumn{7}{l}{\texttt{fastp.bash}} \\
+	& \highlightrobust{Looping mechanism for QC and trimming} & & & & & & X \\
+	& \multicolumn{7}{l}{\texttt{trimming-cleaning-checking.py}} \\ 
+	& \highlightrobust{Data visualization} & X & & & & & \\
+	& \highlightrobust{Determination of optimal tool/s} & X & & & & & \\
+	& \highlightrobust{Parametric randomization} & & & & & & X \\
+	& \multicolumn{7}{l}{\texttt{trim\_randomizer.smk}} \\
+	& \highlightrobust{Parse QC of all metrics in parametric randomizer} & & & & & & X \\
+	& \multicolumn{7}{l}{\texttt{parseFastQC.py}} \\
+	& \highlightrobust{Determination of optimal parameters} & X & & & & & \\
+	& \highlightrobust{Tool combination randomization script} & X & & & & & \\
+	& \multicolumn{7}{c|}{\textbf{Test on Datasets}} \\
+	& \highlightessential{Raw reads QC} & & & & & & X \\ 
+	& \highlightessential{Raw reads trimming} & & & & & & X \\ 
+	& \multicolumn{7}{l}{\texttt{\deprecated{trimmomatic.bash}}} \\ 
+	& \multicolumn{7}{l}{\texttt{\deprecated{fastp.bash}}} \\
+	& \multicolumn{7}{l}{\texttt{trimming-cleaning-checking.py}} \\ 
+	& \highlightessential{Aggregate quality metrics} & & & & & & X \\
+	& \multicolumn{7}{l}{\texttt{summary\_stat.bash}} \\ 
+	& \highlightrobust{Parametric randomization} & & & & & & X \\
+	& \highlightrobust{Parse QC of all metrics in parametric randomizer} & & & & & & X \\
+	& \multicolumn{7}{c|}{\textbf{Integrate to pipelines}} \\
+	& \highlightessential{Pipeline integration of \texttt{raw.bash}} & X & & & & & \\
+	
+	& \highlightessential{Raw reads trimming} & & & & & & X \\ 
+	
+	\hline
+	
+	
+	\multirow{20}{*}{\textbf{Taxonomy}} 
+	& \multicolumn{7}{c|}{\textbf{Create the script}} \\
+	& \highlightessential{Kraken2} & & & & & & X \\
+	& \multicolumn{7}{l}{\texttt{krakenpipeline.bash}} \\ 
+	& \highlightessential{Bracken} & & & & & & X \\
+	& \multicolumn{7}{l}{\texttt{krakenpipeline.bash}} \\ 
+	& \highlightessential{Diversity indices} & & & & & & X \\
+	& \multicolumn{7}{l}{\texttt{calculate\_diversity.py}} \\ 
+	& \highlightoptional{MetaPhlan4} & X & & & & & \\ 
+	& \multicolumn{7}{c|}{\textbf{Test on Datasets}} \\
+	& \highlightessential{Kraken2} & & & & & & X \\
+	& \highlightessential{Bracken} & & & & & & X \\
+	& \highlightessential{Diversity indices} & & & & & & X \\
+	& \multicolumn{7}{c|}{\textbf{Integrate to pipelines}} \\
+	& \highlightessential{Kraken2} & & & & & & X \\
+	& \highlightessential{Bracken} & & & & & & X \\
+	& \highlightessential{Diversity indices} & & & & & & X \\
+	& \highlightessential{Test whole pipeline} & & & & & & X \\
+	& \multicolumn{7}{l}{\texttt{metagenomics\_general.smk}} \\ 
+	& \highlightrobust{Bootstrapping script} & & & & & & X \\
+	& \multicolumn{7}{l}{\texttt{bootstrapping\_rawreads.smk}} \\ 
+	
+	\hline
+	
+	
+	\multirow{18}{*}{\textbf{Assembly}} 
+	& \multicolumn{7}{c|}{\textbf{Create the script}} \\
+	& \highlightessential{metaSPAdes} & X & & & & & \\ 
+	& \highlightessential{MEGAHIT} & & & & & & X \\
+	& \highlightrobust{MASURCA} & X & & & & & \\ 
+	& \highlightrobust{PLASS} & X & & & & & \\ 
+	& \highlightrobust{AbySS} & X & & & & & \\ 
+	& \multicolumn{7}{c|}{\textbf{Test on Datasets}} \\
+	& \highlightessential{metaSPAdes} & X & & & & & \\ 
+	& \highlightessential{MEGAHIT} & & & & & & X \\ 
+	& \highlightrobust{MASURCA} & X & & & & & \\ 
+	& \highlightrobust{PLASS} & X & & & & & \\ 
+	& \highlightrobust{AbySS} & X & & & & & \\ 
+	& \highlightrobust{KMA-iterative} & X & & & & & \\
+	& \highlightrobust{Benchmarking between all of them} & X & & & & & \\
+	& \highlightoptional{Contig quality checking} & & X & & & & \\ 
+	& \multicolumn{7}{c|}{\textbf{Integrate to pipelines}} \\
+	& \highlightrobust{MetaWrap binning} & & & & X & & \\
+	& \highlightessential{Kraken (MEGAHIT)} & & & & & & X \\ \hline
+	
+	\multirow{4}{*}{\textbf{Binning}} 
+	& \highlightoptional{Testing on datasets} & & & & X & & \\
+	& \highlightoptional{Testing on higher depth datasets} & X & & & & & \\
+	& \highlightrobust{Refinement of bins} & X & & & & & \\ 
+	& \highlightrobust{Testing binning pipeline} & X & & & & & \\ \hline
+	
+	\multirow{7}{*}{\textbf{ARG Annotation}} 
+	& \highlightessential{RGI} & & & X & & & \\ 
+	& \highlightessential{ShortBRED} & & & & & & X \\
+	& \highlightoptional{AMRFinder} & & & X & & & \\ 
+	& \multicolumn{7}{c|}{\textbf{Test on datasets}} \\
+	& \highlightessential{RGI} & X & & & & & \\
+	& \highlightessential{ShortBRED} & X & & & & & \\
+	& \highlightoptional{AMRFinder} & X & & & & & \\ \hline
+	
+\end{longtable}
 
 \newpage
 \onecolumn
@@ -654,9 +594,9 @@ If plasmid signatures are present, \texttt{plasmidSPAdes} along with \texttt{Gap
 
 \dirtree{%
 	.1 /project\_root/.
-	.2 *path/to/cleaned\_reads/* (Prerequisite).
+	.2 path/to/cleaned\_reads/ \DTcomment{Prerequisite}.
 	.2 path/to/merged\_reads/.
-	.2 *path/to/CARD\_db/* (Prerequisite - Database).
+	.2 path/to/CARD\_db/ \DTcomment{Prerequisite - Database}.
 	.2 path/to/output/.
 	.3 final\_annotated\_plasmids.fasta.
 	.3 fpkm\_normalized\_plasmids.txt.
@@ -668,8 +608,8 @@ If plasmid signatures are present, \texttt{plasmidSPAdes} along with \texttt{Gap
 	.3 check\_plasmidfinder.log.
 	.3 calculate\_gc\_skew.log.
 	.2 path/to/plaspredict\_output/.
-	.2 *path/to/PFAM\_db/* (Prerequisite - Database).
-	.2 *path/to/TnpPred\_db/* (Prerequisite - Database).
+	.2 path/to/PFAM\_db/ \DTcomment{Prerequisite - Database}.
+	.2 path/to/TnpPred\_db/ \DTcomment{Prerequisite - Database}.
 	.2 path/to/plasmid\_prediction/.
 	.3 predicted\_plasmids.fasta.
 	.3 plasmidfinder\_report.txt.
@@ -760,12 +700,12 @@ Will continue improving this section (everything regarding HGT) by evaluating th
 	.1 /project\_root/.
 	.2 configs/.
 	.3 config.yaml.
-	.2 **path/to/raw\_reads\_dir/** \textit{(Prerequisite - Raw Data)}.
+	.2 path/to/raw\_reads\_dir/ \DTcomment{Prerequisite - Raw Data}.
 	.3 sample1\_R1.fastq.gz.
 	.3 sample1\_R2.fastq.gz.
 	.3 sample2\_R1.fastq.gz.
 	.3 sample2\_R2.fastq.gz.
-	.2 **path/to/trimmed\_reads\_dir/** \textit{(Prerequisite - Trimmed Data)}.
+	.2 path/to/trimmed\_reads\_dir/ \DTcomment{Prerequisite - Trimmed Data}.
 	.3 sample1\_R1\_paired.fastq.gz.
 	.3 sample1\_R2\_paired.fastq.gz.
 	.3 sample2\_R1\_paired.fastq.gz.
@@ -832,64 +772,64 @@ This is a module that will be part of a bigger pipeline. The idea here to is ran
 \subsection{Annotated Directory Tree with File Temporary files and Prerequisites}
 \dirtree{%
 	.1 /project\_root/.
-	.2 raw\_reads/ \textit{(permanent)} **(prerequisite)**.
-	.3 sample1\_R1.fastq.gz \textit{(permanent)} **(prerequisite)**.
-	.3 sample1\_R2.fastq.gz \textit{(permanent)} **(prerequisite)**.
-	.3 sample2\_R1.fastq.gz \textit{(permanent)} **(prerequisite)**.
-	.3 sample2\_R2.fastq.gz \textit{(permanent)} **(prerequisite)**.
+	.2 raw\_reads/ \DTcomment{(permanent) (prerequisite)}.
+	.3 sample1\_R1.fastq.gz \DTcomment{(permanent) (prerequisite)}.
+	.3 sample1\_R2.fastq.gz \DTcomment{(permanent) (prerequisite)}.
+	.3 sample2\_R1.fastq.gz \DTcomment{(permanent) (prerequisite)}.
+	.3 sample2\_R2.fastq.gz \DTcomment{(permanent) (prerequisite)}.
 	.2 output\_dir/.
-	.3 fastp\_output/ \textit{(temporary)} \textit{(to be deleted)}.
+	.3 fastp\_output/ \DTcomment{(temporary) (to be deleted)}.
 	.4 iteration\_1/.
-	.5 sample1\_R1\_fastp\_trimmed.fastq.gz \textit{(temporary)}.
-	.5 sample1\_R2\_fastp\_trimmed.fastq.gz \textit{(temporary)}.
-	.5 sample2\_R1\_fastp\_trimmed.fastq.gz \textit{(temporary)}.
-	.5 sample2\_R2\_fastp\_trimmed.fastq.gz \textit{(temporary)}.
+	.5 sample1\_R1\_fastp\_trimmed.fastq.gz \DTcomment{(temporary)}.
+	.5 sample1\_R2\_fastp\_trimmed.fastq.gz \DTcomment{(temporary)}.
+	.5 sample2\_R1\_fastp\_trimmed.fastq.gz \DTcomment{(temporary)}.
+	.5 sample2\_R2\_fastp\_trimmed.fastq.gz \DTcomment{(temporary)}.
 	.4 iteration\_2/.
-	.5 (same as iteration\_1 but with iteration\_2 files) \textit{(temporary)}.
+	.5 (same as iteration\_1 but with iteration\_2 files) \DTcomment{(temporary)}.
 	.4 iteration\_3/.
-	.5 (same as iteration\_1 but with iteration\_3 files) \textit{(temporary)}.
-	.3 trimmomatic\_output/ \textit{(temporary)} \textit{(to be deleted)}.
+	.5 (same as iteration\_1 but with iteration\_3 files) \DTcomment{(temporary)}.
+	.3 trimmomatic\_output/ \DTcomment{(temporary) (to be deleted)}.
 	.4 iteration\_1/.
-	.5 sample1\_R1\_paired.fastq.gz \textit{(temporary)}.
-	.5 sample1\_R1\_unpaired.fastq.gz \textit{(temporary)}.
-	.5 sample1\_R2\_paired.fastq.gz \textit{(temporary)}.
-	.5 sample1\_R2\_unpaired.fastq.gz \textit{(temporary)}.
-	.5 (same for sample2) \textit{(temporary)}.
+	.5 sample1\_R1\_paired.fastq.gz \DTcomment{(temporary)}.
+	.5 sample1\_R1\_unpaired.fastq.gz \DTcomment{(temporary)}.
+	.5 sample1\_R2\_paired.fastq.gz \DTcomment{(temporary)}.
+	.5 sample1\_R2\_unpaired.fastq.gz \DTcomment{(temporary)}.
+	.5 (same for sample2) \DTcomment{(temporary)}.
 	.4 iteration\_2/.
-	.5 (same structure as iteration\_1) \textit{(temporary)}.
+	.5 (same structure as iteration\_1) \DTcomment{(temporary)}.
 	.4 iteration\_3/.
-	.5 (same structure as iteration\_1) \textit{(temporary)}.
-	.3 cutadapt\_output/ \textit{(temporary)} \textit{(to be deleted)}.
+	.5 (same structure as iteration\_1) \DTcomment{(temporary)}.
+	.3 cutadapt\_output/ \DTcomment{(temporary) (to be deleted)}.
 	.4 iteration\_1/.
-	.5 sample1\_R1\_cutadapt\_trimmed.fastq.gz \textit{(temporary)}.
-	.5 sample1\_R2\_cutadapt\_trimmed.fastq.gz \textit{(temporary)}.
+	.5 sample1\_R1\_cutadapt\_trimmed.fastq.gz \DTcomment{(temporary)}.
+	.5 sample1\_R2\_cutadapt\_trimmed.fastq.gz \DTcomment{(temporary)}.
 	.4 iteration\_2/.
-	.5 (same structure as iteration\_1) \textit{(temporary)}.
+	.5 (same structure as iteration\_1) \DTcomment{(temporary)}.
 	.4 iteration\_3/.
-	.5 (same structure as iteration\_1) \textit{(temporary)}.
-	.3 bbduk\_output/ \textit{(temporary)} \textit{(to be deleted)}.
+	.5 (same structure as iteration\_1) \DTcomment{(temporary)}.
+	.3 bbduk\_output/ \DTcomment{(temporary) (to be deleted)}.
 	.4 iteration\_1/.
-	.5 sample1\_R1\_bbduk\_trimmed.fastq.gz \textit{(temporary)}.
-	.5 sample1\_R2\_bbduk\_trimmed.fastq.gz \textit{(temporary)}.
+	.5 sample1\_R1\_bbduk\_trimmed.fastq.gz \DTcomment{(temporary)}.
+	.5 sample1\_R2\_bbduk\_trimmed.fastq.gz \DTcomment{(temporary)}.
 	.4 iteration\_2/.
-	.5 (same structure as iteration\_1) \textit{(temporary)}.
+	.5 (same structure as iteration\_1) \DTcomment{(temporary)}.
 	.4 iteration\_3/.
-	.5 (same structure as iteration\_1) \textit{(temporary)}.
-	.3 sickle\_output/ \textit{(temporary)} \textit{(to be deleted)}.
+	.5 (same structure as iteration\_1) \DTcomment{(temporary)}.
+	.3 sickle\_output/ \DTcomment{(temporary) (to be deleted)}.
 	.4 iteration\_1/.
-	.5 sample1\_R1\_sickle\_trimmed.fastq.gz \textit{(temporary)}.
-	.5 sample1\_R2\_sickle\_trimmed.fastq.gz \textit{(temporary)}.
-	.5 sample1\_singles\_sickle\_trimmed.fastq.gz \textit{(temporary)}.
+	.5 sample1\_R1\_sickle\_trimmed.fastq.gz \DTcomment{(temporary)}.
+	.5 sample1\_R2\_sickle\_trimmed.fastq.gz \DTcomment{(temporary)}.
+	.5 sample1\_singles\_sickle\_trimmed.fastq.gz \DTcomment{(temporary)}.
 	.4 iteration\_2/.
-	.5 (same structure as iteration\_1) \textit{(temporary)}.
+	.5 (same structure as iteration\_1) \DTcomment{(temporary)}.
 	.4 iteration\_3/.
-	.5 (same structure as iteration\_1) \textit{(temporary)}.
-	.2 logs/ \textit{(permanent)} **(prerequisite)**.
-	.3 fastp\_params.tsv \textit{(permanent)} **(prerequisite)**.
-	.3 trimmomatic\_params.tsv \textit{(permanent)} **(prerequisite)**.
-	.3 cutadapt\_params.tsv \textit{(permanent)} **(prerequisite)**.
-	.3 bbduk\_params.tsv \textit{(permanent)} **(prerequisite)**.
-	.3 sickle\_params.tsv \textit{(permanent)} **(prerequisite)**.
+	.5 (same structure as iteration\_1) \DTcomment{(temporary)}.
+	.2 logs/ \DTcomment{(permanent) (prerequisite)}.
+	.3 fastp\_params.tsv \DTcomment{(permanent) (prerequisite)}.
+	.3 trimmomatic\_params.tsv \DTcomment{(permanent) (prerequisite)}.
+	.3 cutadapt\_params.tsv \DTcomment{(permanent) (prerequisite)}.
+	.3 bbduk\_params.tsv \DTcomment{(permanent) (prerequisite)}.
+	.3 sickle\_params.tsv \DTcomment{(permanent) (prerequisite)}.
 }
 
 
@@ -924,7 +864,9 @@ Bootstrapping is the process of randomly selecting from a pool of samples (with 
 \textbf{Technical Notes}:This executes \texttt{bootstrap\_reads.py} in the scripts directory to start bootstrapping the paired-end reads and outputs them in the temporary folders I mentioned earlier. \\
 \textbf{Rationale}: Moving bootstrapping logic into a Python script leverages its ability to create randomizations from its libraries. Also it allows us to define a \texttt{seed} so it is reproducible (if you want to reproduce) the results anyway.
 \\ \textbf{Note:} The number of bootstraps and the fraction of samples you want to retain can be controlled in the config.yaml file in the configuration folder. \\
-\textbf{On a personal note}: Before writing this part of the document (Sep 19, 2024, 3:00 AM), I decided to change the bootstrapping rule. It used to rely on a simplified approximation. The probability of not being selected after \(N\) independent draws from a sample of size \(N\) is given by:
+
+\begin{tcolorbox}[title= Update Sep 19 2024, coltitle=AntiqueWhite1]
+\textbf{On a personal note}: Before writing this part of the document, I decided to change the bootstrapping rule. It used to rely on a simplified approximation. The probability of not being selected after \(N\) independent draws from a sample of size \(N\) is given by:
 
 \[
 P = \left( 1 - \frac{1}{N} \right)^N
@@ -936,54 +878,53 @@ This is a well-known mathematical equation describing the probability of not sel
 \frac{1}{e}
 \]
 
-
 Previously, I used the probability of a sample \textit{being selected}, which is:
 
 \[
 1 - \frac{1}{e}
 \]
 
-This was used as an approximation for bootstrapping by shuffling and adjusting the sample size. However, the updated script now performs \textbf{actual bootstrapping}, sampling with replacement, which is a more accurate statistical method for resampling.\\
-\\
+This was used as an approximation for bootstrapping by shuffling and adjusting the sample size. However, the updated script now performs \textbf{actual bootstrapping}, sampling with replacement, which is a more accurate statistical method for resampling.
+\end{tcolorbox}
 \subsection{Annotated Directory Tree with File Movement and Prerequisites}
 \dirtree{%
 	.1 /project\_root/.
 	.2 configs/.
-	.3 config.yaml **(prerequisite)**.
-	.2 path/to/raw\_reads\_dir/ \textit{(permanent)} **(prerequisite)**.
-	.3 sample1\_R1.fastq.gz \textit{(permanent)} **(prerequisite)**.
-	.3 sample1\_R2.fastq.gz \textit{(permanent)} **(prerequisite)**.
-	.3 sample2\_R1.fastq.gz \textit{(permanent)} **(prerequisite)**.
-	.3 sample2\_R2.fastq.gz \textit{(permanent)} **(prerequisite)**.
-	.2 path/to/temp\_bootstrap\_dir/ \textit{(temporary)} \textit{(to be deleted after pipeline resolves)}.
-	.3 sample1/ \textit{(temporary)}.
-	.4 rep\_1\_R1.fastq.gz \textit{(temporary)}.
-	.4 rep\_1\_R2.fastq.gz \textit{(temporary)}.
-	.4 rep\_2\_R1.fastq.gz \textit{(temporary)}.
-	.4 rep\_2\_R2.fastq.gz \textit{(temporary)}.
-	.4 total\_reads.txt \textit{(temporary)}.
-	.3 sample2/ \textit{(temporary)}.
-	.4 rep\_1\_R1.fastq.gz \textit{(temporary)}.
-	.4 rep\_1\_R2.fastq.gz \textit{(temporary)}.
-	.4 rep\_2\_R1.fastq.gz \textit{(temporary)}.
-	.4 rep\_2\_R2.fastq.gz \textit{(temporary)}.
-	.4 total\_reads.txt \textit{(temporary)}.
-	.3 rep\_1/ \textit{(temporary)}.
-	.4 diversity\_matrices\_sample1\_rep\_1.tsv \textit{(temporary)} \textit{(moved to diversity\_results/)}.
-	.4 diversity\_matrices\_sample2\_rep\_1.tsv \textit{(temporary)} \textit{(moved to diversity\_results/)}.
-	.3 rep\_2/ \textit{(temporary)}.
-	.4 diversity\_matrices\_sample1\_rep\_2.tsv \textit{(temporary)} \textit{(moved to diversity\_results/)}.
-	.4 diversity\_matrices\_sample2\_rep\_2.tsv \textit{(temporary)} \textit{(moved to diversity\_results/)}.
-	.2 logs/ \textit{(permanent)} **(prerequisite)**.
-	.3 metagenomics\_pipeline\_sample1\_rep\_1.log \textit{(permanent)} **(prerequisite)**.
-	.3 metagenomics\_pipeline\_sample1\_rep\_2.log \textit{(permanent)} **(prerequisite)**.
-	.3 metagenomics\_pipeline\_sample2\_rep\_1.log \textit{(permanent)} **(prerequisite)**.
-	.3 metagenomics\_pipeline\_sample2\_rep\_2.log \textit{(permanent)} **(prerequisite)**.
-	.2 diversity\_results/ \textit{(permanent)} \textit{(contains moved files)} **(prerequisite)**.
-	.3 diversity\_rep\_1.tsv \textit{(moved from temp\_bootstrap\_dir)}.
-	.3 diversity\_rep\_2.tsv \textit{(moved from temp\_bootstrap\_dir)}.
-	.2 aggregated\_results/ \textit{(permanent)} **(prerequisite)**.
-	.3 diversity\_aggregate.tsv \textit{(permanent)}.
+	.3 config.yaml \DTcomment{(prerequisite)}.
+	.2 path/to/raw\_reads\_dir/ \DTcomment{(permanent) (prerequisite)}.
+	.3 sample1\_R1.fastq.gz \DTcomment{(permanent) (prerequisite)}.
+	.3 sample1\_R2.fastq.gz \DTcomment{(permanent) (prerequisite)}.
+	.3 sample2\_R1.fastq.gz \DTcomment{(permanent) (prerequisite)}.
+	.3 sample2\_R2.fastq.gz \DTcomment{(permanent) (prerequisite)}.
+	.2 path/to/temp\_bootstrap\_dir/ \DTcomment{(temporary) (to be deleted after pipeline resolves)}.
+	.3 sample1/ \DTcomment{(temporary)}.
+	.4 rep\_1\_R1.fastq.gz \DTcomment{(temporary)}.
+	.4 rep\_1\_R2.fastq.gz \DTcomment{(temporary)}.
+	.4 rep\_2\_R1.fastq.gz \DTcomment{(temporary)}.
+	.4 rep\_2\_R2.fastq.gz \DTcomment{(temporary)}.
+	.4 total\_reads.txt \DTcomment{(temporary)}.
+	.3 sample2/ \DTcomment{(temporary)}.
+	.4 rep\_1\_R1.fastq.gz \DTcomment{(temporary)}.
+	.4 rep\_1\_R2.fastq.gz \DTcomment{(temporary)}.
+	.4 rep\_2\_R1.fastq.gz \DTcomment{(temporary)}.
+	.4 rep\_2\_R2.fastq.gz \DTcomment{(temporary)}.
+	.4 total\_reads.txt \DTcomment{(temporary)}.
+	.3 rep\_1/ \DTcomment{(temporary)}.
+	.4 diversity\_matrices\_sample1\_rep\_1.tsv \DTcomment{(temporary) (moved to diversity\_results/)}.
+	.4 diversity\_matrices\_sample2\_rep\_1.tsv \DTcomment{(temporary) (moved to diversity\_results/)}.
+	.3 rep\_2/ \DTcomment{(temporary)}.
+	.4 diversity\_matrices\_sample1\_rep\_2.tsv \DTcomment{(temporary) (moved to diversity\_results/)}.
+	.4 diversity\_matrices\_sample2\_rep\_2.tsv \DTcomment{(temporary) (moved to diversity\_results/)}.
+	.2 logs/ \DTcomment{(permanent) (prerequisite)}.
+	.3 metagenomics\_pipeline\_sample1\_rep\_1.log \DTcomment{(permanent) (prerequisite)}.
+	.3 metagenomics\_pipeline\_sample1\_rep\_2.log \DTcomment{(permanent) (prerequisite)}.
+	.3 metagenomics\_pipeline\_sample2\_rep\_1.log \DTcomment{(permanent) (prerequisite)}.
+	.3 metagenomics\_pipeline\_sample2\_rep\_2.log \DTcomment{(permanent) (prerequisite)}.
+	.2 diversity\_results/ \DTcomment{(permanent) (contains moved files) (prerequisite)}.
+	.3 diversity\_rep\_1.tsv \DTcomment{(moved from temp\_bootstrap\_dir)}.
+	.3 diversity\_rep\_2.tsv \DTcomment{(moved from temp\_bootstrap\_dir)}.
+	.2 aggregated\_results/ \DTcomment{(permanent) (prerequisite)}.
+	.3 diversity\_aggregate.tsv \DTcomment{(permanent)}.
 }
 
 
@@ -1022,7 +963,8 @@ This was used as an approximation for bootstrapping by shuffling and adjusting t
 \subsection{\texttt{CD-HIT-EST} (Clustering) at Identity: 90\%}
 \textbf{Technical Notes}: \texttt{CD-HIT-EST} clusters similar sequences at 90\% identity. \\
 \textbf{Rationale}: Clustering reduces redundancy in the contig data while maintaining closely related sequences. \\ 
-\textbf{Notes}:I chose 90\% ID because that's what I often see in published journals that is all Perhaps, the 90\% identity threshold balances removing duplicates while preserving diversity and that higher thresholds would result in fewer clusters but might oversimplify the data. \textit{Fine, I'll make it my homework assignment why this specific threshold is used (I HAVE TO KNOW)}.
+\textbf{Notes}:I chose 90\% ID because that's what I often see in published journals that is all Perhaps, the 90\% identity threshold balances removing duplicates while preserving diversity and that higher thresholds would result in fewer clusters but might oversimplify the data. \\
+\textit{Fine, I'll make it my homework assignment why this specific threshold is used (TBA)}.
 \\
 \\
 \\ 
@@ -1095,70 +1037,69 @@ This was used as an approximation for bootstrapping by shuffling and adjusting t
 
 \dirtree{%
 	.1 /project\_root/.
-	.2 trimmed\_reads/ \textit{(prerequisite)}.
-	.3 site1\_R1\_paired.fastq.gz \textit{(permanent)}.
-	.3 site1\_R2\_paired.fastq.gz \textit{(permanent)}.
-	.3 site2\_R1\_paired.fastq.gz \textit{(permanent)}.
-	.3 site2\_R2\_paired.fastq.gz \textit{(permanent)}.
-	.2 fastuniq/ \textit{(temporary)} \textit{(to be deleted)}.
-	.3 site1\_R1\_uniq.fastq \textit{(temporary)}.
-	.3 site1\_R2\_uniq.fastq \textit{(temporary)}.
-	.3 site2\_R1\_uniq.fastq \textit{(temporary)}.
-	.3 site2\_R2\_uniq.fastq \textit{(temporary)}.
-	.2 fasta/ \textit{(permanent)}.
-	.3 site1\_R1\_clean.fasta \textit{(permanent)}.
-	.3 site1\_R2\_clean.fasta \textit{(permanent)}.
-	.3 site2\_R1\_clean.fasta \textit{(permanent)}.
-	.3 site2\_R2\_clean.fasta \textit{(permanent)}.
-	.2 megahit\_output/ \textit{(permanent)}.
+	.2 trimmed\_reads/ \DTcomment{(prerequisite)}.
+	.3 site1\_R1\_paired.fastq.gz \DTcomment{(permanent)}.
+	.3 site1\_R2\_paired.fastq.gz \DTcomment{(permanent)}.
+	.3 site2\_R1\_paired.fastq.gz \DTcomment{(permanent)}.
+	.3 site2\_R2\_paired.fastq.gz \DTcomment{(permanent)}.
+	.2 fastuniq/ \DTcomment{(temporary) (to be deleted)}.
+	.3 site1\_R1\_uniq.fastq \DTcomment{(temporary)}.
+	.3 site1\_R2\_uniq.fastq \DTcomment{(temporary)}.
+	.3 site2\_R1\_uniq.fastq \DTcomment{(temporary)}.
+	.3 site2\_R2\_uniq.fastq \DTcomment{(temporary)}.
+	.2 fasta/ \DTcomment{(permanent)}.
+	.3 site1\_R1\_clean.fasta \DTcomment{(permanent)}.
+	.3 site1\_R2\_clean.fasta \DTcomment{(permanent)}.
+	.3 site2\_R1\_clean.fasta \DTcomment{(permanent)}.
+	.3 site2\_R2\_clean.fasta \DTcomment{(permanent)}.
+	.2 megahit\_output/ \DTcomment{(permanent)}.
 	.3 site1\_assembly/.
-	.4 site1\_filtered\_contigs.fa \textit{(permanent)}.
+	.4 site1\_filtered\_contigs.fa \DTcomment{(permanent)}.
 	.3 site2\_assembly/.
-	.4 site2\_filtered\_contigs.fa \textit{(permanent)}.
-	.2 cdhit\_contigs/ \textit{(permanent)}.
-	.3 site1\_cdhit\_contigs.fasta \textit{(permanent)}.
-	.3 site2\_cdhit\_contigs.fasta \textit{(permanent)}.
-	.2 CLEAN\_READS/ \textit{(permanent)} \textit{(moved)}.
+	.4 site2\_filtered\_contigs.fa \DTcomment{(permanent)}.
+	.2 cdhit\_contigs/ \DTcomment{(permanent)}.
+	.3 site1\_cdhit\_contigs.fasta \DTcomment{(permanent)}.
+	.3 site2\_cdhit\_contigs.fasta \DTcomment{(permanent)}.
+	.2 CLEAN\_READS/ \DTcomment{(permanent) (moved)}.
 	.3 site1/.
-	.4 site1\_1.fastq \textit{(moved from fastuniq)}.
-	.4 site1\_2.fastq \textit{(moved from fastuniq)}.
+	.4 site1\_1.fastq \DTcomment{(moved from fastuniq)}.
+	.4 site1\_2.fastq \DTcomment{(moved from fastuniq)}.
 	.3 site2/.
-	.4 site2\_1.fastq \textit{(moved from fastuniq)}.
-	.4 site2\_2.fastq \textit{(moved from fastuniq)}.
-	.2 binning\_output/ \textit{(permanent)}.
+	.4 site2\_1.fastq \DTcomment{(moved from fastuniq)}.
+	.4 site2\_2.fastq \DTcomment{(moved from fastuniq)}.
+	.2 binning\_output/ \DTcomment{(permanent)}.
 	.3 site1\_binning\_output/.
-	.4 concoct\_bins.scaffolds2bin.tsv \textit{(permanent)}.
-	.4 metabat2\_bins.scaffolds2bin.tsv \textit{(permanent)}.
-	.4 maxbin2\_bins.scaffolds2bin.tsv \textit{(permanent)}.
+	.4 concoct\_bins.scaffolds2bin.tsv \DTcomment{(permanent)}.
+	.4 metabat2\_bins.scaffolds2bin.tsv \DTcomment{(permanent)}.
+	.4 maxbin2\_bins.scaffolds2bin.tsv \DTcomment{(permanent)}.
 	.3 site2\_binning\_output/.
-	.4 (same as site1) \textit{(permanent)}.
-	.2 dastool\_output/ \textit{(permanent)}.
-	.3 DAS\_Tool\_bins\_site1 \textit{(permanent)}.
-	.3 DAS\_Tool\_bins\_site2 \textit{(permanent)}.
-	.2 reassembly\_output/ \textit{(permanent)}.
+	.4 (same as site1) \DTcomment{(permanent)}.
+	.2 dastool\_output/ \DTcomment{(permanent)}.
+	.3 DAS\_Tool\_bins\_site1 \DTcomment{(permanent)}.
+	.3 DAS\_Tool\_bins\_site2 \DTcomment{(permanent)}.
+	.2 reassembly\_output/ \DTcomment{(permanent)}.
 	.3 site1\_reassembly\_output/.
-	.4 assembly.fasta \textit{(permanent)}.
+	.4 assembly.fasta \DTcomment{(permanent)}.
 	.3 site2\_reassembly\_output/.
-	.4 assembly.fasta \textit{(permanent)}.
-	.2 magpurify\_output/ \textit{(permanent)}.
-	.3 site1\_cleaned.fasta \textit{(permanent)}.
-	.3 site2\_cleaned.fasta \textit{(permanent)}.
-	.2 metaquast\_output/ \textit{(permanent)}.
+	.4 assembly.fasta \DTcomment{(permanent)}.
+	.2 magpurify\_output/ \DTcomment{(permanent)}.
+	.3 site1\_cleaned.fasta \DTcomment{(permanent)}.
+	.3 site2\_cleaned.fasta \DTcomment{(permanent)}.
+	.2 metaquast\_output/ \DTcomment{(permanent)}.
 	.3 site1\_metaquast\_output/.
-	.4 (MetaQUAST results) \textit{(permanent)}.
+	.4 (MetaQUAST results) \DTcomment{(permanent)}.
 	.3 site2\_metaquast\_output/.
-	.4 (MetaQUAST results) \textit{(permanent)}.
-	.2 dereplication\_output/ \textit{(permanent)}.
+	.4 (MetaQUAST results) \DTcomment{(permanent)}.
+	.2 dereplication\_output/ \DTcomment{(permanent)}.
 	.3 dereplicated\_genomes/.
-	.4 dereplicated\_genomes.fasta \textit{(permanent)}.
-	.4 checkm2\_output/ \textit{(permanent)}.
-	.5 quality\_report.tsv \textit{(permanent)}.
-	.2 logs/ \textit{(permanent)}.
-	.3 run\_megahit\_site1.log \textit{(permanent)}.
-	.3 run\_cdhit\_site1.log \textit{(permanent)}.
-	.3 (logs for each step) \textit{(permanent)}.
+	.4 dereplicated\_genomes.fasta \DTcomment{(permanent)}.
+	.4 checkm2\_output/ \DTcomment{(permanent)}.
+	.5 quality\_report.tsv \DTcomment{(permanent)}.
+	.2 logs/ \DTcomment{(permanent)}.
+	.3 run\_megahit\_site1.log \DTcomment{(permanent)}.
+	.3 run\_cdhit\_site1.log \DTcomment{(permanent)}.
+	.3 (logs for each step) \DTcomment{(permanent)}.
 }
-
 
 
 \linenumbers*
@@ -1171,19 +1112,19 @@ This was used as an approximation for bootstrapping by shuffling and adjusting t
 \subsection{Directory tree}
 \dirtree{%
 	.1 /project\_root/.
-	.2 trimmed\_reads/ **\textit{(Prerequisite - Trimmed reads directory)}**.
+	.2 trimmed\_reads/ \DTcomment{Prerequisite - Trimmed reads directory}.
 	.3 sample1\_R1\_paired.fastq.gz.
 	.3 sample1\_R2\_paired.fastq.gz.
 	.3 sample2\_R1\_paired.fastq.gz.
 	.3 sample2\_R2\_paired.fastq.gz.
-	.2 kraken\_db/ **\textit{(Prerequisite - Kraken2 database directory)}**.
+	.2 kraken\_db/ \DTcomment{Prerequisite - Kraken2 database directory}.
 	.3 database files (.k2d, etc.).
-	.2 kraken\_output/ \textit{(Output directory for Kraken2 reports)}.
+	.2 kraken\_output/ \DTcomment{Output directory for Kraken2 reports}.
 	.3 sample1.k2report.
 	.3 sample1.kraken2.
 	.3 sample2.k2report.
 	.3 sample2.kraken2.
-	.2 bracken\_output/ \textit{(Output directory for Bracken reports)}.
+	.2 bracken\_output/ \DTcomment{Output directory for Bracken reports}.
 	.3 sample1.bracken.
 	.3 sample1.breport.
 	.3 sample2.bracken.
@@ -1215,11 +1156,11 @@ It then saves them into a file the summary subfolder.  \\
 \subsection{Directory tree}
 \dirtree{%
 	.1 /project\_root/.
-	.2 **raw\_reads/** \textit{(Prerequisite - Raw Data)}.
+	.2 raw\_reads/ \DTcomment{(Prerequisite - Raw Data)}.
 	.3 sample1.fastq.gz.
 	.3 sample2.fastq.gz.
 	.3 \dots.
-	.2 **trimmed\_reads/** \textit{(Prerequisite - Trimmed Data)}.
+	.2 trimmed\_reads/ \DTcomment{(Prerequisite - Trimmed Data)}.
 	.3 sample1\_trimmed.fastq.gz.
 	.3 sample2\_trimmed.fastq.gz.
 	.3 \dots.
@@ -1239,6 +1180,7 @@ It then saves them into a file the summary subfolder.  \\
 	.3 raw\_read\_counts.txt.
 	.3 trimmed\_read\_counts.txt.
 }
+
 
 
 \linenumbers*
@@ -1311,6 +1253,60 @@ While troubleshooting, I encountered persistent naming errors that were confusin
 \begin{tcolorbox}[title=Sept 20 2024 Update, coltitle=white]
 Removed the hard-cap of 1-511.faa files, to add flexibility; now downloads without the need for the user to check how many to download. Also now uses aria2c, which has and intrinsic \texttt{redownload} unfinished files instead of \texttt{wget} function. 
 \end{tcolorbox}
+
+
+\linenumbers*
+\section{trimmomatic.bash; pipeline module}
+\textbf{Stage: Done} \\   
+\textbf{\texttt{Trimmomatic} automation script to run \texttt{FastQC} on reads} \\
+\textbf{Specifics:} This script takes input reads (dictated by the pipeline) and trims them. \\ 
+\textbf{Note:} This also contains the \texttt{Trimmomatic} parameters that I decided to use as placeholder at the beginning of this whole project. \\
+
+\begin{tcolorbox}
+	\textbf{Note:} Will likely become deprecated soon (or simply altered) depending on the results of my optimization tests on trimmers (TBA). Code snippet is below. 
+\end{tcolorbox}
+
+\begin{verbatim}
+	TRIMMOMATIC_ADAPTERS="NexteraPE-PE.fa"
+	TRIMMOMATIC_SETTINGS="LEADING:10 TRAILING:10 SLIDINGWINDOW:4:20 MINLEN:60"
+	.
+	.
+	trimmomatic PE -phred33
+\end{verbatim}
+
+\linenumbers*
+\section{renamingSIMS.bash}
+\textbf{Stage: Done} \\   
+\textbf{renaming output files from raw-reads simulators i.e. \texttt{CAMISIM}} \\
+\textbf{Specifics:} This script takes the output folder of \texttt{CAMISIM} called the \texttt{out} directory and automates renaming them, and moving them. \\ 
+\textbf{Note:} Directory structure is below to show you why automation is necessary and manually renaming is too time-consuming. \\
+
+\section{Directory Tree with Notations}
+
+\dirtree{%
+	.1 CAMISIM/.
+	.2 out/.
+	.3 sample1/ \DTcomment{Renamed from "2024.09.05\_11.25.28\_sample\_0" to "sample1"}.
+	.4 bam\_1/ \DTcomment{Renamed from "bam"}.
+	.4 contigs\_1/ \DTcomment{Renamed from "contigs"}.
+	.4 reads\_1/ \DTcomment{Renamed from "reads"}.
+	.5 anonymous\_reads.fq.gz \DTcomment{Original interleaved FASTQ file}.
+	.5 R1.fastq.gz \DTcomment{Created by seqtk}.
+	.5 R2.fastq.gz \DTcomment{Created by seqtk}.
+	.3 sample2/ \DTcomment{Renamed from "2024.09.05\_11.25.28\_sample\_1" to "sample2"}.
+	.4 bam\_2/ \DTcomment{Renamed from "bam"}.
+	.4 contigs\_2/ \DTcomment{Renamed from "contigs"}.
+	.4 reads\_2/ \DTcomment{Renamed from "reads"}.
+	.5 anonymous\_reads.fq.gz \DTcomment{Original interleaved FASTQ file}.
+	.5 R1.fastq.gz \DTcomment{Created by seqtk}.
+	.5 R2.fastq.gz \DTcomment{Created by seqtk}.
+	.2 raw\_reads/.
+	.3 sample1\_R1.fastq.gz \DTcomment{Copied from "CAMISIM/out/sample1/reads\_1/R1.fastq.gz"}.
+	.3 sample1\_R2.fastq.gz \DTcomment{Copied from "CAMISIM/out/sample1/reads\_1/R2.fastq.gz"}.
+	.3 sample2\_R1.fastq.gz \DTcomment{Copied from "CAMISIM/out/sample2/reads\_2/R1.fastq.gz"}.
+	.3 sample2\_R2.fastq.gz \DTcomment{Copied from "CAMISIM/out/sample2/reads\_2/R2.fastq.gz"}.
+}
+
 
 \newpage
 
