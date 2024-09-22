@@ -1372,6 +1372,155 @@ Removed the hard-cap of 1-511.faa files, to add flexibility; now downloads witho
 }
 
 
+\linenumbers*
+\section{RefSeq.bash}
+\textbf{Stage: Done} \\   
+\textbf{Downloads \textbf{Bacterial} RefSeq database} \\
+\textbf{Specifics:} It uses \texttt{aria2} a multi-connection download tool with \texttt{-x 16 s -16} parameters meaning 16 connections. It then 
+	\begin{itemize}
+		\item Verifies the downloads (confirming if the downloads are successful)
+		\item Redownloads the unsuccessful downloads
+		\item Extracts each individual file
+		\item Concatenate or combine them into a single file called \texttt{refseq\_bacteria.fasta}
+	\end{itemize}    
+\textbf{Note:} Used to be called \texttt{nr\_download.bash}, renamed it at Sep 22, 2024. 
+
+\linenumbers*
+\section{Pavian\_analysis.R}
+\textbf{Stage: Done} \\   
+\textbf{Visualization of \texttt{Kraken2} via \texttt{Pavian}} \\
+\textbf{Specifics:} Uses \texttt{Pavian} to visualize specifically the \texttt{\_kraken2\_summary.txt} files. Additionally, it calls on \texttt{ggplot2} to create a bar plot taxonomic classification counts (at different taxonomic levels). It then redirects all output (tables and plots) into a \texttt{pavian\_output.pdf}. \\
+\textbf{Note:} You have to set the change the path to the correct \texttt{Kraken2} output directory - where the .kraken files are. 
+
+\linenumbers*
+\section{parseFastQC.py}
+\textbf{Stage: Done} \\   
+\textbf{Interprets all the \texttt{FastQC} summaries} \\
+\textbf{Specifics:} It does a few things in sequence:
+\begin{enumerate}
+	\item Uses the \texttt{summary.txt} files from \texttt{FastQC}. 
+	\item Creates a Legend that lists the abbreviations used in the file and puts them in a separate \texttt{legend\_tsv file}. 
+	\item Extracts each \texttt{FASTQC} \texttt{ZIP} file into a temporary directory and looks for the \texttt{summary.txt} file.
+	\item Generates a summary report called \texttt{output\_tsv} for each sample (per direction R1 and R2). 
+\end{enumerate}
+\textbf{Note:} Make sure to set the correct path to the \texttt{FastQC} output directory where the .zip files are. 
+
+\subsection{Directory tree}
+\dirtree{%
+	.1 project\_root/.
+	.2 fastqc\_output/.
+	.3 sample1\_R1\_fastqc.zip \DTcomment{FastQC zip file for Sample 1 (Read 1) \textbf{(Prerequisite)}}.
+	.3 sample1\_R2\_fastqc.zip \DTcomment{FastQC zip file for Sample 1 (Read 2) \textbf{(Prerequisite)}}.
+	.3 sample2\_R1\_fastqc.zip \DTcomment{FastQC zip file for Sample 2 (Read 1) \textbf{(Prerequisite)}}.
+	.3 sample2\_R2\_fastqc.zip \DTcomment{FastQC zip file for Sample 2 (Read 2) \textbf{(Prerequisite)}}.
+	.2 output/.
+	.3 fastqc\_report.tsv \DTcomment{Generated FastQC summary report \textbf{(Generated)}}.
+	.3 legend.tsv \DTcomment{Abbreviation legend for FastQC metrics \textbf{(Generated)}}.
+	.2 scripts/.
+	.3 check\_fastqc.py \DTcomment{Python script for generating FastQC report \textbf{(Script)}}.
+}
+
+
+\linenumbers*
+\section{minimum\_length\_CARD.py}
+\textbf{Stage: Done} \\   
+\textbf{Description:} Parses the \texttt{CARD protein homologue FASTA} file and identifies the shortest sequence length. \\
+\textbf{Specifics:} This script uses the \texttt{Biopython} library to read each sequence in the \texttt{FASTA} file, comparing lengths and returning the smallest sequence length in the dataset. \\
+\textbf{Note:} The input \texttt{FASTA} file should contain the \texttt{CARD protein homologue sequences}—so the user has to set it to where it is.
+
+
+\linenumbers*
+\section{template modulars: megahit\_binning.sh} 
+\textbf{Stage: Done} \\   
+\textbf{Description:} Template modular script that can be integrated into \texttt{Snakefiles}. \\
+\textbf{Specifics:} This script loops through deduplicated paired reads (\texttt{*\_R1\_uniq.fastq}) and runs \texttt{MEGAHIT}, then filters out contigs $>$ 200 bp. It is written specifically for integration into \texttt{Snakefiles}, so its input and output directories are dictated by the \texttt{Snakefile shell}. \\
+\textbf{Note:} \texttt{MEGAHIT} can read \texttt{FASTQ} files—I double-checked, haha. \\
+
+\begin{tcolorbox}
+	The modified companion script, \texttt{megahit\_binning.sh}, is specifically designed for the \texttt{Binning.smk} pipeline, but they both perform the same task.  
+	\begin{verbatim}
+		MEGAHIT_SETTINGS="--k-min 35 --k-max 141 --k-step 28"
+	\end{verbatim} 
+	\textbf{Note:} \texttt{FastQC.bash} is another template modular script that needs to be integrated into \texttt{Snakefiles}, but it instead uses \texttt{FastQC}.
+\end{tcolorbox}
+
+\linenumbers*
+\section{diversity\_bootstrap.R} 
+\textbf{Stage: Draft} \\   
+\textbf{Description:} Reads and plots diversity indices. \\
+\textbf{Specifics:} Parses diversity files for individual metrics and generates the following plots:
+\begin{itemize}
+	\item \textbf{Alpha-diversity plotting:}
+	\begin{itemize}
+		\item \texttt{Ridgeline plot}: Shows the distribution of diversity metrics across samples, per bootstrap replicate.
+		\item \texttt{Violin plots}: Displays diversity index distributions with individual points plotted for each bootstrap.
+	\end{itemize}
+	\item \textbf{Beta-diversity plotting:}
+	\begin{itemize}
+		\item \texttt{Heatmap}: Visualizes the consistency of beta-diversity across bootstraps.
+		\item \texttt{NMDS} (Non-Metric Multidimensional Scaling): Plots ordination based on \texttt{Bray-Curtis} distances.
+	\end{itemize}
+\end{itemize}
+\textbf{Note:} This script needs updates to include: (TBA)
+\begin{itemize}
+	\item Specific paths to diversity files.
+	\item More customization options for the heatmap, such as clustering methods or color scales.
+	\item Optional: Optimization for memory usage, as large datasets with many bootstraps can consume significant resources.
+\end{itemize}
+
+
+\linenumbers*
+\section{calculate\_plasmid\_percentage.py}
+\textbf{Stage: Done} \\   
+\textbf{Description:} This script calculates the percentage of reads that map to plasmids based on the total and plasmid read counts. \\
+\textbf{Specifics:} The script performs the following steps:
+\begin{enumerate}
+	\item Reads the plasmid and total read counts from input files provided by \texttt{Snakemake}.
+	\item Calculates the percentage of plasmid reads relative to the total number of reads using the formula: 
+	\[ \text{plasmid\_percentage} = \left( \frac{\text{plasmid\_reads}}{\text{total\_reads}} \right) \times 100 \]
+	\item Writes the percentage of plasmid reads (formatted to two decimal places) to the specified output file.
+\end{enumerate}
+\textbf{Note:} The input and output file paths are provided by \texttt{Snakemake}, ensuring integration into a larger pipeline. \\
+
+
+\linenumbers*
+\section{calculate\_diversity.py}
+\textbf{Stage: Draft} \\   
+\textbf{Description:} This script calculates both alpha and beta diversity metrics.\\
+\textbf{Specifics:} The script reads species abundance data from \texttt{.bracken} files, calculates various diversity metrics, and outputs the alpha and beta diversity results, both to the console and to a file called \texttt{diversity\_matrices.tsv}.
+
+\begin{multicols}{2}
+	\textbf{Alpha Diversity Metrics:}
+	\begin{itemize}
+		\item Using \texttt{scikit-bio}
+		\begin{itemize}
+			\item \texttt{Shannon}
+			\item \texttt{Simpson}
+			\item \texttt{Pielou's Evenness}
+		\end{itemize}
+		\item Custom implementations
+		\begin{itemize}
+			\item \texttt{Fisher's Alpha}
+			\item \texttt{Chao1}
+			\item \texttt{Berger-Parker Index}
+		\end{itemize}
+	\end{itemize}
+	
+	\textbf{Beta Diversity Metrics (via \texttt{scikit-bio}):}
+	\begin{itemize}
+		\item \texttt{Bray-Curtis}
+		\item \texttt{Jaccard} 
+	\end{itemize}
+\end{multicols}
+
+\textbf{Note:} There are two other beta diversity metrics not included here because they require phylogenetic trees (in Newick file format) beforehand, i.e., \texttt{UniFrac} and unweighted \texttt{UniFrac} (TBA). The Newick file format looks like so:
+\begin{verbatim}
+	(A:0.1,B:0.2,(C:0.3,D:0.4):0.5);
+\end{verbatim}
+where \texttt{A}, \texttt{B}, \texttt{C}, and \texttt{D} correspond to different taxa, the numbers represent \texttt{branch lengths} (distances), and the bracketing specifies the \texttt{clades}.
+
+
+
 
 
 
@@ -1553,12 +1702,23 @@ This section comprises of concepts or ideas that require further investigation. 
 
 \textbf{To do list}
 \begin{itemize}
-	\item [\pending] Project4 Modules
+	\item [\done] Project4 Modules
 	\begin{itemize}
 		\item [\done] \texttt{KMA-iterative} now deprecated check own section as to why
-		
+		\item [\done] NCBI\_taxonomy.bash now also deleted from the repo as deprecated (residual file used to be part of the original \texttt{Kraken2} pipeline)
+		\item [\done] prokka\_ARG.bash
+		\item [\done] RefSeq.bash
+		\item [\done] Pavian\_analysis.R
+		\item [\done] parseFastQC.py
+		\item [\done] mimimum\_length\_CARD.py
+		\item [\done] megahit\_binning.sh
+		\item [\done] megahit\_binning.sh
+		\item [\done] FastQC.bash
+		\item [\done] calculate\_plasmid\_percentage.py
+		\item [\done] calculate\_diversity.py
 	\end{itemize}
 \end{itemize}
+
 
 \textbf{Completed Tasks} 
 \begin{itemize}
@@ -1578,7 +1738,7 @@ This section comprises of concepts or ideas that require further investigation. 
 
 \textbf{Need to Troubleshoot}
 \begin{itemize}
-	\item 
+	\item [\done] Ubuntu crashed (again) (resolved)
 \end{itemize}
 
 
