@@ -168,12 +168,16 @@
 
 
 
+\chapter{Data collection}
+
+\section{Procurement}
 
 
 \newpage
 		
-\chapter{Bioinformatics}
+\chapter{Bioinformatics Progress}
 
+\section{Kanban table}
 \begin{longtable}{|c|p{8cm}|c|c|c|c|c|c|}
 	\hline
 	\textbf{Section} & \textbf{Task} & \pending & \draft & \refine & \issue & \moved & \done \\ \hline
@@ -269,7 +273,7 @@
 	& \highlightrobust{MASURCA} & X & & & & & \\ 
 	& \highlightrobust{PLASS} & X & & & & & \\ 
 	& \highlightrobust{AbySS} & X & & & & & \\ 
-	& \highlightrobust{KMA-iterative} & X & & & & & \\
+	& \highlightrobust{\deprecated{KMA-iterative}} & X & & & & & \\
 	& \highlightrobust{Benchmarking between all of them} & X & & & & & \\
 	& \highlightoptional{Contig quality checking} & & X & & & & \\ 
 	& \multicolumn{7}{c|}{\textbf{Integrate to pipelines}} \\
@@ -302,7 +306,7 @@
 \fancyhead[R]{\thepage}
 \section*{\centering \huge \textbf{Script Descriptions}}  % Big, bold centered title
 
-\section*{Pipelines}  % Pipelines Section
+
 This section covers all the scripts that were created during the Project.
 \\
 \\
@@ -346,12 +350,12 @@ I have separated them into folders/repositories (shameless plug here: \href{http
 \fancyhead[R]{\thepage}
 
 
+\part{Bioinformatics work}
+
+\chapter{Project 4 Scripts}
 
 
-\part{Project 4 Scripts}
 
-
-\renewcommand{\thesection}{\arabic{section}}
 \setcounter{section}{0}
 \setcounter{subsection}{0}
 
@@ -379,10 +383,28 @@ This pipeline is designed for \textbf{comprehensive metagenomic analysis of ARGs
 \\
 \textbf{Metagenomic Assembly} \\
 \rule{\linewidth}{0.5mm}
-\subsection{Iterative alignment of ARG-contigs}
+\subsection{\deprecated{Iterative alignment of ARG-contigs}}
 \textbf{Technical Notes}: \texttt{KMA} (K-mer Alignment) is used find the reverse-translated ARGs with the proximity filtering option to determine the surrounding regions of ARGs. This is done iteratively for each gene increasing the ARG-associated database. \\
 \textbf{Rationale}: Firstly, \texttt{KMA} is used because, unlike \texttt{Bowtie2} and \texttt{BWA-MEM}, which were created specifically for Human metagenomics, KMA does not suffer (or suffers less) from multi-allelic databases. Secondly, iterative alignment using this process allows us to contextualize the region wherein ARGs reside - thereby narrowing our focus onto these local regions instead of looking at the global genomic context.
 \textbf{Notes:} The script is designed to have a cap on the number of iterations KMA creates, increasing the database size. 
+
+\begin{tcolorbox}[title=Sep 22 2024 Update, coltitle=AntiqueWhite1]
+	This is now deprecated as there is apparently another wrapper tool called \texttt{ARG Profiler} that has a module called \texttt{ARG Extender} that literally does the same thing but with an extra filtering step that applies filters on:
+		\begin{enumerate}
+			\item \% query ID
+			\item \% global consensus ID
+			\item Mean read depth 
+		\end{enumerate}
+		and is thus more robust. So I will instead be using their module and cite them as such 
+			\begin{verbatim}
+				"This study utilized the ARGextender 
+				module from ARGProfiler (Martiny, et al., 2024) 
+				to extend genomic flanking regions around ARGs."
+			\end{verbatim}
+	\textbf{Personal Note: }\textit{Feels bad a bit on my part that someone already published the idea before I did but hey, at least I know this sort of idea is publishable haha}. Moreover, it does save us time because I only have to \texttt{copy-paste} their module (and associated scripts) into the existing pipeline.
+
+\end{tcolorbox}
+
 	
 \subsection{Merging of paired reads}
 \textbf{Technical Notes}: \texttt{PANDASeq} is then used to further refine the paired-reads collated in the ARG-related genes database. \\
@@ -1281,7 +1303,7 @@ Removed the hard-cap of 1-511.faa files, to add flexibility; now downloads witho
 \textbf{Specifics:} This script takes the output folder of \texttt{CAMISIM} called the \texttt{out} directory and automates renaming them, and moving them. \\ 
 \textbf{Note:} Directory structure is below to show you why automation is necessary and manually renaming is too time-consuming. \\
 
-\section{Directory Tree with Notations}
+\subsection{Directory Tree with Notations}
 
 \dirtree{%
 	.1 CAMISIM/.
@@ -1308,6 +1330,51 @@ Removed the hard-cap of 1-511.faa files, to add flexibility; now downloads witho
 }
 
 
+
+\linenumbers*
+\section{prokka\_ARG.bash}
+\textbf{Stage: Done} \\   
+\textbf{Uses the wrapper tool \texttt{prokka} to predict genes from contigs} \\
+\textbf{Specifics:} This script first concatenates the \texttt{CARD} and \texttt{NCBI-AMR} databases then using the \texttt{--protein} option, which replaces its database with the one the user specifies, uses that concatenated database to look for possible ARGs in contigs. \\ 
+\textbf{Note:} 
+
+
+\begin{tcolorbox}[title=Sept 21 2024 Update, coltitle=white]
+	I removed it's companion script \texttt{prokka\_Uniprot.bash} from the \texttt{repo} because it is redundant. Prokka already uses \texttt{UniProt}. I also updated it to include an \texttt{EMBOSS transeq} function to translate the fasta files to protein sequences, something that I overlooked and thought that \texttt{prokka} was able to translate by itself.
+\end{tcolorbox}
+
+\subsection{Directory tree}
+\dirtree{%
+	.1 project\_root/.
+	.2 databases/.
+	.3 CARD\_sequences/.
+	.4 extracted/.
+	.5 protein\_fasta\_protein\_homolog\_model.fasta \DTcomment{CARD nucleotide sequences \textbf{(Prerequisite)}}.
+	.3 NCBI\_AMR\_sequences/.
+	.4 AMRProt.fasta \DTcomment{NCBI AMR nucleotide sequences \textbf{(Prerequisite)}}.
+	.3 arg\_proteins.fasta \DTcomment{Translated protein sequences (created by transeq) \textbf{(Generated)}}.
+	.2 merged\_contigs/.
+	.3 SSR1\_filtered\_contigs.fa \DTcomment{Contig file for SSR1 \textbf{(Prerequisite)}}.
+	.3 SSR2\_filtered\_contigs.fa \DTcomment{Contig file for SSR2 \textbf{(Prerequisite)}}.
+	.3 SSRN\_filtered\_contigs.fa \DTcomment{Contig files for other samples \textbf{(Prerequisite)}}.
+	.2 prokka\_output/.
+	.3 prokka\_ARGs/.
+	.4 SSR1/.
+	.5 ARG\_SSR1.faa \DTcomment{Prokka protein FASTA output for SSR1 \textbf{(Generated)}}.
+	.5 ARG\_SSR1.gff \DTcomment{Prokka GFF annotation for SSR1 \textbf{(Generated)}}.
+	.5 ARG\_SSR1.gbk \DTcomment{Prokka GenBank file for SSR1 \textbf{(Generated)}}.
+	.4 SSR2/.
+	.5 ARG\_SSR2.faa \DTcomment{Prokka protein FASTA output for SSR2 \textbf{(Generated)}}.
+	.5 ARG\_SSR2.gff \DTcomment{Prokka GFF annotation for SSR2 \textbf{(Generated)}}.
+	.5 ARG\_SSR2.gbk \DTcomment{Prokka GenBank file for SSR2 \textbf{(Generated)}}.
+	.2 all\_ARG\_nucleotides.fasta \DTcomment{Concatenated nucleotide sequences (created by script) \textbf{(Generated)}}.
+	.2 your\_script.sh \DTcomment{Bash script for the workflow \textbf{(Script)}}.
+}
+
+
+
+
+
 \newpage
 
 \pagestyle{fancy}
@@ -1319,10 +1386,9 @@ Removed the hard-cap of 1-511.faa files, to add flexibility; now downloads witho
 
 
 
-\part{Project Side Scripts}
+\chapter{Project Side Scripts}
 
 
-\renewcommand{\thesection}{\arabic{section}}
 \setcounter{section}{0}
 \setcounter{subsection}{0}
 
@@ -1351,10 +1417,8 @@ Removed the hard-cap of 1-511.faa files, to add flexibility; now downloads witho
 
 
 
-\part{Project Main Scripts}
+\chapter{Project Main Scripts}
 
-
-\renewcommand{\thesection}{\arabic{section}}
 \setcounter{section}{0}
 \setcounter{subsection}{0}
 
@@ -1482,6 +1546,79 @@ This section comprises of concepts or ideas that require further investigation. 
 \begin{itemize}
 	\item 
 \end{itemize}
+\newpage
+\section{September 22, 2024}
+\textbf{To-do List} \\
+
+
+\textbf{To do list}
+\begin{itemize}
+	\item [\pending] Project4 Modules
+	\begin{itemize}
+		\item [\done] \texttt{KMA-iterative} now deprecated check own section as to why
+		
+	\end{itemize}
+\end{itemize}
+
+\textbf{Completed Tasks} 
+\begin{itemize}
+	\item
+\end{itemize}
+
+\textbf{Scripts Worked On}
+\begin{itemize}
+	\item 
+\end{itemize}
+
+
+\textbf{Issues Encountered}
+\begin{itemize}
+	\item  
+\end{itemize}
+
+\textbf{Need to Troubleshoot}
+\begin{itemize}
+	\item 
+\end{itemize}
+
+
+\newpage
+\section{September 21, 2024}
+\textbf{To-do List} \\
+
+
+\textbf{To do list}
+\begin{itemize}
+	\item [\pending] Project4 Modules
+	\begin{itemize}
+		\item [\done] \texttt{trimmomatic.bash}
+		\item [\done] \texttt{renamingSIMS.bash}
+	\end{itemize}
+\end{itemize}
+
+\textbf{Completed Tasks} 
+\begin{itemize}
+	\item [\done] Restructured directory trees so it's easier to understand. 
+	\item [\done] Restructuring of the checklist to become a Kanban board so it's easier to understand at a glance.
+\end{itemize}
+
+\textbf{Scripts Worked On}
+\begin{itemize}
+	\item 
+\end{itemize}
+
+
+\textbf{Issues Encountered}
+\begin{itemize}
+	\item  
+\end{itemize}
+
+\textbf{Need to Troubleshoot}
+\begin{itemize}
+	\item 
+\end{itemize}
+
+\newpage
 
 \newpage
 \section{September 20, 2024}
