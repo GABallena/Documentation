@@ -72,6 +72,7 @@
 \usepackage{longtable} %loooong looong man
 
 \usepackage{hyperref} %linking between documents
+\tcbuselibrary{breakable} %Breakin boxes
 
 
 % Define simple symbols
@@ -1542,7 +1543,7 @@ where \texttt{A}, \texttt{B}, \texttt{C}, and \texttt{D} correspond to different
 
 \chapter{Project Side Scripts}
 \section{kmer\_contam.smk}
-\textbf{Stage: Draft}
+\textbf{Stage: To test}
 \textbf{General Purpose}
 
 This pipeline is designed for the \textbf{detection and removal of contaminant sequences} using k-mer-based filtering. It includes steps for \textbf{contaminant k-mer generation}, mapping k-mers to metagenomic reads, and \textbf{statistical testing for ambiguous sequences}. The pipeline incorporates tools for \textbf{read quality control, contamination filtering, and re-validation} using k-mers and BUSCO analysis.
@@ -1592,11 +1593,8 @@ This pipeline is designed for the \textbf{detection and removal of contaminant s
 \textbf{Rationale}: Normalization ensures that the k-mer counts are comparable across samples. Statistical testing allows detection of ambiguous areas that may require further analysis or removal. 
 \textbf{Notes} (For more details on wavelets, see \hyperref[box:wavelets]{Box on Wavelets})
 
-\subsection{Filtering Ambiguous Sequences} \textbf{Technical Notes}: Sequences identified as ambiguous are filtered out to retain only high-fidelity reads in the final metagenomic assembly. \\
-\textbf{Rationale}: This step ensures that the final assembly is free of contamination and contains only high-quality sequences for downstream analyses. 
 
-
-\begin{tcolorbox}[coltitle=white, title=Personal Notes]
+\begin{tcolorbox}[coltitle=white, title=Personal Notes, breakable]
 	The usage of wavelets here increases sensitivity and provides statistical robustness. Since we are no longer relying on exact matching but allowing for mismatches, we expect a distribution of k-mer bindings embedded within the coverage data. To analyze this distribution, we apply a wavelet transformation (similar to a Fourier transformation, but localized) to decompose the data into smaller components (frequencies) that contribute to the overall pattern.
 	
 	Wavelet-based statistical testing is implemented in this step through a series of Python scripts:
@@ -1607,7 +1605,18 @@ This pipeline is designed for the \textbf{detection and removal of contaminant s
 			significant = np.where(p_value < 0.05, 'significant', 'ambiguous')
 		\end{verbatim}
 	\end{itemize}
+	\textbf{Update Sep 27, 5:33 am}
+	\texttt{compare\_wavelets\_stats.py} has also been now updated to handle:
+		\begin{itemize}
+			\item Decision making of using parametric or non-parametric wavelet tests
+			\item Handle a battery of different tests
+			\item Apply Bonferroni and FDR corrections for such tests 
+		\end{itemize}
 \end{tcolorbox}
+
+\subsection{Filtering Ambiguous Sequences} \textbf{Technical Notes}: Sequences identified as ambiguous are filtered out to retain only high-fidelity reads in the final metagenomic assembly. \\
+\textbf{Rationale}: This step ensures that the final assembly is free of contamination and contains only high-quality sequences for downstream analyses. 
+
 
 
 \subsection{Re-validation of SCGs} \textbf{Technical Notes}: \texttt{BUSCO} is rerun on the final cleaned assembly to confirm that SCGs have been retained after contamination filtering. \\
@@ -1652,11 +1661,26 @@ This pipeline is designed for the \textbf{detection and removal of contaminant s
 
 
 
-
-
-
-
-
+\begin{tcolorbox}[coltitle=white, title=Update Sep 27 3:57 am] Provided the limitations of the original Snakefile, which assumes normally distributed k-mer binding, I created another workflow that tests "normality" of the distribution. This determines whether a Z-test or t-test is valid.
+Here’s a brief explanation of the scripts:
+\begin{itemize}
+	\item \texttt{normality\_test.py} uses the Shapiro-Wilk and Kolmogorov-Smirnov tests to determine normality. If normality fails, we proceed with:
+	\item \texttt{fit\_distributions.py} to check whether the data follow log-normal, exponential, or gamma distributions, which can be transformed using:
+	\item \texttt{transform\_data.py}, which attempts to normalize the data. If normalization succeeds, we proceed with parametric tests.
+	\item If normalization fails, we use \texttt{check\_nonparametric.py} to determine the type of non-parametric distribution the data likely follows.
+	\item To increase confidence in the distribution type, I included two scripts that test goodness of fit:
+	\begin{itemize}
+		\item \texttt{goodness\_of\_fit\_parametric.py}, and
+		\item \texttt{goodness\_of\_fit\_nonparametric.py}.
+	\end{itemize}
+	Using statistical tests rather than visual inspection removes human judgement bias and focuses purely on mathematical/statistical validation.
+\end{itemize}
+In line with this, researchers often settle on subjective p-values (e.g., \texttt{< 0.05} or \texttt{< 0.01}) as thresholds, known as \texttt{alpha}. I included scripts that determine the best alpha for whichever distribution has the best goodness of fit:
+\begin{itemize}
+	\item \texttt{best\_alpha\_parametric.py} and \texttt{best\_alpha\_nonparametric.py}, either of which feed into:
+	\item \texttt{bestfit\_and\_alpha.py}, which determines the best \texttt{alpha} for downstream analyses.
+\end{itemize}
+\end{tcolorbox}
 
 
 \newpage
@@ -1714,6 +1738,42 @@ This section comprises of concepts or ideas that require further investigation. 
 \end{tcolorbox}
 
 
+\begin{tcolorbox}[label=box:Wavelets, colback=gray!10!white, coltitle=white, colframe=gray!80!black, title=Box on Wavelets, breakable]
+	\textbf{What is a Wavelet?} 
+	
+	A \textbf{wavelet} is a small, localized wave that is used to represent signals at different scales. Unlike sinusoids in the Fourier transform, which extend infinitely, wavelets are confined to a limited duration. This makes them highly useful for capturing both frequency and time (or space) information simultaneously.
+	
+	Wavelets are particularly well-suited for analyzing signals with transient or localized features, such as sharp peaks, edges, or changes in behavior. Because of their ability to zoom in on fine details while also capturing broad trends, wavelets are widely used in signal processing, image compression, and data analysis.
+	
+	\textbf{How Do Wavelets Work?}
+	
+	Wavelets work by breaking down a signal into smaller, simpler components—each representing the signal at different scales. The signal is convolved with a family of wavelets, each scaled and shifted to analyze the data at various resolutions. The result is a multi-scale representation that provides insights into both high-frequency details (like sudden spikes) and low-frequency trends (like global patterns).
+	
+	\textbf{Continuous Wavelet Transform (CWT)}
+	
+	The \textbf{Continuous Wavelet Transform (CWT)} is a specific type of wavelet transform that decomposes a signal continuously over a range of scales. CWT produces a 2D representation of the signal in both time and frequency domains, making it ideal for detecting localized features that vary across scales.
+	
+	\textbf{Why CWT for k-mer Normalization?}
+	
+	In bioinformatics, CWT is employed to normalize k-mer counts by analyzing the data across multiple scales. This multi-scale analysis captures localized features in the k-mer distributions, such as regions affected by contaminants or biologically significant regions (e.g., single-copy genes, SCGs). By applying CWT, we can detect and highlight these variations while preserving the overall structure of the data.
+	
+	\textbf{Signal vs. Noise Differentiation with CWT}
+	
+	One of the key strengths of wavelet transforms is their ability to differentiate signal from noise. By breaking down a signal across multiple scales, wavelets can identify high-frequency components often associated with noise, while preserving lower-frequency, biologically meaningful signals. This is especially important in this workflow, where tools that allow k-mer mismatches are used. Unlike tools like \texttt{minimap2} or \texttt{BBDuk}, which prioritize specificity (via exact kmer matching), the wavelet-based approach prioritizes sensitivity, helping to detect real signals despite mismatches or noise in the data.
+	
+	\textbf{Key Advantages of CWT}:
+	\begin{itemize}
+		\item \textbf{Multi-scale analysis}: CWT allows us to view the data at different scales, capturing both small localized features and broader trends.
+		\item \textbf{Localized feature detection}: Unlike global methods (e.g., Fourier transform), CWT can detect localized anomalies in the data, such as contamination spikes that only affect certain regions.
+		\item \textbf{Non-stationary signal analysis}: Many biological signals, including k-mer counts, are non-stationary (their statistical properties vary over time or space). CWT is well-suited for handling such data.
+		\item \textbf{Noise filtering}: CWT can differentiate high-frequency noise from low-frequency signal, making it an excellent tool for extracting meaningful data even in noisy datasets.
+	\end{itemize}
+	
+	\textbf{Application in This Workflow}:
+	
+	In this workflow, CWT is applied to normalize k-mer counts for both contaminants and SCGs. After normalization, statistical tests like \texttt{t-tests} or \texttt{Z-tests} are used to detect ambiguous regions that may require further analysis or removal. This process ensures that k-mer counts are comparable across samples and that biologically meaningful patterns are preserved.
+	
+\end{tcolorbox}
 
 
 
@@ -1744,6 +1804,60 @@ This section comprises of concepts or ideas that require further investigation. 
 \setcounter{section}{0}
 \setcounter{subsection}{0}
 
+	
+
+\begin{multicols}{2}
+\section{September 26, 2024}
+
+
+\textbf{To-do List} \\
+\textbf{Note:} 
+
+\begin{itemize}
+	\item [\done] distribution.yaml for kmer\_contam.smk
+	
+	
+\end{itemize}
+
+\textbf{Completed Tasks}
+\begin{itemize}
+	\item [\done] kmer\_contam.smk explanation (initial)
+	\item [\draft] what\_distribution.smk
+	
+\end{itemize}
+
+\textbf{Scripts Worked On}
+\begin{itemize}
+	\item kmer\_contam.smk
+	\item what\_distribution.smk
+	\item best\_fit.py
+	\item check\_nonparametric.py
+	\item compare\_wavelets\_stats.py
+	\item fit\_distributions.py
+	\item goodness\_of\_fit.py (parametric)
+	\item goodness\_of\_fit\_nonparametric.py
+	\item normality\_test.py
+	\item normalize\_contam\_wavelet.py
+	\item normalize\_scgs\_wavelet.py
+	\item transform\_data.py
+	
+\end{itemize}
+
+
+\textbf{Issues Encountered}
+\begin{itemize}
+	\item 
+\end{itemize}
+
+\textbf{Need to Troubleshoot}
+\begin{itemize}
+	\item 
+\end{itemize}
+\end{multicols}
+
+\newpage
+
+\begin{multicols}{2}
 % First entry, decrease the counter after each section
 \section{September 25, 2024}
 
@@ -1779,8 +1893,12 @@ This section comprises of concepts or ideas that require further investigation. 
 \begin{itemize}
 	\item 
 \end{itemize}
+\end{multicols}
+
+
 \newpage
 
+\begin{multicols}{2}
 \section{September 23, 2024}
 
 
@@ -1815,7 +1933,12 @@ This section comprises of concepts or ideas that require further investigation. 
 \begin{itemize}
 	\item 
 \end{itemize}
+\end{multicols}
+
+
 \newpage
+
+\begin{multicols}{2}
 \section{September 22, 2024}
 \textbf{To-do List} \\
 
@@ -1860,9 +1983,11 @@ This section comprises of concepts or ideas that require further investigation. 
 \begin{itemize}
 	\item [\done] Ubuntu crashed (again) (resolved)
 \end{itemize}
-
+\end{multicols}
 
 \newpage
+
+\begin{multicols}{2}
 \section{September 21, 2024}
 \textbf{To-do List} \\
 
@@ -1897,10 +2022,13 @@ This section comprises of concepts or ideas that require further investigation. 
 \begin{itemize}
 	\item 
 \end{itemize}
+\end{multicols}
 
 \newpage
 
 \newpage
+
+\begin{multicols}{2}
 \section{September 20, 2024}
 \textbf{To-do List} \\
 
@@ -1940,8 +2068,11 @@ This section comprises of concepts or ideas that require further investigation. 
 \begin{itemize}
 	\item 
 \end{itemize}
+\end{multicols}
 
 \newpage
+
+\begin{multicols}{2}
 \section{September 19, 2024}
 
 
@@ -1994,10 +2125,11 @@ This section comprises of concepts or ideas that require further investigation. 
 \begin{itemize}
 	\item 
 \end{itemize}
+\end{multicols}
 
 \newpage
 
-
+\begin{multicols}{2}
 \section{September 18, 2024}
 
 \textbf{To-do List}
@@ -2038,7 +2170,7 @@ This section comprises of concepts or ideas that require further investigation. 
 \begin{itemize}
 	\item conky display of wakatime API for desktop
 \end{itemize}
-
+\end{multicols}
 
 \newpage
 \onecolumn
@@ -2049,6 +2181,8 @@ This section comprises of concepts or ideas that require further investigation. 
 
 
 % Research Diary
+
+\begin{multicols}{2}
 \section{September 17, 2024}
 
 \textbf{To-do List}
@@ -2081,7 +2215,7 @@ This section comprises of concepts or ideas that require further investigation. 
 	\item [\done] \texttt  {Project4/calculate\_contig\_quality.py} 
 	\item [\done] \texttt  {Project4/plot\_and\_detect\_intermediate\_coverage.py} 
 \end{itemize}
-
+\end{multicols}
 
 \textbf{Issues Encountered}
 \begin{itemize}
