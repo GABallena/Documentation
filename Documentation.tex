@@ -71,6 +71,7 @@
 
 \usepackage{longtable} %loooong looong man
 
+\usepackage{hyperref} %linking between documents
 
 
 % Define simple symbols
@@ -788,7 +789,7 @@ This is a module that will be part of a bigger pipeline. The idea here to is ran
 	\item Visualization can be done using \texttt{Rstudio} or \texttt{Python's matplotlib} to visually look for differences in abnormalities. 
 \end{enumerate} 
 \textbf{Rationale}:Evaluating read quality and assessing key metrics post-trimming helps to ensure that the data is suitable for downstream analyses. Optimal trimming should maximize the number of high-quality, usable reads while eliminating low-quality bases and adapter contamination.\\ 
-\textbf{Notes} See Further Investigations \texttt{Box on Biological Information} for more possible details on this. 
+\textbf{Notes} See \hyperref[box:biological information]{Box on Biological Information} for more possible details on this. 
 
 
 \subsection{Annotated Directory Tree with File Temporary files and Prerequisites}
@@ -1532,19 +1533,122 @@ where \texttt{A}, \texttt{B}, \texttt{C}, and \texttt{D} correspond to different
 \fancyhead[C]{\leftmark}  % Adds section title in the header
 \fancyhead[R]{\thepage}
 
-
-
-
-\chapter{Project Side Scripts}
-
-
 \setcounter{section}{0}
 \setcounter{subsection}{0}
 
 \linenumbers*
-\section{}
 
 
+
+\chapter{Project Side Scripts}
+\section{kmer\_contam.smk}
+\textbf{Stage: Draft}
+\textbf{General Purpose}
+
+This pipeline is designed for the \textbf{detection and removal of contaminant sequences} using k-mer-based filtering. It includes steps for \textbf{contaminant k-mer generation}, mapping k-mers to metagenomic reads, and \textbf{statistical testing for ambiguous sequences}. The pipeline incorporates tools for \textbf{read quality control, contamination filtering, and re-validation} using k-mers and BUSCO analysis.
+\\
+\\ \textbf{Preprocessing} \\ \rule{\linewidth}{0.5mm} 
+
+\subsection{Contaminant Databases Download} \textbf{Technical Notes}: The contaminant databases \texttt{UniVec} from \texttt{NCBI}, \texttt{PhiX}, and the \texttt{1000 Genomes Project} are downloaded using \texttt{aria2c} to ensure a fast and reliable download process.\\ \textbf{Rationale}: These databases contain many  known contaminants that may appear in metagenomic samples, which must be filtered out before further downstream analyses.
+
+\begin{tcolorbox}[coltitle=white, title=Personal Notes]
+	Usually, in standard bioinformatics analyses:
+	\begin{enumerate}
+		\item The largely annotated human genome, \texttt{GRCh38} (often referred to as \texttt{HG38}), is an upgraded version of the previous build, \texttt{GRCh37} (sometimes called \texttt{HG19}), and is commonly used to filter out contaminants.
+		\item Tools like \texttt{minimap2} or \texttt{BBDuk} are typically used to map reads to the human genome (or other contaminant references) and then remove contaminant sequences via k-mer matching or alignment.
+	\end{enumerate}
+	\textbf{So why did I create this more elaborate workflow?}
+	\begin{itemize}
+		\item Tools like \texttt{BBDuk} and other k-mer-based mappers, such as \texttt{Kraken2}, often rely on \textbf{exact matches} to assign taxonomic profiles of contaminants or other sequences.
+		\item While \texttt{GRCh37} (or \texttt{GRCh38}) is a robust and well-annotated reference genome, it doesn't fully capture the breadth of human genetic diversity. It represents an amalgamation of human populations, but strict k-mer matching means it only identifies specific k-mers from that reference genome. The 1000 Genomes Project covers a broader range of human genetic diversity and is therefore included in this workflow to better account for this variability.
+	\end{itemize}
+\end{tcolorbox}
+
+
+
+\subsection{BUSCO Validation} \textbf{Technical Notes}: \texttt{BUSCO} is used to validate the presence of Single Copy Genes (SCGs) across the metagenomic data. This step ensures the retention of high-quality sequences that are biologically meaningful.\\
+\textbf{Rationale}: SCG validation confirms the biological integrity of the metagenomic sample after contamination filtering. It uses all available BUSCO lineages for a comprehensive assessment. 
+
+\subsection{Marker K-mer Generation} \textbf{Technical Notes}: K-mer counting is performed using \texttt{Jellyfish} for both SCGs and contaminants. This process generates k-mers that represent sequences of interest (SCGs) and contaminants (UniVec, PhiX, 1000 Genomes).\\ \textbf{Rationale}: K-mers allow rapid matching between known contaminants and sample reads, enabling efficient filtering and high-fidelity read retention. 
+\\
+\\
+\textbf{Contamination Filtering and Statistical Testing} \\ \rule{\linewidth}{0.5mm} 
+
+\subsection{Mapping K-mers} \textbf{Technical Notes}: \texttt{KMA} is used to map k-mers from SCGs and contaminants to raw metagenomic reads. \\
+\textbf{Rationale}: Mapping k-mers identifies sequences that match known contaminants, allowing for removal of ambiguous or low-quality sequences from the data. 
+
+\begin{tcolorbox}[coltitle=white, title=Personal Notes]
+	The use of \texttt{KMA} here specifically, instead of other mappers like \texttt{Bowtie2} and \texttt{BWA}, is because:
+	\begin{itemize}
+		\item While \texttt{Bowtie2}, \texttt{BWA}, and \texttt{KMA} are not restricted to \textbf{exact matching} (i.e., they can tolerate mismatches, increasing sensitivity),
+		\item \texttt{KMA} performs better with highly redundant databases. Although \texttt{Bowtie2} and \texttt{BWA} were originally optimized for mapping reads to human genomes or other low-redundancy datasets, they are not restricted to such uses. Both are excellent mappers, but \texttt{KMA} is specifically optimized for working with highly redundant databases, such as those commonly encountered in metagenomic or microbial datasets. For more information, see the \href{https://github.com/arpcard/rgi/blob/master/docs/rgi_bwt.rst}{RGI documentation}.
+	\end{itemize}
+\end{tcolorbox}
+
+
+
+
+\subsection{Normalization and Testing} \textbf{Technical Notes}: Contaminant and SCG k-mers are normalized using wavelet transformation, and a statistical test (e.g., \texttt{t-test} or \texttt{Z-test}) is performed to detect ambiguous regions.\\
+\textbf{Rationale}: Normalization ensures that the k-mer counts are comparable across samples. Statistical testing allows detection of ambiguous areas that may require further analysis or removal. 
+\textbf{Notes} (For more details on wavelets, see \hyperref[box:wavelets]{Box on Wavelets})
+
+\subsection{Filtering Ambiguous Sequences} \textbf{Technical Notes}: Sequences identified as ambiguous are filtered out to retain only high-fidelity reads in the final metagenomic assembly. \\
+\textbf{Rationale}: This step ensures that the final assembly is free of contamination and contains only high-quality sequences for downstream analyses. 
+
+
+\begin{tcolorbox}[coltitle=white, title=Personal Notes]
+	The usage of wavelets here increases sensitivity and provides statistical robustness. Since we are no longer relying on exact matching but allowing for mismatches, we expect a distribution of k-mer bindings embedded within the coverage data. To analyze this distribution, we apply a wavelet transformation (similar to a Fourier transformation, but localized) to decompose the data into smaller components (frequencies) that contribute to the overall pattern.
+	
+	Wavelet-based statistical testing is implemented in this step through a series of Python scripts:
+	\begin{itemize}
+		\item \texttt{normalize\_scgs\_wavelet.py} and \texttt{normalize\_contam\_wavelet.py} load the k-mer counts from SCGs (identified by \texttt{BUSCO odb10}) and from contaminant databases, respectively. These scripts apply continuous wavelet transformations (CWT) to create wavelet distributions and then calculate Z-scores for the wavelet coefficients to assess their statistical significance. Wavelet coefficients with Z-scores corresponding to a p-value of less than 0.05 (Z-score $\geq$ 1.96) are retained, while the others are filtered out.
+		\item \texttt{compare\_wavelets\_stats.py} compares the wavelet distributions of SCGs and contaminants, testing whether they are statistically different (with the null hypothesis, H0, being that they are not different). If the null hypothesis is accepted (i.e., the distributions are similar), the sequences are flagged as ambiguous and filtered out.
+		\begin{verbatim}
+			significant = np.where(p_value < 0.05, 'significant', 'ambiguous')
+		\end{verbatim}
+	\end{itemize}
+\end{tcolorbox}
+
+
+\subsection{Re-validation of SCGs} \textbf{Technical Notes}: \texttt{BUSCO} is rerun on the final cleaned assembly to confirm that SCGs have been retained after contamination filtering. \\
+\textbf{Rationale}: Re-validation with BUSCO ensures that the final dataset remains biologically meaningful after the filtering process.
+	
+
+
+
+\subsection{Directory tree}
+
+\dirtree{%
+	.1 project\_root/.
+	.2 databases/.
+	.3 UniVec \DTcomment{(Generated)}.
+	.3 PhiX \DTcomment{(Generated)}.
+	.3 1000\_genomes.fasta \DTcomment{(Generated)}.
+	.2 results/.
+	.3 cleaned\_high\_fidelity\_spikes.fasta.
+	.3 scg\_kmer\_stats.txt.
+	.3 contam\_kmer\_stats.txt.
+	.3 phix\_kmer\_stats.txt.
+	.3 genome\_1000\_kmer\_stats.txt.
+	.3 wavelet\_normalized\_contam.txt.
+	.3 wavelet\_normalized\_scgs.txt.
+	.3 t\_test\_results.txt.
+	.3 ambiguous\_sequences.txt.
+	.2 busco\_outputs/.
+	.3 dataset1/.
+	.3 dataset2/.
+	.3 ....
+	.2 busco\_validation\_outputs/.
+	.3 short\_summary.txt.
+	.2 scripts/ \DTcomment{(Prerequisite)}.
+	.3 normalize\_contam\_wavelet.py \DTcomment{(Prerequisite)}.
+	.3 normalize\_scgs\_wavelet.py \DTcomment{(Prerequisite)}.
+	.3 compare\_wavelets\_stats.py \DTcomment{(Prerequisite)}.
+	.2 env/.
+	.3 busco\_env.yaml \DTcomment{(Prerequisite)}.
+	.3 jellyfish\_env.yaml \DTcomment{(Prerequisite)}.
+	.2 raw\_reads.fastq \DTcomment{(Prerequisite)}.
+}
 
 
 
@@ -1601,6 +1705,7 @@ where \texttt{A}, \texttt{B}, \texttt{C}, and \texttt{D} correspond to different
 This section comprises of concepts or ideas that require further investigation. They are written in boxes to help categorize them cleanly. I will refer to this section often as no script is perfect - and can be further improved. 
 
 \begin{tcolorbox}[colback=gray!10!white, coltitle=white, colframe=gray!80!black, title=Biological Information]
+	\label{box:biological information}
 	I have long pondered upon the idea of creating a graph with \texttt{biological information} on the y-axis and \texttt{read length} on the x-axis. I hypothesize that we will find a \textbf{"sweet spot" }wherein we can optimize the amount of \texttt{information/read} using such trimmers. Unfortunately, it is extremely difficult to define what \texttt{a biological sequence} really is, because technically you can generate any random sequence - whether protein or nucleotide. That's the main reason I have been stuck on this problem for quite a while, I've been trying to find the answer first.
 	
 	The core difficulty here lies in defining what constitutes biological information in a meaningful, quantifiable way. Since any random sequence of nucleotides or proteins could be technically "valid" (false-positives). 
