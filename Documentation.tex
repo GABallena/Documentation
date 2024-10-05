@@ -2257,7 +2257,9 @@ This is part is mainly created as an information dump outside of just bioinforma
 
 
 
-\begin{tcolorbox}[title=Exponential Decay and Biological Gene Expression, coltitle=AntiqueWhite1] In statistical mechanics, microstates (positions, velocities, energies, etc.) are often unpredictable—this is related to Schrödinger's thought experiment and further elaborated by Werner Heisenberg’s Uncertainty Principle. However, macrostates (large-scale properties) that emerge from the ensemble of microstates are model-able.
+\section{Biological OFF "Decay"}
+\begin{multicols}{2}
+In statistical mechanics, microstates (positions, velocities, energies, etc.) are often unpredictable—this is related to Schrödinger's thought experiment and further elaborated by Werner Heisenberg’s Uncertainty Principle. However, macrostates (large-scale properties) that emerge from the ensemble of microstates are model-able.
 	For **radioactive decay**, while we can’t predict when individual atoms will decay, we can model the **half-life** of the entire ensemble. The **exponential decay equation** models this process:
 	
 	\[
@@ -2292,9 +2294,101 @@ This is part is mainly created as an information dump outside of just bioinforma
 	In gene expression studies, \( k \) could represent the rate at which environmental or physiological conditions (such as cold temperatures or seasonal changes) cause genes to turn off. This decay constant could be derived from \textbf{empirical data} (e.g., using transcriptomics data like DeSeq2) by calculating how quickly gene repression occurs over a certain period of time.
 	
 	The model can help us estimate when a certain percentage of genes will be repressed, akin to the half-life concept in radioactive decay. This framework allows us to mathematically predict e.g. when a plant or organism is preparing for overwintering, or to determine the rate of gene repression under specific environmental conditions.
-	
-	
-\end{tcolorbox}
+\end{multicols}	
+
+
+\newpage	
+\section{Best Data science practices}
+	Here as some of the best practices and principles in data science which can be adopted to any scientific discipline dealing with large amount of data.
+	\begin{multicols}{2}
+	\begin{enumerate}
+		\item Defining the problem clearly which includes
+		\begin{itemize}
+			\item Objective/s
+			\item Scope of the Project
+			\item Key metrics for success
+		\end{itemize}
+		\item Knowing data data which including
+		\begin{itemize}
+			\item Data structure
+			\item Data type
+			\item Data distribution
+			\item Anomalies e.g. missing values
+			\item Imbalances in data e.g. oversampling, undersampling, synthetic data generation etc. 
+		\end{itemize}
+		\item Ensure reproducibility
+		\begin{itemize}
+			\item Documentation: cleaning, analysis, modeling
+			\item Scripts and Notebooks 
+			\item Makes your code easier to understand and facilitates collabs and updates. 
+		\end{itemize}
+		\item Validation
+		\begin{itemize}
+			\item Split data into training and testing sets to ensure models generalize well to unseen data. \item Prototype first before implementation
+			\item Feature Engineering
+			\item Optimize trade-off between complexity and interpret-ability 
+			\item Implement Data Augmentation techniques to increase diversity and quantity of training data, improving robustness
+		\end{itemize}
+		\item Consider ethical practices and biases; ensure fairness on treatment of data 
+		\begin{itemize}
+			\item Data privacy and Security is top priority
+				\begin{itemize}
+					\item Encryption
+					\item Access controls 
+					\item Anonymyzation techniques
+				\end{itemize}
+		\end{itemize}
+		\item Automate where possible to reduce the likelihood of human error - this includes:
+		\begin{itemize}
+			\item Pipelines
+			\item Feature engineering updates 
+			\item Feedback 
+		\end{itemize}
+		\item Stay updated with the latest tools 
+		\item Scalability: ensure models  
+		\begin{itemize}
+			\item Can handle increasing amounts of data (data storage scalability) without 
+			\item Significant performance degradation 
+			\item Significant increases in computational resources
+		\end{itemize} 
+		\item Impact: avoid "Analysis Paralysis" by focusing on insights that are actionable 
+		\item Implement feedback loops based on
+		\begin{itemize}
+			\item New data
+			\item Performance metrics
+			\item Stakeholder and end-user feedback
+			\item Alignment with broader objectives (be relevant and actionable)
+			\item Explore other models
+			\item Data leakage checks \\
+			\textbf{Note that bias can arise from data}
+			\item Appropriate metrics are used 
+			\item \textbf{Always be skeptical of results}
+			\item Feedback from domain expertise
+			\item Auditing 
+		\end{itemize}
+		\item Mind the end users; models must be 
+		\begin{itemize}
+			\item Accessible 
+			\item Interpretable
+			\item Usable 
+			\item Continuous Integration and Deployment (CI/CD)
+		\end{itemize}
+		\item Communication:
+		\begin{itemize}
+			\item Uncertainties
+			\item Assumptions
+			\item Model explainability techniques: how complex models make decisions
+			
+		\end{itemize} 
+	\item Understand the data lifecycle
+		\begin{enumerate}
+			\item Collection to preprocessing
+			\item Analysis
+			\item Modeling
+			\item Eventual archival and deletion
+		\end{enumerate}
+	\end{enumerate}
+	\end{multicols}
 
 
 \renewcommand{\thesection}{\arabic{section}}
