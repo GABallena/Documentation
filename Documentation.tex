@@ -1591,7 +1591,7 @@ This pipeline is designed for the \textbf{detection and removal of contaminant s
 
 \subsection{Normalization and Testing} \textbf{Technical Notes}: Contaminant and SCG k-mers are normalized using wavelet transformation, and a statistical test (e.g., \texttt{t-test} or \texttt{Z-test}) is performed to detect ambiguous regions.\\
 \textbf{Rationale}: Normalization ensures that the k-mer counts are comparable across samples. Statistical testing allows detection of ambiguous areas that may require further analysis or removal. 
-\textbf{Notes} (For more details on wavelets, see \hyperref[box:wavelets]{Box on Wavelets})
+\textbf{Notes} (For more details on wavelets, see \hyperref[box:wavelets]{Wavelets})
 
 
 \begin{tcolorbox}[coltitle=white, title=Personal Notes, breakable]
@@ -1738,7 +1738,7 @@ This section comprises of concepts or ideas that require further investigation. 
 \end{tcolorbox}
 
 
-\begin{tcolorbox}[label=box:Wavelets, colback=gray!10!white, coltitle=white, colframe=gray!80!black, title=Box on Wavelets, breakable]
+\begin{tcolorbox}[label=box:Wavelets, colback=gray!10!white, coltitle=white, colframe=gray!80!black, title= Wavelets, breakable]
 	\textbf{What is a Wavelet?} 
 	
 	A \textbf{wavelet} is a small, localized wave that is used to represent signals at different scales. Unlike sinusoids in the Fourier transform, which extend infinitely, wavelets are confined to a limited duration. This makes them highly useful for capturing both frequency and time (or space) information simultaneously.
@@ -1776,8 +1776,81 @@ This section comprises of concepts or ideas that require further investigation. 
 \end{tcolorbox}
 
 
+\begin{tcolorbox}[label=box:modeltesting, colback=gray!10!white, coltitle=white, colframe=gray!80!black, title=Model Testing in Phylogenetics, breakable]
+	\textbf{What is a Model Testing in Phylogenetics?} 
+	
+	Note that especially in exploration of the tree space using Maximum Likelihood or Bayesian Inferences, you are often first required to test for the model of evolution - this serves two related purposes:
+	\begin{itemize}
+		\item To find the most fitting model given the dataset
+		\item That is also the simplest one (avoids overfitting - and thereby computational resources)
+	\end{itemize}
+	
+	So what is a model in phylogenetics? A model is simply a possible explanation of how a specific gene or partition (discussed later) likely evolved. \\
+	\textbf{Note} Different models take into account different evolutionary processes (and parameters) into account (some account for more than others). Factors include:
+	\begin{itemize}
+		\item Transition vs Transversion rates
+		\item Base frequencies
+		\item Among-site rate variation
+		\item The behavior or rate distribution \\ \textbf{Note} Assuming differences in site variation is often known as $\Gamma$ while I - means proportion of sites is invariant.
+	\end{itemize}
+		
+	To determine which is best tools such as ModelTest or jModeltest (if you prefer GUIs) use certain statistical criteria i.e.
+	\begin{itemize}
+		\item Akaike Information Criterion (\textbf{AIC}),
+		\item Bayesian Information Criterion (\textbf{BIC}), or
+		\item likelihood-ratio tests (\textbf{LRT}), 
+	\end{itemize}
+	
+	to rank models based on how well they explain the data while penalizing for model complexity.
+	
+Selection of a model affects phylogenetic trees in terms of 
+\begin{itemize}
+	\item Branch lengths 
+	\item Overall tree topology 
+\end{itemize}
+
+\textbf{Why bother penalize overfitting?}
+First and foremost, overfitting may cause the model to assume \textbf{random noise in the data as genuine evolutionary signals}. Overfitting may also cause it to become too specific at explaining the data at the cost of generalizability. Finally, it leads to unnecessary computational resources and time. \\
+\textbf{Personal Note} TLDR, to balance between accuracy vs speed, and data specificity-generalized conclusions. 
+
+\textbf{What to do when using concatenated sequences?}
+When using concatenated sequences - likely from phylogenomics or using multiple marker genes. It is important to note that (more likely than not) \textbf{evolutionary rates differ between different genomic regions.} Case in point: coding vs non-coding regions or the mere fact that concept of conserved regions exist.  In such cases as \textbf{partitioned analysis} is recommended - where you apply different models for each stretch of DNA or partition.\\
+\textbf{Note} Doing so also helps you avoid Simpson's Paradox - a statistical bias - where trends from several groups disappear or reverse depending on how you partition your data based on metadata.
+\textbf{Personal Note} Other methods to avoid this bias include:
+\begin{itemize}
+	\item Using Bayesian methods 
+	\item Coalescent models see \hyperref[Coalescent]{Box on Coalescent Phylogenetics}
+	\item Phylogenetic Networks \hyperref[Network Phylogenetics]{Box on Network Phylogenetics}
+\end{itemize} 
+ 
+	
+\end{tcolorbox}
 
 
+
+\begin{tcolorbox}[label=box:Coalescent, colback=gray!10!white, coltitle=white, colframe=gray!80!black, title=Coalescent, breakable]
+	
+\end{tcolorbox}
+	
+	
+\begin{tcolorbox}[label=box:Network Phylogenetics, colback=gray!10!white, coltitle=white, colframe=gray!80!black, title=Networks in Phylogenetics, breakable]
+\end{tcolorbox}
+
+\begin{tcolorbox}[label=box:Benchmarking, colback=gray!10!white, coltitle=white, colframe=gray!80!black, title=Benchmarking, breakable]
+	
+
+\textbf{Why test on your own dataset?}
+\begin{itemize}
+	\item Specific conditions, organisms, or complexities applicable to your metagenomic data - which Gold standards might not be able to capture e.g. noise, biases, biological variation
+	\item Gold standards often reflect idealized situations, disallowing you to fine-tune or feature engineer based on your specific data.\\
+	\textbf{Personal Note} Every metagenomic dataset has unique challenges and represent a sample that no longer exists in the real world (because you took it). Testing the data allows you to specifically optimize tools or methods for those issues \textbf{rather than for general use cases}.
+	\item Tools trained on gold standards may perform differently when exposed to new (real world) data, especially when your dataset has (unforeseen )biases or noise not accounted for in the development of the gold standard. 
+	\item Lastly, your research goals may differ from those who developed the simulations or gold standards. Testing directly on your dataset makes sure that any optimizations are specifically meaningful to your data.
+\end{itemize}	
+	
+	
+	
+\end{tcolorbox}
 
 \setcounter{section}{1}
 \setcounter{subsection}{0}
@@ -1804,8 +1877,126 @@ This section comprises of concepts or ideas that require further investigation. 
 \setcounter{section}{0}
 \setcounter{subsection}{0}
 
-	
 
+\chapter{October 2024}
+\begin{multicols}{2}
+	\section{October 7, 2024}
+	
+	
+	\textbf{To-do List} \\
+	\textbf{Note:} 
+	
+	\begin{itemize}
+		\item 
+	\end{itemize}
+	
+	\textbf{Completed Tasks}
+	\begin{itemize}
+		\item [\done] Creation of a new repo called Health
+		
+	\end{itemize}
+	
+	\textbf{Scripts Worked On}
+	\begin{itemize}
+		\item
+	\end{itemize}
+	
+	
+	\textbf{Issues Encountered}
+	\begin{itemize}
+		\item 
+	\end{itemize}
+	
+	\textbf{Need to Troubleshoot}
+	\begin{itemize}
+		\item 
+	\end{itemize}
+\end{multicols}
+
+\newpage
+
+\begin{multicols}{2}
+	\section{October 6, 2024}
+	
+	
+	\textbf{To-do List} \\
+	\textbf{Note:} 
+	
+	\begin{itemize}
+		\item [\pending] Documentation backlogs
+		\item [\done] Box on Model Testing
+		\item [\refine] Box on Benchmarking
+		\item [\pending] Box on Coverage and Microbial Eukaryotes
+		\item [\pending] Box on Spiking 
+	\end{itemize}
+	
+	\textbf{Completed Tasks}
+	\begin{itemize}
+		\item [\done] Backlog: Best Data science practices 
+		\item [\done] Backlog: Staying updated Section
+		\item [\done] Backlog: When to split publications
+		
+	\end{itemize}
+	
+	\textbf{Scripts Worked On}
+	\begin{itemize}
+		\item
+	\end{itemize}
+	
+	
+	\textbf{Issues Encountered}
+	\begin{itemize}
+		\item 
+	\end{itemize}
+	
+	\textbf{Need to Troubleshoot}
+	\begin{itemize}
+		\item 
+	\end{itemize}
+\end{multicols}
+
+\newpage
+
+
+\begin{multicols}{2}
+	\section{October 4, 2024}
+	
+	
+	\textbf{To-do List} \\
+	\textbf{Note:} 
+	
+	\begin{itemize}
+		\item [\pending] Documentation backlogs
+		\item [\pending] Box on Coverage and Microbial Eukaryotes
+		\item [\pending] Box on Spiking 
+	\end{itemize}
+	
+	\textbf{Completed Tasks}
+	\begin{itemize}
+		\item 
+	\end{itemize}
+	
+	\textbf{Scripts Worked On}
+	\begin{itemize}
+		\item
+	\end{itemize}
+	
+	
+	\textbf{Issues Encountered}
+	\begin{itemize}
+		\item 
+	\end{itemize}
+	
+	\textbf{Need to Troubleshoot}
+	\begin{itemize}
+		\item 
+	\end{itemize}
+\end{multicols}
+
+\newpage
+
+	
+\chapter{September 2024}
 \begin{multicols}{2}
 \section{September 26, 2024}
 
@@ -2344,7 +2535,7 @@ In statistical mechanics, microstates (positions, velocities, energies, etc.) ar
 			\item Feature engineering updates 
 			\item Feedback 
 		\end{itemize}
-		\item Stay updated with the latest tools 
+		\item Stay updated with the latest tools
 		\item Scalability: ensure models  
 		\begin{itemize}
 			\item Can handle increasing amounts of data (data storage scalability) without 
@@ -2390,6 +2581,215 @@ In statistical mechanics, microstates (positions, velocities, energies, etc.) ar
 	\end{enumerate}
 	\end{multicols}
 
+
+\section{Staying updated}
+In line with best practices, here is a list of where to find the latest tools and the journals I personally consider to be of high-impact. 
+\subsection{Where to find some protocols}
+\begin{itemize}
+	\item Nature Protocols, Nature Methods
+	\item Journal of Visualized Experiments
+	\item Current Protocols
+	\item Cold Spring Harbor Protocols
+	\item Protocol Exchange \dotfill open repo hosted by Nature
+	\item Bio-Protocol
+	\item PLOS ONE Protocols
+	\item STAR Protocols \dotfill more like a part of Cell
+\end{itemize}
+
+\subsection{Bioinformatics Tools and Journals}
+\begin{itemize}
+	\item Bioinformatics \dotfill Oxford University Press
+	\item BMC Bioinformatics
+	\item Briefings in Bioinformatics
+	\item Nucleic Acids Research (NAR)
+	\item Journal of Computational Biology
+	\item PLoS Computational Biology
+	\item Bioinformatics and Biology Insights \dotfill Bit on the low side of IF, but Open Access
+	\item Database \dotfill Oxford University Press
+	\item GigaScience \dotfill Also a DB repository for some custom datasets
+	\item Genome Biology
+	\item Scientific Data \dotfill hosted by Nature, aptly named
+	\item Bioinformatics Advances
+\end{itemize}
+\subsection{High quality (imo) Life-Science Journals}
+\begin{itemize}
+	\item General
+	\begin{itemize}
+		\item Nature
+		\item Science
+		\item Cell
+		\item Annual Reviews \dotfill Aptly named
+		\item Trends
+		\item EMBO \dotfill Mostly molecular biology
+		\item PLoS (especially the specialized ones)
+		\item Current Biology
+	\end{itemize}
+	\item Mostly medical literature
+	\begin{itemize}
+		\item The Lancet
+		\item NEJM
+		\item BMJ
+		\item JAMA
+		\item Cochrane \dotfill Best place for Evidence-based Literature
+	\end{itemize}
+\subsection{Notable Labs and Groups for AMR research}
+\begin{itemize}
+	\item Knights Lab \dotfill University of Minnesotta
+	\item Dantas Lab \dotfill Washington University in St. Louis
+	\item Beiko Lab \dotfill Dalhousie University
+	\item Fraser Lab \dotfill University of Maryland
+	\item Moran Lab \dotfill Georgia Institute of Technology
+	\item Bhatt Lab \dotfill Stanford University
+	\item ph4ge group \dotfill Mostly epidemiological
+	\item StaPH-B group 
+	\item phytools blog
+\end{itemize}
+\end{itemize}
+
+\section{Beyond the scope of this study}
+Below are some of the analyses that are overlooked or not typically addressed - but not by high IF papers regarding antimicrobial resistance.
+\subsection{In General}  
+\begin{itemize}
+	\item Functional characterization of ARGs
+	\begin{itemize}
+		\item Experimental validation
+		\item Mechanisms of resistance
+		\item Linking ARGs to specific pathways or cellular processes
+	\end{itemize}
+	\item Ecological and Evolutionary Context
+	\begin{itemize}
+		\item How ARGs emerge, persist, and spread
+		\item HGT, selective pressures, impact of environmental factors
+	\end{itemize}
+	\item Innovative methodologies
+	\item Focus on mobile genetic elements
+	\begin{itemize}
+		\item Plasmids, Transposons, Integrons
+		\item Co-localization and dynamics of transfer 
+		\item Evolutionary dynamics of the resistome
+	\end{itemize}
+	\item Public Health and Clinical Relevance Linking
+	\begin{itemize}
+		\item Clinical outcomes 
+		\item Potential therapeutic strategies 
+		\item Policy recommendations
+		\item Burden of ARGs in the environment
+		\item Strategies for mitigating spread
+	\end{itemize}
+	\item Quantitative Analysis and Modeling
+	\begin{itemize}
+		\item Prediction of spread
+		\item Assessment of risk factors
+		\item Evaluation of mitigation strategies 
+		\item Evolutionary trajectory
+	\end{itemize}
+	\item Policy and Societal Implications
+	\begin{itemize}
+		\item Evidence-based recommendations for antibiotic use, environmental management, and global health strat
+		\item Ethical considerations and regulatory challenges
+		\begin{itemize}
+			\item Responsible usage of antibiotics
+			\item Implications to public health policies
+			\item Need for global cooperation 
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+\subsection{Bioinformatics}
+\begin{itemize}
+	\item Comprehensive data integration \dotfill multi-omics
+	\item Advanced assembly and binning techniques 
+	\begin{itemize}
+		\item Hybrid assemblies 
+		\item Magnetic isolation or targeted metagenomics
+		\item Deep sequencing 
+	\end{itemize}
+	\item Usage of multiple specialized databases such as 
+	\begin{itemize}
+		\item CARD
+		\item ResFinder
+		\item ARG-ANNOT
+		\item Deep-ARG\\
+		- then cross-validation between them 
+	\end{itemize}
+	\item HGT analysis often by specialized tools e.g.
+	\begin{itemize}
+		\item ICEberg
+		\item oriTfinder
+		\item plasmidSPAdes\\
+	\item Co-occurrence analysis with MGEs using tools such as \begin{itemize}
+		\item MOB-suite
+		\item PlasFlow
+		\item cBar
+		\item Cytoscape \dotfill Data viz for networks
+		\item SpiecEasi \dotfill R-package
+	\end{itemize}
+	\item Resistance Gene Quantification 
+	\begin{itemize}
+		\item RPKM or TPM normalization
+		\item Accounting for copy number variations
+		\item Differential expression 
+	\end{itemize}
+	\item Phylogenetic and Evolutionary Analysis 
+	\begin{itemize}
+		\item Evolutionary origins, dissemination pathways
+		\item WGS to build phylogenies rather than markers
+		\item MLST integration 
+		\item Phylogeography and Spatial Phylogenetics \dotfill SPREAD or PhyloGeoBEARS
+		\item Selection pressure of genes or genomes and how they relate to antibiotic usage
+		\item Phylogenetic networks and reticulate evolution
+		\item Co-phylogeny and Host-Microbe 
+		\item Gene Tree-Species Tree Reconciliation or discrepancies 
+		\item Ancestral State Reconstruction 
+		\item Phylogenetic Comparative Methods 
+		\item Bayesian Phylogenetics and Model Selection
+		\item Simulation studies for phylogenetic validation under different conditions
+		\begin{itemize}
+			\item Different rates of evolution
+			\item Incomplete lineage sorting
+			\item Varying levels of HGT
+		\end{itemize}
+		\item Phylogenetic placement of uncultured or unknown
+		\item 
+	\end{itemize} 
+	\item Comparative genomics 
+	\begin{itemize}
+		\item Syntenic regions 
+		\item Conserved domains
+		\item Shared genomic islands
+		\item Core vs accessory genomes
+		\item Core vs shell vs cloud \dotfill Roary or PanX
+	\end{itemize}
+	\item Deep Learning or Machine Learning Approaches
+	\begin{itemize}
+		\item Neural networks
+		\item Random forests 
+		\item Support vector machines
+	\end{itemize}
+	\item Novel Pipelines of Workflows 
+	\end{itemize}
+	\item Binning validation 
+	\item Strain-level resolution \dotfill StrainPhlAn
+	\item Detailed Eco-evolutionary context \dotfill reservoirs and how they impact human health 
+	\item Advanced Contamination Control \dotfill low-biomass samples
+	\item ID of novel ARGs followed by experimental validation
+	\item Data sharing and reproducibility 
+	\item Benchmarking and Validation against established standards or reference databases 
+	
+\end{itemize}
+
+\subsection{When to split}
+Splitting papers into multiple publications can be a strategic and necessary move when the scope is too broad.
+Here are some key considerations:
+\begin{itemize}
+	\item Distinct research questions and hypotheses that can be fully explored on their own 
+	\item When methodologies are distinct enough to require separate justifications
+	\item Significant results in different areas
+	\item Coherence in narrative flow
+	\item Journal requirements \dotfill Word Count, No. of Figures, Scope
+	\item Major differences in teams and co-authors
+	\item Data and results need independent discussions in themselves 
+	\item It is a follow up study 
+\end{itemize}
 
 \renewcommand{\thesection}{\arabic{section}}
 \setcounter{section}{0}
