@@ -35,7 +35,7 @@
 \usepackage{adjustbox}
 
 % Text boxes and highlighting
-\usepackage{tcolorbox}
+\usepackage[most]{tcolorbox}
 
 % Option to strike through text
 \usepackage{ulem}
@@ -96,6 +96,7 @@
 % Fancy headers
 
 
+
 \title{\Huge \textbf{ONE ARM Metagenomics Pipeline}}
 \author{\Large Prepared for and by: Project 4}
 \date{\Large Last updated \today}
@@ -109,10 +110,17 @@
 	
 	% Start main document
 	\newpage
-	
+
+
+
 \setcounter{tocdepth}{3} 
-\tableofcontents
-\newpage  % Start a new page after the ToC	
+\tableofcontents  % This generates the Table of Contents
+\newpage
+  % This generates the List of Figures
+\newpage
+\listoftables      % This generates the List of Tables
+\newpage
+
 
 
 \pagestyle{fancy}
@@ -170,134 +178,125 @@
 
 
 
-\chapter{Data collection}
-
-\section{Procurement}
-
-
 \newpage
 		
 \chapter{Bioinformatics Progress}
 
-\section{Kanban table}
+\section{Kanban Table}
+
 \begin{longtable}{|c|p{8cm}|c|c|c|c|c|c|}
+	\caption[Kanban Table]{Detailed Kanban Table for HPC and File Management Tasks} \\  % Short caption for LoT
 	\hline
-	\textbf{Section} & \textbf{Task} & \pending & \draft & \refine & \issue & \moved & \done \\ \hline
+	\textbf{Section} & \textbf{Task} & \textbf{\pending} & \textbf{\draft} & \textbf{\refine} & \textbf{\issue} & \textbf{\moved} & \textbf{\done} \\ \hline
 	\endfirsthead
 	\hline
-	\textbf{Section} & \textbf{Task} & \pending & \draft & \refine & \issue & \moved & \done \\ \hline
+	\textbf{Section} & \textbf{Task} & \textbf{\pending} & \textbf{\draft} & \textbf{\refine} & \textbf{\issue} & \textbf{\moved} & \textbf{\done} \\ \hline
 	\endhead
 	
 	\multirow{8}{*}{\textbf{HPC Preparation}} 
-	& \highlightessential{Confirmation of Required Robustness} & & & & & & X \\ 
-	& \highlightessential{Agree upon the type of analyses} & & & & & X & \\ 
+	& \highlightessential{Confirmation of Required Robustness} & & & & & & \done \\ 
+	& \highlightessential{Agree upon the type of analyses} & & & & & \moved & \\ 
 	& \multicolumn{7}{c|}{\textbf{SLURM request management}} \\
-	& \highlightessential{Calculate using quotation from PGC} & & & & & & X \\ 
-	& \highlightessential{Setup Docker containers for SLURM} & X & & & & & \\
-	& \highlightessential{SLURM container for simulations} & X & & & & & \\ 
-	& \highlightoptional{Automation of SLURM requests} & X & & & & & \\
-	& \highlightoptional{Send email for HPC usage requests} & & & X & & & \\ \hline
+	& \highlightessential{Calculate using quotation from PGC} & & & & & & \done \\ 
+	& \highlightessential{Setup Docker containers for SLURM} & \pending & & & & & \\
+	& \highlightessential{SLURM container for simulations} & \pending & & & & & \\ 
+	& \highlightoptional{Automation of SLURM requests} & \pending & & & & & \\
+	& \highlightoptional{Send email for HPC usage requests} & & & \refine & & & \\ \hline
 	
 	\multirow{2}{*}{\textbf{File Management}} 
-	& \highlightoptional{BAM file parsing} & X & & & & & \\
-	& \highlightoptional{Interconversion between SAM and BAM} & X & & & & & \\ \hline
+	& \highlightoptional{BAM file parsing} & \pending & & & & & \\
+	& \highlightoptional{Interconversion between SAM and BAM} & \pending & & & & & \\ \hline
 	
 	\multirow{29}{*}{\textbf{Raw Read Processing}}
 	& \multicolumn{7}{c|}{\textbf{Create the script}} \\
-	& \highlightessential{Raw reads QC} & & & & & & X \\ 
+	& \highlightessential{Raw reads QC} & & & & & & \done \\ 
 	& \multicolumn{7}{l}{\texttt{raw.bash}} \\ 
-	& \highlightessential{Raw reads trimming} & & & & & & X \\ 
+	& \highlightessential{Raw reads trimming} & & & & & & \done \\ 
 	& \multicolumn{7}{l}{\texttt{trimmomatic.bash}} \\ 
 	& \multicolumn{7}{l}{\texttt{fastp.bash}} \\
-	& \highlightrobust{Looping mechanism for QC and trimming} & & & & & & X \\
+	& \highlightrobust{Looping mechanism for QC and trimming} & & & & & & \done \\
 	& \multicolumn{7}{l}{\texttt{trimming-cleaning-checking.py}} \\ 
-	& \highlightrobust{Data visualization} & X & & & & & \\
-	& \highlightrobust{Determination of optimal tool/s} & X & & & & & \\
-	& \highlightrobust{Parametric randomization} & & & & & & X \\
+	& \highlightrobust{Data visualization} & \pending & & & & & \\
+	& \highlightrobust{Determination of optimal tool/s} & \pending & & & & & \\
+	& \highlightrobust{Parametric randomization} & & & & & & \done \\
 	& \multicolumn{7}{l}{\texttt{trim\_randomizer.smk}} \\
-	& \highlightrobust{Parse QC of all metrics in parametric randomizer} & & & & & & X \\
+	& \highlightrobust{Parse QC of all metrics in parametric randomizer} & & & & & & \done \\
 	& \multicolumn{7}{l}{\texttt{parseFastQC.py}} \\
-	& \highlightrobust{Determination of optimal parameters} & X & & & & & \\
-	& \highlightrobust{Tool combination randomization script} & X & & & & & \\
+	& \highlightrobust{Determination of optimal parameters} & \pending & & & & & \\
+	& \highlightrobust{Tool combination randomization script} & \pending & & & & & \\
 	& \multicolumn{7}{c|}{\textbf{Test on Datasets}} \\
-	& \highlightessential{Raw reads QC} & & & & & & X \\ 
-	& \highlightessential{Raw reads trimming} & & & & & & X \\ 
+	& \highlightessential{Raw reads QC} & & & & & & \done \\ 
+	& \highlightessential{Raw reads trimming} & & & & & & \done \\ 
 	& \multicolumn{7}{l}{\texttt{\deprecated{trimmomatic.bash}}} \\ 
 	& \multicolumn{7}{l}{\texttt{\deprecated{fastp.bash}}} \\
 	& \multicolumn{7}{l}{\texttt{trimming-cleaning-checking.py}} \\ 
-	& \highlightessential{Aggregate quality metrics} & & & & & & X \\
+	& \highlightessential{Aggregate quality metrics} & & & & & & \done \\
 	& \multicolumn{7}{l}{\texttt{summary\_stat.bash}} \\ 
-	& \highlightrobust{Parametric randomization} & & & & & & X \\
-	& \highlightrobust{Parse QC of all metrics in parametric randomizer} & & & & & & X \\
+	& \highlightrobust{Parametric randomization} & & & & & & \done \\
+	& \highlightrobust{Parse QC of all metrics in parametric randomizer} & & & & & & \done \\
 	& \multicolumn{7}{c|}{\textbf{Integrate to pipelines}} \\
-	& \highlightessential{Pipeline integration of \texttt{raw.bash}} & X & & & & & \\
-	
-	& \highlightessential{Raw reads trimming} & & & & & & X \\ 
-	
-	\hline
-	
+	& \highlightessential{Pipeline integration of \texttt{raw.bash}} & \pending & & & & & \\
+	& \highlightessential{Raw reads trimming} & & & & & & \done \\ \hline
 	
 	\multirow{20}{*}{\textbf{Taxonomy}} 
 	& \multicolumn{7}{c|}{\textbf{Create the script}} \\
-	& \highlightessential{Kraken2} & & & & & & X \\
+	& \highlightessential{Kraken2} & & & & & & \done \\
 	& \multicolumn{7}{l}{\texttt{krakenpipeline.bash}} \\ 
-	& \highlightessential{Bracken} & & & & & & X \\
+	& \highlightessential{Bracken} & & & & & & \done \\
 	& \multicolumn{7}{l}{\texttt{krakenpipeline.bash}} \\ 
-	& \highlightessential{Diversity indices} & & & & & & X \\
+	& \highlightessential{Diversity indices} & & & & & & \done \\
 	& \multicolumn{7}{l}{\texttt{calculate\_diversity.py}} \\ 
-	& \highlightoptional{MetaPhlan4} & X & & & & & \\ 
+	& \highlightoptional{MetaPhlan4} & \pending & & & & & \\ 
 	& \multicolumn{7}{c|}{\textbf{Test on Datasets}} \\
-	& \highlightessential{Kraken2} & & & & & & X \\
-	& \highlightessential{Bracken} & & & & & & X \\
-	& \highlightessential{Diversity indices} & & & & & & X \\
+	& \highlightessential{Kraken2} & & & & & & \done \\
+	& \highlightessential{Bracken} & & & & & & \done \\
+	& \highlightessential{Diversity indices} & & & & & & \done \\
 	& \multicolumn{7}{c|}{\textbf{Integrate to pipelines}} \\
-	& \highlightessential{Kraken2} & & & & & & X \\
-	& \highlightessential{Bracken} & & & & & & X \\
-	& \highlightessential{Diversity indices} & & & & & & X \\
-	& \highlightessential{Test whole pipeline} & & & & & & X \\
+	& \highlightessential{Kraken2} & & & & & & \done \\
+	& \highlightessential{Bracken} & & & & & & \done \\
+	& \highlightessential{Diversity indices} & & & & & & \done \\
+	& \highlightessential{Test whole pipeline} & & & & & & \done \\
 	& \multicolumn{7}{l}{\texttt{metagenomics\_general.smk}} \\ 
-	& \highlightrobust{Bootstrapping script} & & & & & & X \\
-	& \multicolumn{7}{l}{\texttt{bootstrapping\_rawreads.smk}} \\ 
-	
-	\hline
-	
+	& \highlightrobust{Bootstrapping script} & & & & & & \done \\
+	& \multicolumn{7}{l}{\texttt{bootstrapping\_rawreads.smk}} \\ \hline
 	
 	\multirow{18}{*}{\textbf{Assembly}} 
 	& \multicolumn{7}{c|}{\textbf{Create the script}} \\
-	& \highlightessential{metaSPAdes} & X & & & & & \\ 
-	& \highlightessential{MEGAHIT} & & & & & & X \\
-	& \highlightrobust{MASURCA} & X & & & & & \\ 
-	& \highlightrobust{PLASS} & X & & & & & \\ 
-	& \highlightrobust{AbySS} & X & & & & & \\ 
+	& \highlightessential{metaSPAdes} & \pending & & & & & \\ 
+	& \highlightessential{MEGAHIT} & & & & & & \done \\
+	& \highlightrobust{MASURCA} & \pending & & & & & \\ 
+	& \highlightrobust{PLASS} & \pending & & & & & \\ 
+	& \highlightrobust{AbySS} & \pending & & & & & \\ 
 	& \multicolumn{7}{c|}{\textbf{Test on Datasets}} \\
-	& \highlightessential{metaSPAdes} & X & & & & & \\ 
-	& \highlightessential{MEGAHIT} & & & & & & X \\ 
-	& \highlightrobust{MASURCA} & X & & & & & \\ 
-	& \highlightrobust{PLASS} & X & & & & & \\ 
-	& \highlightrobust{AbySS} & X & & & & & \\ 
-	& \highlightrobust{\deprecated{KMA-iterative}} & X & & & & & \\
-	& \highlightrobust{Benchmarking between all of them} & X & & & & & \\
-	& \highlightoptional{Contig quality checking} & & X & & & & \\ 
+	& \highlightessential{metaSPAdes} & \pending & & & & & \\ 
+	& \highlightessential{MEGAHIT} & & & & & & \done \\ 
+	& \highlightrobust{MASURCA} & \pending & & & & & \\ 
+	& \highlightrobust{PLASS} & \pending & & & & & \\ 
+	& \highlightrobust{AbySS} & \pending & & & & & \\ 
+	& \highlightrobust{\deprecated{KMA-iterative}} & \pending & & & & & \\
+	& \highlightrobust{Benchmarking between all of them} & \pending & & & & & \\
+	& \highlightoptional{Contig quality checking} & & \draft & & & & \\ 
 	& \multicolumn{7}{c|}{\textbf{Integrate to pipelines}} \\
-	& \highlightrobust{MetaWrap binning} & & & & X & & \\
-	& \highlightessential{Kraken (MEGAHIT)} & & & & & & X \\ \hline
+	& \highlightrobust{MetaWrap binning} & & & & \issue & & \\
+	& \highlightessential{Kraken (MEGAHIT)} & & & & & & \done \\ \hline
 	
 	\multirow{4}{*}{\textbf{Binning}} 
-	& \highlightoptional{Testing on datasets} & & & & X & & \\
-	& \highlightoptional{Testing on higher depth datasets} & X & & & & & \\
-	& \highlightrobust{Refinement of bins} & X & & & & & \\ 
-	& \highlightrobust{Testing binning pipeline} & X & & & & & \\ \hline
+	& \highlightoptional{Testing on datasets} & & & & \issue & & \\
+	& \highlightoptional{Testing on higher depth datasets} & \pending & & & & & \\
+	& \highlightrobust{Refinement of bins} & \pending & & & & & \\ 
+	& \highlightrobust{Testing binning pipeline} & \pending & & & & & \\ \hline
 	
 	\multirow{7}{*}{\textbf{ARG Annotation}} 
-	& \highlightessential{RGI} & & & X & & & \\ 
-	& \highlightessential{ShortBRED} & & & & & & X \\
-	& \highlightoptional{AMRFinder} & & & X & & & \\ 
+	& \highlightessential{RGI} & & & \refine & & & \\ 
+	& \highlightessential{ShortBRED} & & & & & & \done \\
+	& \highlightoptional{AMRFinder} & & & \refine & & & \\ 
 	& \multicolumn{7}{c|}{\textbf{Test on datasets}} \\
-	& \highlightessential{RGI} & X & & & & & \\
-	& \highlightessential{ShortBRED} & X & & & & & \\
-	& \highlightoptional{AMRFinder} & X & & & & & \\ \hline
+	& \highlightessential{RGI} & \pending & & & & & \\
+	& \highlightessential{ShortBRED} & \pending & & & & & \\
+	& \highlightoptional{AMRFinder} & \pending & & & & & \\ \hline
 	
 \end{longtable}
+
 
 \newpage
 \onecolumn
@@ -1728,6 +1727,7 @@ In line with this, researchers often settle on subjective p-values (e.g., \textt
 
 This section comprises of concepts or ideas that require further investigation. They are written in boxes to help categorize them cleanly. I will refer to this section often as no script is perfect - and can be further improved. 
 
+\section{Biological Information}
 \begin{tcolorbox}[colback=gray!10!white, coltitle=white, colframe=gray!80!black, title=Biological Information]
 	\label{box:biological information}
 	I have long pondered upon the idea of creating a graph with \texttt{biological information} on the y-axis and \texttt{read length} on the x-axis. I hypothesize that we will find a \textbf{"sweet spot" }wherein we can optimize the amount of \texttt{information/read} using such trimmers. Unfortunately, it is extremely difficult to define what \texttt{a biological sequence} really is, because technically you can generate any random sequence - whether protein or nucleotide. That's the main reason I have been stuck on this problem for quite a while, I've been trying to find the answer first.
@@ -1737,7 +1737,7 @@ This section comprises of concepts or ideas that require further investigation. 
 	When people are asked this question they often give \textbf{DESCRIPTIONS} of what a \texttt{biological sequence} is but not what \textbf{DEFINES} a \texttt{biological sequence}. I understand that there are many characteristics that can help in determining the signal from the noise, but I am just not satisfied with whether this "thing" checks most (if not all) the boxes - I need a non-subjective answer to this problem. 
 \end{tcolorbox}
 
-
+\section{Wavelets}
 \begin{tcolorbox}[label=box:Wavelets, colback=gray!10!white, coltitle=white, colframe=gray!80!black, title= Wavelets, breakable]
 	\textbf{What is a Wavelet?} 
 	
@@ -1775,7 +1775,7 @@ This section comprises of concepts or ideas that require further investigation. 
 	
 \end{tcolorbox}
 
-
+\section{ModelTesting}
 \begin{tcolorbox}[label=box:modeltesting, colback=gray!10!white, coltitle=white, colframe=gray!80!black, title=Model Testing in Phylogenetics, breakable]
 	\textbf{What is a Model Testing in Phylogenetics?} 
 	
@@ -1827,7 +1827,7 @@ When using concatenated sequences - likely from phylogenomics or using multiple 
 \end{tcolorbox}
 
 
-
+\section{Phylogenetics}
 \begin{tcolorbox}[label=box:Coalescent, colback=gray!10!white, coltitle=white, colframe=gray!80!black, title=Coalescent, breakable]
 	
 \end{tcolorbox}
@@ -1836,6 +1836,8 @@ When using concatenated sequences - likely from phylogenomics or using multiple 
 \begin{tcolorbox}[label=box:Network Phylogenetics, colback=gray!10!white, coltitle=white, colframe=gray!80!black, title=Networks in Phylogenetics, breakable]
 \end{tcolorbox}
 
+
+\section{Robustness}
 \begin{tcolorbox}[label=box:Benchmarking, colback=gray!10!white, coltitle=white, colframe=gray!80!black, title=Benchmarking, breakable]
 	
 
@@ -2448,7 +2450,7 @@ This is part is mainly created as an information dump outside of just bioinforma
 
 
 
-\section{Biological OFF "Decay"}
+\section{Biological OFF Decay}\label{sec:biological-off-decay}
 \begin{multicols}{2}
 In statistical mechanics, microstates (positions, velocities, energies, etc.) are often unpredictable—this is related to Schrödinger's thought experiment and further elaborated by Werner Heisenberg’s Uncertainty Principle. However, macrostates (large-scale properties) that emerge from the ensemble of microstates are model-able.
 	For **radioactive decay**, while we can’t predict when individual atoms will decay, we can model the **half-life** of the entire ensemble. The **exponential decay equation** models this process:
@@ -2777,7 +2779,7 @@ Below are some of the analyses that are overlooked or not typically addressed - 
 	
 \end{itemize}
 
-\subsection{When to split}
+\subsection{When to Split Papers}
 Splitting papers into multiple publications can be a strategic and necessary move when the scope is too broad.
 Here are some key considerations:
 \begin{itemize}
@@ -2790,6 +2792,39 @@ Here are some key considerations:
 	\item Data and results need independent discussions in themselves 
 	\item It is a follow up study 
 \end{itemize}
+
+
+\section{More on Determining Biological Data}
+
+\begin{tcolorbox}[title=Viruses and the vines of life, coltitle=AntiqueWhite1, breakable]
+	
+
+
+\end{tcolorbox}
+
+
+
+\begin{tcolorbox}[title=More data or better tools?, coltitle=AntiqueWhite1, breakable]
+	With the advancement of faster and more efficient sequencing technologies we really have to question whether we need more data.
+	
+	A parallel discussion about this was in the field of physics - specifically the Einstein's Determinism and Bohr's probabilistic view of quantum objects. Let me explain. The exact tension between these two great scientific thinkers came about because Einstein was not satisfied that the randomness of quantum systems (only being collapsed after observation) is inherent to universal laws - and that there may be \texttt{hidden variables} we have either failed to take into account or our tools are not precise enough to detect. In contrast, Bohr's view (the Copenhagen interpretation) suggests inherent indeterminacy in quantum systems.
+	
+	Ingenious thought experiments were made (and directly observed) as a result of these debates in the Solvay conferences which included well-known physicists such as Born, Heisenberg, and Schrodinger. 
+	
+	On the same vein, biological sequences seem to have an apparent randomness to them that either have variables or models that are too complex we fail to take into account or that we simply require more data to determine these \texttt{biological hidden variables}. 
+	
+	As at its heart, similar to Schrodinger's thought experiment or radioactive decay see section \hyperref[sec:biological-off-decay]{on Biological OFF Decay}, where exactly mutations occur on a stretch of DNA is inherently random though we can model the rate at which it occurs (about 10e-10) depending on the organism. 
+	
+	Yes, be skeptical about noise, but also accept that some uncertainty is inherent. It's like a random walk, but constrained ultimately by developmental and evolutionary forces some of which are random e.g. genetic drift, transposition, \textbf{and even horizontal transfer events.} 
+	
+	We might fall into the "we need more data" trap wherein eventually the signal will drown out the noise - but the reality is the noise will likely also increase with more data - and sometimes more complexity. Resolutions from the debates I mentioned earlier came from ingenious experiments carried out by better tools.
+	
+	Karl Popper once expressed that to be able to test scientifically, it must be falsifiable - and thought experiments are just that "what ifs". Perhaps later on we develop better tools or algorithms that can confirm or deny our outstanding hypotheses later on.
+	
+\end{tcolorbox}
+
+
+
 
 \renewcommand{\thesection}{\arabic{section}}
 \setcounter{section}{0}
