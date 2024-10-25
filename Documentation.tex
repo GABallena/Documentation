@@ -1124,6 +1124,17 @@ This was used as an approximation for bootstrapping by shuffling and adjusting t
 	.3 (logs for each step) \DTcomment{(permanent)}.
 }
 
+\subsection{Alternatives}
+\begin{tcolorbox}
+	\texttt{Vamb} employs a \textbf{multisplit approach} wherein individual replicates (of assembled contigs) are first \textbf{concatenated} before performing binning. This approach can potentially enhance \texttt{MIMAG} standards by leveraging shared information across replicates, improving the completeness and quality of bins. By pooling data from replicates, the method also helps cancel out random noise.
+	
+	This concept is analogous to \textbf{image stacking} in signal processing, where shared signals become more pronounced and \textbf{differences or inconsistencies} are easier to identify (see \hyperref[box:signal_averaging]{box on signal averaging})
+	
+	One can visualize these improvements using Manhattan plots across the contigs, where lower variability leads to higher\textbf{ E-values}. Here, E-values are used instead of P-values because they incorporate the statistical significance with respect to the \textbf{reference database}.
+	
+	The same principle applies when comparing coverage depths during read mapping on \texttt{MAGs} (Metagenome-Assembled Genomes). A higher \textbf{read depth} (more reads mapped back to the same site) increases confidence in the result, reinforcing the quality of the assembly and binning.
+		
+\end{tcolorbox}
 
 \linenumbers*
 \section{krakenpipeline.bash}
@@ -1836,10 +1847,20 @@ When using concatenated sequences - likely from phylogenomics or using multiple 
 \begin{tcolorbox}[label=box:Network Phylogenetics, colback=gray!10!white, coltitle=white, colframe=gray!80!black, title=Networks in Phylogenetics, breakable]
 \end{tcolorbox}
 
+\section{Signal vs Noise}
+\begin{tcolorbox}[label=box:signal_averaging, colback=gray!10!white, coltitle=white, colframe=gray!80!black, title=Signal Averaging, breakable]
+	
+	
+	One can then check for variabilities in the averaged data and perform statistical analysis as to whether they cluster neatly. 
+	
+\end{tcolorbox}
+
 
 \section{Robustness}
 \begin{tcolorbox}[label=box:Benchmarking, colback=gray!10!white, coltitle=white, colframe=gray!80!black, title=Benchmarking, breakable]
-	
+
+
+
 
 \textbf{Why test on your own dataset?}
 \begin{itemize}
@@ -2821,6 +2842,12 @@ Below are some of the analyses that are overlooked or not typically addressed - 
 	\item ID of novel ARGs followed by experimental validation
 	\item Data sharing and reproducibility 
 	\item Benchmarking and Validation against established standards or reference databases 
+	
+\begin{tcolorbox}[title=When to eliminate duplicates, breakable, coltitle=AntiqueWhite1]
+	\texttt{FastUniq} and other tools filter out duplicate reads thereby sacrificing depth - in exchange for a decrease in false-positives during read mapping. It also decreases the amount of data that needs to be stored or processed for downstream. This is similar to how \texttt{dRep} clusters OTUs and how marker-based annotators e.g. \texttt{MetaPhlan4} and \texttt{ShortBred} align via a "representative" sequence. 
+	
+	The risk you run, removing duplicate reads is an increase in false-negatives (true signals otherwise assumed to be sequencing artefacts). On the flipside, duplicate removal prevents skewing by technical replication errors - by forcing normalization of the data. 
+\end{tcolorbox}
 	
 \end{itemize}
 
