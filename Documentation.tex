@@ -598,7 +598,8 @@ If plasmid signatures are present, \texttt{plasmidSPAdes} along with \texttt{Gap
 \rule{\linewidth}{0.5mm}	
 	
 \subsection{Phage influence signatures}
-\textbf{Technical Notes}: They will be determined using a variety of tools:
+\textbf{Technical Notes}: They will be determined using a variety of tools:\\
+After prediction with \texttt{Prodigal}, a sequence was considered a phage if it was identified by two-thirds (2/3) of the program stated below: 
 \begin{itemize}
 	\item \texttt{VirSorter}: Identifies viral signatures within microbial genomes and separates prophages from bacterial sequences.
 	\item \texttt{PHASTER}: A web-based tool for phage search and annotation, identifying integrated prophages.
@@ -606,11 +607,22 @@ If plasmid signatures are present, \texttt{plasmidSPAdes} along with \texttt{Gap
 \end{itemize}
 \textbf{Rationale}:This analysis aims to detect potential phage signatures in the chimeric contigs. Since phages are mobile genetic elements, their involvement in transferring ARGs through transduction is highly relevant.Phages, especially temperate phages, can integrate into bacterial genomes and excise themselves, sometimes carrying host genetic material, such as ARGs, with them.The integration and excision signatures detected in contigs will provide evidence of possible transduction events in our datasets, supporting the hypothesis of ARG dissemination via phages.
 
+\subsection{Annotion of Phage genes (TBA)} 
+\textbf{Technical Notes} All these proteins will be queried against the following databases.
+\begin{enumerate}
+	\item \texttt{{PFAM}}
+	\item \texttt{VOGdb}
+	\item \texttt{eggNOG} 
+\end{enumerate}
+Using a combination of \texttt{eggNOG-mapper(mapper.py)} and \texttt{HMMER} with the following thresholds: E-value $<$ 10\textsuperscript{-5}, score $\geq$ 50. \texttt{Active} prophages were then separated from \texttt{Inactive} ones using the tool \href{https://github.com/WenchenSONG/Prophage-Hunter}{\texttt{Prophage Hunter}} -- default scoring parameters. Results were considered false-positives if they were considered active by \texttt{Prophage Hunter} but were 'not phage' for \texttt{VirFinder} and \texttt{MetaPhinder} as \href{https://academic.oup.com/nar/article/47/W1/W74/5494712}{previously done by the authors of the tool.} HMM profiles were downloaded from \href{https://promge.embl.de/download.cgi}{proMGE database -- which are calibrated to different recombinases: (huh\_y1, huh\_y2, ser\_tn, ser\_ce, ser\_lsr, cas1)} and used against the putative recombinases to further divide them into distinct categories. To determine whether these genes are of viral or bacterial origin, \href{https://www.nature.com/articles/s41587-020-00774-7}{\texttt{CheckV} was used}.
+\\ \textbf{Rationale}
+\\ \textbf{Notes}
+
 
 \subsection{Phage Signature Extraction and Phylogenetic Analysis}
 \textbf{Technical Notes}: Phage-associated genes will be extracted from the chimeric contigs, followed by phylogenetic analysis to uncover evolutionary relationships. \texttt{FastTree} will be used to build a phylogenetic tree based on the extracted phage genes. For visualization, tools like \texttt{iTOL} or \texttt{FigTree} can be used to generate an interpretable phylogenetic tree.
 
-\textbf{Rationale}: Phage genes embedded in chimeric contigs (their taxonomy) may serve as strong evidence of horizontal gene transfer (HGT) events. The aim here is to check the evolutionary origins of the phage genes found in our dataset and their potential involvement in the dissemination of ARGs.
+\noindent \textbf{Rationale}: Phage genes embedded in chimeric contigs (their taxonomy) may serve as strong evidence of horizontal gene transfer (HGT) events. The aim here is to check the evolutionary origins of the phage genes found in our dataset and their potential involvement in the dissemination of ARGs.
 
 \subsection{Directory tree}
 \textbf{Notes:} The final directory tree should look like this to help you visualize. \textbf{Notice the multiple \texttt{path/to/} here as this is still (WIP)}:
@@ -1911,6 +1923,41 @@ When using concatenated sequences - likely from phylogenomics or using multiple 
 
 \chapter{October 2024}
 \begin{multicols}{2}
+		\section{October 26, 2024}
+	
+	
+	\textbf{To-do List} \\
+	\textbf{Note:} 
+	
+	\begin{itemize}
+		\item 
+	\end{itemize}
+	
+	\textbf{Completed Tasks}
+	\begin{itemize}
+		\item [\done] Proposed (TBA) annotation of Phage genes -- updated MGE-ARG section to include the initial plan
+		
+	\end{itemize}
+	
+	\textbf{Scripts Worked On}
+	\begin{itemize}
+		\item 
+	\end{itemize}
+	
+	
+	\textbf{Issues Encountered}
+	\begin{itemize}
+		\item 
+	\end{itemize}
+	
+	\textbf{Need to Troubleshoot}
+	\begin{itemize}
+		\item 
+	\end{itemize}
+	\end{multicols}
+	
+	\newpage
+	\begin{multicols}{2}
 	\section{October 10, 2024}
 	
 	
