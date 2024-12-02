@@ -1149,7 +1149,7 @@ This was used as an approximation for bootstrapping by shuffling and adjusting t
 \end{tcolorbox}
 
 \linenumbers*
-\section{krakenpipeline.bash}
+\section{krakenpipeline.bash(WIP)}
 \textbf{Stage: Done} \\   
 \textbf{The entire basic taxo-metagenomic pipeline with the usual tools} \\
 \textbf{Specifics:} This pipeline passes through a loop between \texttt{FastQC} and \texttt{Trimmomatic} \texttt{trimming\_cleaning\_checking.py} before progressing to \texttt{Kraken2} then \texttt{Bracken} then \texttt{calculate\_diversity.py}. \\
@@ -1352,6 +1352,14 @@ Removed the hard-cap of 1-511.faa files, to add flexibility; now downloads witho
 	.3 sample2\_R1.fastq.gz \DTcomment{Copied from "CAMISIM/out/sample2/reads\_2/R1.fastq.gz"}.
 	.3 sample2\_R2.fastq.gz \DTcomment{Copied from "CAMISIM/out/sample2/reads\_2/R2.fastq.gz"}.
 }
+
+\begin{tcolorbox}
+	Now updated (December 01, 2024) to renamingSIMS.sh - a four liner. Found a way to make the script more efficient. Also, added two more functions to the script
+	\begin{itemize}
+		\item Split the interleaved reads using \texttt{seqtk}
+		\item Re-zip them to save space
+	\end{itemize} 
+\end{tcolorbox}
 
 
 
