@@ -98,7 +98,7 @@
 
 
 \title{\Huge \textbf{ONE ARM Metagenomics Pipeline}}
-\author{\Large Prepared for and by: Project 4}
+\author{\Large Gerald Amiel Ballena}
 \date{\Large Last updated \today}
 
 \begin{document}
@@ -1150,7 +1150,10 @@ This was used as an approximation for bootstrapping by shuffling and adjusting t
 
 \linenumbers*
 \section{krakenpipeline.bash(WIP)}
-\textbf{Stage: Done} \\   
+\begin{tcolorbox}
+	Construction of a script that is dependent on the config.yaml currently ongoing
+\end{tcolorbox}
+\textbf{Stage: \refine} \\   
 \textbf{The entire basic taxo-metagenomic pipeline with the usual tools} \\
 \textbf{Specifics:} This pipeline passes through a loop between \texttt{FastQC} and \texttt{Trimmomatic} \texttt{trimming\_cleaning\_checking.py} before progressing to \texttt{Kraken2} then \texttt{Bracken} then \texttt{calculate\_diversity.py}. \\
 \textbf{Notes}: This does not include \texttt{FastQC}-ing of raw reads (yet), you have to run \texttt{raw.bash} for that. Additionally, it also currently does not automate the production of aggregated summaries of the FastQC files for you (yet), you have to run \texttt{summary\_stat.bash} for that as well. 
@@ -1354,10 +1357,10 @@ Removed the hard-cap of 1-511.faa files, to add flexibility; now downloads witho
 }
 
 \begin{tcolorbox}
-	Now updated (December 01, 2024) to renamingSIMS.sh - a four liner. Found a way to make the script more efficient. Also, added two more functions to the script
+	Now updated (December 01, 2024) to renamingSIMS.sh - a 6 liner text file that is more efficient only requires manual input. Also, added two more functions to the script
 	\begin{itemize}
 		\item Split the interleaved reads using \texttt{seqtk}
-		\item Re-zip them to save space
+		\item Re-zip using \texttt{gunzip} them to save space
 	\end{itemize} 
 \end{tcolorbox}
 
