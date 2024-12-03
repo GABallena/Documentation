@@ -1149,9 +1149,19 @@ This was used as an approximation for bootstrapping by shuffling and adjusting t
 \end{tcolorbox}
 
 \linenumbers*
-\section{krakenpipeline.bash(WIP)}
-\begin{tcolorbox}
-	Construction of a script that is dependent on the config.yaml currently ongoing
+\section{\deprecated{krakenpipeline.bash}}
+\begin{tcolorbox}[title=Reason for Deprecation \dotfill Dec 3 2024, coltitle=AntiqueWhite1, breakable]
+	Now contains separated into two different scripts
+	\begin{itemize}
+		\item kraken\_pipeline\_script.sh
+		\item run\_bracken\_per\_sample.py
+	\end{itemize}
+	For a couple of reasons:
+	\begin{enumerate}
+		\item Modularity for future workflows. 
+		\item Efficiency, as the bracken script now contains read estimation - which could be useful later on.
+		\item To allow for dynamic changes in Bracken estimation of k-mers, it now has it's own script.  
+	\end{enumerate}
 \end{tcolorbox}
 \textbf{Stage: \refine} \\   
 \textbf{The entire basic taxo-metagenomic pipeline with the usual tools} \\
