@@ -362,12 +362,90 @@ I have separated them into folders/repositories (shameless plug here: \href{http
 
 \linenumbers*
 \section{ARG-MGE.smk}
+\begin{tcolorbox}[title=Update \dotfill \today, coltitle=AntiqueWhite1]
+	Now separated into \texttt{ARG.smk} and \texttt{MGE.smk} to better modularize the workflow.
+\end{tcolorbox}
 \textbf{Stage: Draft}   
 \textbf{General Purpose}
 
 This pipeline is designed for \textbf{comprehensive metagenomic analysis of ARGs}, it also includes placeholders for analyses of \textbf{mobile genetic elements (MGEs)}, and \textbf{plasmid detection}. It integrates tools for \textbf{read quality control, assembly, annotation, taxonomic profiling, and structural variant (SV) detection} to provide a high-resolution view of the genetic components in metagenomic samples.
-\\
-\\
+\newpage
+
+\begin{tikzpicture}[
+	every node/.style={draw, rectangle, rounded corners, align=center, minimum width=3cm},
+	arrow/.style={->, thick}
+	]
+	
+	% Left side nodes
+	\node (trimmedreads) at (0,0) {Trimmed reads};
+	\node (pairmerged) at (0,-2) {Pair-merged};
+	\node (contigs) at (0,-6) {Contigs};
+	\node (argcontigs2) at (0,-9) {ARG-contigs II};
+	
+	% Right side nodes
+	\node (card) at (6,0) {CARD};
+	\node (translate) at (6,-2) {Protein ARGs};
+	\node (revtranslate) at (6,-4) {Synononymous ARGs};
+	\node (argrevtranslate) at (6,-6) {ARG-related DB};
+	\node (pairmergedDB) at (6,-8) {pair-merged ARG-related DB};
+	\node (argcontigs1) at (6,-10) {ARG-contigs I};
+	
+	% Middle nodes
+	\node (compare) at (3,-11.5) {Compare};
+	\node (reclassified) at (3,-13.5) {Reclassified Contigs};
+	\node (qualitycheck) at (3,-15.5) {High vs Low Confidence Contigs};
+	\node (extendedcontigs) at (3,-17.5) {Extended Contigs};
+	\node (contigsv) at (1,-20) {Contig SVs};
+	\node (taxonomy) at (5,-20) {Taxonomy};
+	\node (chimericcontigs) at (5,-22) {Chimeric Contigs};
+	\node (blastn) at (3,-24) {BLASTN};
+	\node (plasmid) at (1,-26) {Plasmid};
+	\node (phage) at (5,-26) {Phage};
+	
+	% Arrows with labels (Left Side)
+	\draw[arrow] (trimmedreads) -- (pairmerged) node[midway, left] {PEAR};
+	\draw[arrow] (pairmerged) -- ++(0,-2) node[midway, left] {Convert to FASTA};
+	\draw[arrow] ++(0,-2) -- (contigs) node[midway, right] {Assembly};
+	\draw[arrow] (contigs) -- (argcontigs2) node[midway, left] {RGI};
+	
+	% Arrows with labels (Right Side)
+	\draw[arrow] (card) -- (translate) node[midway, right] {Translate};
+	\draw[arrow] (translate) -- (revtranslate) node[midway, right] {Reverse Translate};
+	\draw[arrow] (revtranslate) -- (argrevtranslate) node[midway, right] {KMA iterative};
+	\draw[arrow] (argrevtranslate) -- (pairmergedDB) node[midway, right] {PandaSeq};
+	\draw[arrow] (pairmergedDB) -- (argcontigs1) node[midway, right] {Assembly};
+	
+	% Arrows in middle
+	\draw[arrow] (argcontigs2) -- (compare);
+	\draw[arrow] (argcontigs1) -- (compare);
+	\draw[arrow] (compare) -- (reclassified) node[midway, left] {Filter min-CARD};
+	\draw[arrow] (reclassified) -- (qualitycheck) node[midway, left] {Quality Checking};
+	\draw[arrow] (qualitycheck) -- (extendedcontigs) node[midway, left] {Contig Extender};
+	\draw[arrow] (extendedcontigs.east) -- ++(2,0) -- ++(0,3) -- (reclassified.east);
+	
+	% New arrows below Extended Contigs
+	\draw[arrow] (extendedcontigs.south) -- (contigsv.north) node[midway, left] {manta};
+	\draw[arrow] (extendedcontigs.south) -- (taxonomy.north) node[midway, right] {SprayNPray};
+	\draw[arrow] (taxonomy.south) -- (chimericcontigs.north) node[midway, right] {Kraken Reports};
+	
+	% Arrows to BLASTN
+	\draw[arrow] (contigsv.south) -- (blastn.north);
+	\draw[arrow] (chimericcontigs.south) -- (blastn.north);
+	
+	% Arrows from BLASTN to Plasmid and Phage
+	\draw[arrow] (blastn.south) -- (plasmid.north) node[midway, left] {Plasmid database};
+	\draw[arrow] (blastn.south) -- (phage.north) node[midway, right] {Phage database};
+	
+\end{tikzpicture}
+
+
+
+
+
+
+
+
+
 \textbf{Preprocessing} \\
 \rule{\linewidth}{0.5mm}
 \subsection{Pair merging}
@@ -562,6 +640,8 @@ This pipeline is designed for \textbf{comprehensive metagenomic analysis of ARGs
 \\ 
 \textbf{Transposition} \\
 \rule{\linewidth}{0.5mm}
+
+\section{MGE.smk}
 
 \subsection{Determination of Transposons (TBA)}
 \textbf{Technical Notes}: Tools such as the following can be used:
@@ -1334,7 +1414,7 @@ Removed the hard-cap of 1-511.faa files, to add flexibility; now downloads witho
 \end{verbatim}
 
 \linenumbers*
-\section{renamingSIMS.bash}
+\section*{\deprecated{renamingSIMS.bash}}
 \textbf{Stage: Done} \\   
 \textbf{renaming output files from raw-reads simulators i.e. \texttt{CAMISIM}} \\
 \textbf{Specifics:} This script takes the output folder of \texttt{CAMISIM} called the \texttt{out} directory and automates renaming them, and moving them. \\ 
@@ -1373,6 +1453,79 @@ Removed the hard-cap of 1-511.faa files, to add flexibility; now downloads witho
 		\item Re-zip using \texttt{gunzip} them to save space
 	\end{itemize} 
 \end{tcolorbox}
+
+\linenumbers*
+\section{renamingSIMS.txt}
+\textbf{Stage: Done} \\   
+A series of one-liner scripts for the terminal to automate the execution of certain operations.\\
+\textbf{Specifics:} This script takes the output folder of \texttt{CAMISIM} called the \texttt{out} directory and automates renaming them, and moving them. \\ 
+
+\subsection*{1. Strip Timestamp from Directory Names}
+\begin{verbatim}
+	find . -type d -name "2024.*_sample_*" | xargs -I {} bash -c \
+	'mv "{}" "$(echo "{}" | sed -r "s/2024\.[0-9]{2}\.[0-9]{2}_[0-9]{2}\.[0-9]{2}\.[0-9]{2}_//")"'
+\end{verbatim}
+\textbf{Purpose}: Removes timestamp prefixes from directory names for cleaner structure.
+
+\subsection*{2. Prefix Files with Parent Directory Name}
+\begin{verbatim}
+	find CAMISIM/out -type d -name "sample*" -exec bash -c \
+	'for item in "$1"/*; do mv "$item" "$1/$(basename $1)_$(basename "$item")"; done' _ {} \;
+\end{verbatim}
+\textbf{Purpose}: Adds parent directory name as a prefix to each file for better context.
+
+\subsection*{3. Collect All FASTQ Files}
+\begin{verbatim}
+	mkdir -p raw_reads
+	
+	find CAMISIM -type f -name "*.fq.gz" -print0 | xargs -0 -I {} cp {} raw_reads/
+\end{verbatim}
+\textbf{Purpose}: Gathers all \texttt{.fq.gz} files into a central \texttt{raw\_reads} directory.
+
+\subsection*{4. Separate Interleaved FASTQ Files}
+\begin{verbatim}
+	for f in /home/gerald-amiel/Desktop/Project4/raw_reads/*_reads_anonymous_reads.fq.gz; do
+	seqtk seq -A "$f" | paste - - - - | cut -f1,3 > "${f/_reads_anonymous_reads.fq.gz/_1.fq}"
+	seqtk seq -A "$f" | paste - - - - | cut -f2,4 > "${f/_reads_anonymous_reads.fq.gz/_2.fq}"
+	done
+\end{verbatim}
+\textbf{Purpose}: Splits interleaved reads into two separate paired-end FASTQ files.
+
+\subsection*{5. Install BBMap for File Reformatting}
+\begin{verbatim}
+	conda install -c bioconda bbmap
+\end{verbatim}
+\textbf{Purpose}: Installs BBMap, a toolkit for various file format operations -- mainly for the succeeding three below.
+
+\subsection*{6. Compress FASTQ Files}
+\begin{verbatim}
+	for f in raw_reads/*_1.fq; do 
+	reformat.sh in="$f" \
+	in2="${f/_1.fq/_2.fq}" \
+	out1="${f/_1.fq/_1.fq.gz}" \
+	out2="${f/_1.fq/_2.fq.gz}"; 
+	done
+\end{verbatim}
+\textbf{Purpose}: Converts uncompressed FASTQ files into compressed \texttt{.fq.gz} format.
+
+\subsection*{7. Combine Paired-End Reads into Interleaved Format}
+\begin{verbatim}
+	for f in raw_reads/*_1.fq.gz; do 
+	reformat.sh in1="$f" in2="${f/_1.fq.gz/_2.fq.gz}" \
+	out="${f/_1.fq.gz/.interleaved.fq.gz}";
+	done
+\end{verbatim}
+\textbf{Purpose}: Combines paired-end reads into an interleaved file format.
+
+\subsection*{8. Separate Interleaved Files into Paired-End Reads}
+\begin{verbatim}[language=bash,caption=Splitting Interleaved Files]
+for f in raw_reads/*.interleaved.fq.gz; do 
+reformat.sh in="$f" \
+out1="${f/.interleaved.fq.gz/_1.fq.gz}" \
+out2="${f/.interleaved.fq.gz/_2.fq.gz}"; 
+done
+\end{verbatim}
+\textbf{Purpose}: Reverses interleaving by splitting interleaved files back into paired-end reads.
 
 
 
